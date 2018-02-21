@@ -14,65 +14,86 @@
       <!-- <script
         src="https://unpkg.com/leaflet.nontiledlayer/dist/NonTiledLayer.js">
       </script>
-      <script src="vendor/geotiff.js"></script>
-      <script src="vendor/plotty.js"></script>
-      <script src="leaflet-geotiff.js"></script> -->
+      <script src="vendor/geotiff.browserify.min.js"></script>
+      <script src="vendor/plotty.min.js"></script>
+      <script src="leaflet-geotiff.js"></script>
+      <script src="NonTiledLayer.WCS.js"></script> -->
 
-      <link rel="stylesheet" href="/style.css" />
+      <link rel="stylesheet" href="style.css" />
+      <!-- disable scaling -->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
   </head>
   <body>
-      <div id="climdex-map"></div>
+      <div id="map"></div>
 
       <script>
+        
+        geoserver_base = 'http://localhost:8080/geoserver'
+
         // initialise map
-        var mymap = L.map('climdex-map').setView([51.505, -0.09], 13);
+        var mymap = L.map('map', {
+          center: [-28, -80],    // lat, lon
+          zoom: 3
+        });
 
         // add tile layer
+        // http://leaflet-extras.github.io/leaflet-providers/preview/
+        // recommend:
+        // - stamen toner-lite,
+        // - stamen watercolor,
+        // - esri worldimagery (< 1M views a month)
+        // - cartodb positron, darkmatter
+
         L.tileLayer(
-            'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
-            {
-              attribution:
-                'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (C) <a href="http://mapbox.com">Mapbox</a>',
-              maxZoom: 18,
-              id: 'mapbox.streets',
-              accessToken:
-                'pk.eyJ1IjoicmVuc2EiLCJhIjoiY2pkcWt2eTFkMDZlYTJ3cGt2cjg3cHRrMyJ9.g3-uYFY4pp-7YiULtU9QrA'
-            })
-          .addTo(mymap);
-
-        // add some markers
-        var marker  = L.marker([51.5, -0.09]).addTo(mymap);
-        var circle = L.circle(
-          [51.508, -0.11],
+          'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
           {
-            color: 'red',
-            filLColor: '$f03',
-            fillOpacity: 0.5,
-            radius: 500
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: 'abcd',
+            minZoom: 1,
+            maxZoom: 16,
+            ext: 'png'
           }).addTo(mymap);
-        var polygon = L.polygon(
-          [
-            [51.509, -0.08],
-            [51.503, -0.06],
-            [51.51, -0.047]
-          ]).addTo(mymap);
-        
-        // bind popups to markers
-        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-        circle.bindPopup("I am a circle.");
-        polygon.bindPopup("I am a polygon.");
 
-        // standalone popup
-        var popup = L.popup()
-          .setLatLng([51.5, -0.09])
-          .setContent("I am a standalone popup.")
-          .openOn(mymap);
+        // can apparently do this as a WMS layer
+        // cmip5_wms = geoserver_base + '/climdex-test/wms?service=WMS&version=1.1.0&request=GetMap&layers=climdex-test:tasmax&styles=&bbox=-0.9375,-90.625,359.0625,90.625&width=768&height=386&srs=EPSG:4326&format=image/png'
 
-        // events! define and attach to listener
-        function onMapClick(e) {
-          alert("Sup you clicked the map");
-        }
-        mymap.on('click', onMapClick);
+        L.tileLayer.wms(
+          geoserver_base + '/climdex-test/wms?',
+          {
+            service: 'WMS',
+            version: '1.1.0',
+            request: 'GetMap',
+            layers: 'climdex-test:tasmax',
+            format: 'image/png'
+          }
+        ).setOpacity(0.5).addTo(mymap);
+
+        // okay, what about a wcs layer?
+        // starts distorting for X < 0. i think geoserver only supports
+        // lon 0:360 in WMS, not WCS. we'll see.
+        // plotty.addColorScale("mycolorscale", ["#00ff00", "#0000ff", "#ff0000"], [0, 0.5, 1]);
+        L.nonTiledLayer.wcs(
+          geoserver_base + "/climdex-test/wcs?",
+          {
+            wcsOptions:
+            {
+              service: 'WCS',
+              version: '1.0.0',
+              request: 'GetCoverage',
+              coverage: 'climdex-test:tasmax',
+              crs: 'EPSG:3857',
+              format: 'GeoTIFF'
+            },
+            displayMin: 220,
+            displayMax: 320,
+            // colorScale: 'rainbow',
+            clampLow: false,
+            clampHigh: false,
+            uppercase: true,
+            useCanvas: true,
+            colorScale: 'magma'
+          }).setOpacity(0.5).addTo(mymap);
 
       </script>
   </body>

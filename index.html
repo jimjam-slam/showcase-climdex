@@ -6,18 +6,22 @@
         href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
         integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
         crossorigin=""/>
+      <link
+        rel="stylesheet"
+        href="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css" />
       <script
         src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
         integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
         crossorigin="">
       </script>
-      <!-- <script
-        src="https://unpkg.com/leaflet.nontiledlayer/dist/NonTiledLayer.js">
+      <script
+        type="text/javascript"
+        src="https://cdn.rawgit.com/nezasa/iso8601-js-period/master/iso8601.min.js">
       </script>
-      <script src="vendor/geotiff.browserify.min.js"></script>
-      <script src="vendor/plotty.min.js"></script>
-      <script src="leaflet-geotiff.js"></script>
-      <script src="NonTiledLayer.WCS.js"></script> -->
+      <script
+        type="text/javascript"
+        src="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js">
+      </script>
 
       <link rel="stylesheet" href="style.css" />
       <!-- disable scaling -->
@@ -33,7 +37,13 @@
         // initialise map
         var mymap = L.map('map', {
           center: [-10, -80],    // lat, lon
-          zoom: 2
+          zoom: 2,
+          timeDimension: true,
+          timeDimensionOptions: {
+              timeInterval: '2000-01-01T12:00:00.000Z/2000-12-01T12:00:00.000Z',
+              period: 'P1M'
+          },
+          timeDimensionControl: true,
         });
 
         // add tile layer
@@ -57,20 +67,26 @@
         // add geoserver netcdf using wms
         // (doesn't work with wcs due to lon > 180)
         // and style with css blending modes
-        L.tileLayer.wms(
+        var cmip_layer = L.tileLayer.wms(
           geoserver_base + '/climdex-test/wms?',
           {
             service: 'WMS',
             version: '1.1.0',
             request: 'GetMap',
             layers: 'climdex-test:tasmax',
-            TIME: '2000-07-01T12:00:00.000Z',
             format: 'image/png',
             className: 'multiply-layer'
           }
-        ).addTo(mymap);
-        // cmip5.getContainer().className += "multiply-layer";
+        );  // .addTo(mymap); removed b/c we'll use abstract time layer instead
+        
+        // Create and add a TimeDimension Layer to the map
+        var cmip_time_layer = L.timeDimension.layer.wms(cmip_layer, {
+          cache: 12
+        });
+        cmip_time_layer.addTo(mymap);
 
+        // set to first frame
+        mymap.timeDimension.setCurrentTime(946728000000);
 
       </script>
   </body>

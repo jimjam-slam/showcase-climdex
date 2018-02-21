@@ -7,3 +7,8 @@ html, body, #map {
   height: 100%;
   width: 100vw;
 }
+
+/* climate indices ought to be multiplied so that stamen-toner shows through */
+div.multiply-layer {
+  mix-blend-mode: multiply;
+}

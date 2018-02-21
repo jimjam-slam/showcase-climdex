@@ -22,7 +22,6 @@
       <link rel="stylesheet" href="style.css" />
       <!-- disable scaling -->
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
   </head>
   <body>
       <div id="map"></div>
@@ -55,9 +54,9 @@
             ext: 'png'
           }).addTo(mymap);
 
-        // can apparently do this as a WMS layer
-        // cmip5_wms = geoserver_base + '/climdex-test/wms?service=WMS&version=1.1.0&request=GetMap&layers=climdex-test:tasmax&styles=&bbox=-0.9375,-90.625,359.0625,90.625&width=768&height=386&srs=EPSG:4326&format=image/png'
-
+        // add geoserver netcdf using wms
+        // (doesn't work with wcs due to lon > 180)
+        // and style with css blending modes
         L.tileLayer.wms(
           geoserver_base + '/climdex-test/wms?',
           {
@@ -65,35 +64,12 @@
             version: '1.1.0',
             request: 'GetMap',
             layers: 'climdex-test:tasmax',
-            format: 'image/png'
+            format: 'image/png',
+            className: 'multiply-layer'
           }
-        ).setOpacity(0.5).addTo(mymap);
+        ).addTo(mymap);
+        // cmip5.getContainer().className += "multiply-layer";
 
-        // okay, what about a wcs layer?
-        // starts distorting for X < 0. i think geoserver only supports
-        // lon 0:360 in WMS, not WCS. we'll see.
-        // plotty.addColorScale("mycolorscale", ["#00ff00", "#0000ff", "#ff0000"], [0, 0.5, 1]);
-        L.nonTiledLayer.wcs(
-          geoserver_base + "/climdex-test/wcs?",
-          {
-            wcsOptions:
-            {
-              service: 'WCS',
-              version: '1.0.0',
-              request: 'GetCoverage',
-              coverage: 'climdex-test:tasmax',
-              crs: 'EPSG:3857',
-              format: 'GeoTIFF'
-            },
-            displayMin: 220,
-            displayMax: 320,
-            // colorScale: 'rainbow',
-            clampLow: false,
-            clampHigh: false,
-            uppercase: true,
-            useCanvas: true,
-            colorScale: 'magma'
-          }).setOpacity(0.5).addTo(mymap);
 
       </script>
   </body>

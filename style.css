@@ -9,6 +9,6 @@ html, body, #map {
 }
 
 /* climate indices ought to be multiplied so that stamen-toner shows through */
-div.multiply-layer {
+div.blend_multiply {
   mix-blend-mode: multiply;
 }

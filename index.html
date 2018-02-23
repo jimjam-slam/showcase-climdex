@@ -22,6 +22,11 @@
         type="text/javascript"
         src="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js">
       </script>
+      <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+      </script>
 
       <link rel="stylesheet" href="style.css" />
       <!-- disable scaling -->
@@ -29,65 +34,6 @@
   </head>
   <body>
       <div id="map"></div>
-
-      <script>
-        
-        geoserver_base = 'http://localhost:8080/geoserver'
-
-        // initialise map
-        var mymap = L.map('map', {
-          center: [-10, -80],    // lat, lon
-          zoom: 2,
-          timeDimension: true,
-          timeDimensionOptions: {
-              timeInterval: '2000-01-01T12:00:00.000Z/2000-12-01T12:00:00.000Z',
-              period: 'P1M'
-          },
-          timeDimensionControl: true,
-        });
-
-        // add tile layer
-        // http://leaflet-extras.github.io/leaflet-providers/preview/
-        // recommend:
-        // - stamen toner-lite,
-        // - stamen watercolor,
-        // - esri worldimagery (< 1M views a month)
-        // - cartodb positron, darkmatter
-
-        L.tileLayer(
-          'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
-          {
-            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            subdomains: 'abcd',
-            minZoom: 1,
-            maxZoom: 16,
-            ext: 'png'
-          }).addTo(mymap);
-
-        // add geoserver netcdf using wms
-        // (doesn't work with wcs due to lon > 180)
-        // and style with css blending modes
-        var cmip_layer = L.tileLayer.wms(
-          geoserver_base + '/climdex-test/wms?',
-          {
-            service: 'WMS',
-            version: '1.1.0',
-            request: 'GetMap',
-            layers: 'climdex-test:tasmax',
-            format: 'image/png',
-            className: 'multiply-layer'
-          }
-        );  // .addTo(mymap); removed b/c we'll use abstract time layer instead
-        
-        // Create and add a TimeDimension Layer to the map
-        var cmip_time_layer = L.timeDimension.layer.wms(cmip_layer, {
-          cache: 12
-        });
-        cmip_time_layer.addTo(mymap);
-
-        // set to first frame
-        mymap.timeDimension.setCurrentTime(946728000000);
-
-      </script>
+      <script src="showcase-climdex.js"></script>
   </body>
 </html>

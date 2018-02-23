@@ -10,7 +10,7 @@ $(function() {
     zoom: 2,
     timeDimension: true,
     timeDimensionOptions: {
-        timeInterval: '1995-01-01T00:00:00.000Z/2014-01-01T00:00:00.000Z',
+        timeInterval: '1995-01-01T00:00:00.000Z/2004-01-01T00:00:00.000Z',
         period: 'P1Y'
     },
     timeDimensionControl: true,
@@ -55,7 +55,10 @@ $(function() {
   // add 'em with a layer control
   L.control.layers(climdex_indices).addTo(mymap);
 
-  // add a legend (http://leafletjs.com/examples/choropleth/)
+  // to improve performance, i need to clear cached time slices when new tiles
+  // are requested in response to a pan or zoom
+
+  // TODO - add a legend (http://leafletjs.com/examples/choropleth/)
 
   // set to first frame
   // mymap.timeDimension.setCurrentTime(946728000000);

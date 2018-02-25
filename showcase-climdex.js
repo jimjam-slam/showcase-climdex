@@ -41,6 +41,7 @@ function wipe_time_cache()
 var mymap = L.map('map', {
   center: [-10, -80],    // lat, lon
   zoom: 2,
+  zoomControl: true,
   timeDimension: true,
   timeDimensionOptions: {
       timeInterval: '1995-01-01T00:00:00.000Z/2004-01-01T00:00:00.000Z',
@@ -48,11 +49,15 @@ var mymap = L.map('map', {
   },
   timeDimensionControl: true,
   timeDimensionControlOptions: {
+    position: 'topleft',
+    speedSlider: false,
     playerOptions: {
-      loop: true
+      loop: true,
+      startOver: true
     }
   }
 });
+mymap.zoomControl.setPosition('bottomleft');
 
 // add tile layer
 L.tileLayer(
@@ -91,7 +96,9 @@ var climdex_indices = {
 };
 
 // add 'em with a layer control
-var climdex_indices_control = L.control.layers(climdex_indices).addTo(mymap);
+var climdex_indices_control = L.control.layers(climdex_indices, {}, {
+  position: 'topleft'
+}).addTo(mymap);
 
 // to improve performance, i need to clear cached time slices when new tiles
 // are requested in response to a pan or zoom

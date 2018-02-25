@@ -1,14 +1,125 @@
+/* full-bleed map */
+
 body {
   padding: 0;
   margin: 0;
 }
 
-html, body, #map {
+html, body {
   height: 100%;
   width: 100vw;
 }
 
+#map {
+  height: calc(100% - 50px);
+  width: 100vw;
+}
+
 /* climate indices ought to be multiplied so that stamen-toner shows through */
-div.blend_multiply {
+
+.blend_multiply {
   mix-blend-mode: multiply;
 }
+
+/* header bar */
+
+header {
+  height: 50px;
+  width: calc(100vw - 20px);
+  padding: 0 10px;
+
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: #222;
+  color: #eee;
+}
+
+header h1, header ul {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+}
+
+header h1 {
+  font-size: 1.5em;
+}
+
+header h1 a {
+  color: #eee;
+  text-decoration: none;
+  font-size: 1.5em;
+}
+
+header ul {
+  font-size: 1.25em;
+  list-style-type: none;
+  color: #999;
+}
+
+header ul li {
+  display: inline-block;
+}
+
+header ul li + li:before {
+  content: '|';
+  padding-right: 10px;
+  padding-left: 8px;
+}
+
+/* index/time selection bar */
+
+.leaflet-top.leaflet-left {
+  background-color: gold;
+  min-height: 50px;
+  width: calc(100vw - 20px);
+  padding: 0 10px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.leaflet-top.leaflet-left .leaflet-bar-timecontrol,
+.leaflet-top.leaflet-left .leaflet-control-layers
+{
+  margin: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+}
+
+.leaflet-top.leaflet-left .leaflet-bar-timecontrol {
+  order: 1;
+}
+
+.leaflet-bar-timecontrol .leaflet-control-timecontrol {
+  background: none;
+  border: 0;
+}
+
+a.leaflet-control-timecontrol.timecontrol-date,
+a.leaflet-control-timecontrol.timecontrol-date:hover,
+a.leaflet-control-timecontrol.timecontrol-date.utc,
+a.leaflet-control-timecontrol.timecontrol-date.utc:hover {
+  min-width: 0;
+  width: auto;
+}
+
+.leaflet-control-layers-expanded a.leaflet-control-layers-toggle {
+  display: block;
+}
+
+.leaflet-control-layers-expanded form.leaflet-control-layers-list {
+  background-color: red;
+  position: relative;
+  /* top: 50px; */
+}
+
+/* .leaflet.control-layers-expanded form {
+  white-space: nowrap;
+} */

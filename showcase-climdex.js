@@ -7,28 +7,26 @@ var app_mode = 'data';
    time slices). called whenever someone moves or zooms */
 function wipe_time_cache()
 {
+  // only look for caches to wipe if in data mode
   if (app_mode == 'data')
+  {
+    current_time_id = mymap.timeDimension.getCurrentTime();
+    
+    // ... for each time layer synced to the time dimension...
+    $.each(mymap.timeDimension._syncedLayers, function(sync_index, sync_value)
     {
-      // get the time dimensions' synced layer
-      current_time_id = this.timeDimension.getCurrentTime()//.toString();
-      // this.timeDimension._syncedLayers[0]._leaflet_id
-      
-      // identify the selected index...
-      $.each(climdex_indices_control._layers, function(control_index, control_value)
+      // ... and each time slice in the synced time layer...
+      $.each(sync_value._layers, function(slice_index, slice_value)
       {
-        if (control_value.layer._currentLayer != null) {
-          // ... then identify the time slice to NOT delete!
-          $.each(control_value.layer._layers, function(slice_index, slice_value) {
-            if (slice_index != current_time_id)
-            {
-              console.log('Deleting cached time slice');
-              mymap.removeLayer(slice_value);
-            }
-              
-          });
+        // remove the slice if it doesn't match the current time
+        if (slice_index != current_time_id)
+        {
+          console.log('Deleting cached time slice');
+          mymap.removeLayer(slice_value);
         }
       });
-    }
+    });
+  }
 }
 
 // if (app_mode == 'data' | app_mode == 'tour')
@@ -92,7 +90,7 @@ var climdex_indices_control = L.control.layers(climdex_indices).addTo(mymap);
 
 // to improve performance, i need to clear cached time slices when new tiles
 // are requested in response to a pan or zoom
-mymap.on('zoomlevelschange resize movestart', wipe_time_cache, mymap);
+mymap.on('zoomlevelschange resize movestart', wipe_time_cache);
 
 // TODO - add a legend (http://leafletjs.com/examples/choropleth/)
 

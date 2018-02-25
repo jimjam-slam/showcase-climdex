@@ -47,6 +47,11 @@ var mymap = L.map('map', {
       period: 'P1Y'
   },
   timeDimensionControl: true,
+  timeDimensionControlOptions: {
+    playerOptions: {
+      loop: true
+    }
+  }
 });
 
 // add tile layer

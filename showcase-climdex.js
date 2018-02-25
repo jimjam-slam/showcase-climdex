@@ -1,8 +1,33 @@
 /* blah */
 
+var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
+var app_mode = 'data';
+
+/* wipe_time_cache: if in data mode, destroy all non-visible layers (ie. cached
+   time slices). called whenever someone moves or zooms */
+function wipe_time_cache()
+{
+  if (app_mode == 'data')
+    {
+      this.eachLayer(function(layer) {
+        console.log(layer);
+        if (L.DomUtil.getStyle(layer.getContainer(), 'display') == 'none')
+        {
+          this.removeLayer(layer);
+        }
+      });
+    }
+}
+
 $(function() {
 
-  geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?'
+  // if (app_mode == 'data' | app_mode == 'tour')
+  // {
+  //   start_app(app_mode);
+  // } else
+  // {
+  //   console.error('app_mode should either be \'data\' or \'tour\'');
+  // }
 
   // initialise map
   var mymap = L.map('map', {
@@ -57,6 +82,7 @@ $(function() {
 
   // to improve performance, i need to clear cached time slices when new tiles
   // are requested in response to a pan or zoom
+  // mymap.on('zoomlevelschange resize movestart', wipe_time_cache, mymap);
 
   // TODO - add a legend (http://leafletjs.com/examples/choropleth/)
 

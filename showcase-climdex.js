@@ -39,7 +39,7 @@ function wipe_time_cache()
 
 // initialise map
 var mymap = L.map('map', {
-  center: [-10, -80],    // lat, lon
+  center: [10, -80],    // lat, lon
   zoom: 2,
   zoomControl: true,
   timeDimension: true,
@@ -61,8 +61,8 @@ mymap.zoomControl.setPosition('bottomleft');
 
 // add tile layer
 L.tileLayer(
-  // 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
-  'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+  'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
+  // 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
   {
     attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     subdomains: 'abcd',
@@ -78,7 +78,7 @@ var geoserver_options = {
   request: 'GetMap',
   // layers: 'CDD_ann',
   format: 'image/png',
-  className: 'blend_normal',
+  className: 'blend_multiply',
   transparent: true
 };
 
@@ -87,27 +87,27 @@ var climdex_indices = {
   'CDD (Annual)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'CDD_ann_vals' })),
+      $.extend({}, geoserver_options, { layers: 'CDD_ann_series' })),
     { cache: 12 }),
   'CSDI (Annual)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'CSDI_ann_vals' })),
+      $.extend({}, geoserver_options, { layers: 'CSDI_ann_series' })),
     { cache: 12 }),
   'TXx (Annual)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'TXx_ann_vals' })),
+      $.extend({}, geoserver_options, { layers: 'TXx_ann_series' })),
     { cache: 12 }),
   'TXx (January)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'TXx_jan_vals' })),
+      $.extend({}, geoserver_options, { layers: 'TXx_jan_series' })),
     { cache: 12 }),
   'TXx (July)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'TXx_jul_vals' })),
+      $.extend({}, geoserver_options, { layers: 'TXx_jul_series' })),
     { cache: 12 })
 };
 

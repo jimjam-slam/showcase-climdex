@@ -86,12 +86,27 @@ var climdex_indices = {
   'CDD (Annual)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'CDD_ann' })),
+      $.extend({}, geoserver_options, { layers: 'CDD_ann_vals' })),
     { cache: 12 }),
   'CSDI (Annual)': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'CSDI_ann' })),
+      $.extend({}, geoserver_options, { layers: 'CSDI_ann_vals' })),
+    { cache: 12 }),
+  'TXx (Annual)': L.timeDimension.layer.wms(
+    L.tileLayer.wms(
+      geoserver_base + '/climdex/wms?',
+      $.extend({}, geoserver_options, { layers: 'TXx_ann_vals' })),
+    { cache: 12 }),
+  'TXx (January)': L.timeDimension.layer.wms(
+    L.tileLayer.wms(
+      geoserver_base + '/climdex/wms?',
+      $.extend({}, geoserver_options, { layers: 'TXx_jan_vals' })),
+    { cache: 12 }),
+  'TXx (July)': L.timeDimension.layer.wms(
+    L.tileLayer.wms(
+      geoserver_base + '/climdex/wms?',
+      $.extend({}, geoserver_options, { layers: 'TXx_jul_vals' })),
     { cache: 12 })
 };
 

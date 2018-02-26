@@ -15,11 +15,13 @@ html, body {
   width: 100vw;
 }
 
-/* climate indices ought to be multiplied so that stamen-toner shows through */
+/* blending modes for index layers */
 
-.blend_multiply {
-  mix-blend-mode: multiply;
-}
+.blend_multiply { mix-blend-mode: multiply; }
+.blend_color { mix-blend-mode: color; }
+.blend_difference { mix-blend-mode: difference; }
+.blend_overlay { mix-blend-mode: overlay; }
+.blend_normal { mix-blend-mode: normal; }
 
 /* header bar */
 

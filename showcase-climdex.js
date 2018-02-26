@@ -61,7 +61,8 @@ mymap.zoomControl.setPosition('bottomleft');
 
 // add tile layer
 L.tileLayer(
-  'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
+  // 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
+  'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
   {
     attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     subdomains: 'abcd',
@@ -77,7 +78,7 @@ var geoserver_options = {
   request: 'GetMap',
   // layers: 'CDD_ann',
   format: 'image/png',
-  className: 'blend_multiply',
+  className: 'blend_normal',
   transparent: true
 };
 

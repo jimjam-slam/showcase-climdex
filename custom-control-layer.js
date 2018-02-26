@@ -1,4 +1,5 @@
-/* custom layer control: create a set of (css) dropdowns instead
+/* custom layer control: create a set of (css) dropdowns instead. extends
+   https://github.com/Leaflet/Leaflet/blob/master/src/control/Control.Layers.js
    james goldie, feb 2018 */
 
 L.Control.Layers.DropdownSet = L.Control.Layers.include({

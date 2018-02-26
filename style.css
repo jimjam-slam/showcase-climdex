@@ -126,7 +126,7 @@ a.leaflet-control-timecontrol.timecontrol-date.loading {
 }
 
 a.leaflet-control-timecontrol.timecontrol-date.loading:before {
-  top: 2px;
+  top: 1px;
 }
 
 .leaflet-control-timecontrol.timecontrol-slider .slider {
@@ -159,8 +159,24 @@ a.leaflet-control-timecontrol.timecontrol-date.loading:before {
   position: absolute;
   top: 50px;
   width: 125px;
-  padding: 10px;
+  padding: 5px 0;
 
   box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.15);
 }
 
+form.leaflet-control-layers-list label {
+  /* border: 2px solid red; */
+  padding: 5px 10px;
+}
+
+form.leaflet-control-layers-list label:hover {
+  background-color: goldenrod;
+}
+
+form.leaflet-control-layers-list input[type="radio"] {
+  display: none;
+}
+
+form.leaflet-control-layers-list input[type="radio"]:checked + span::before {
+  content: '>';
+}

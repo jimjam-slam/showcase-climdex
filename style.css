@@ -8,6 +8,7 @@ body {
 html, body {
   height: 100%;
   width: 100vw;
+  min-width: 320px;
 }
 
 #map {
@@ -46,12 +47,8 @@ header h1, header ul {
 
 header h1 {
   font-size: 1.5em;
-}
-
-header h1 a {
   color: #eee;
   text-decoration: none;
-  font-size: 1.5em;
 }
 
 header ul {
@@ -70,7 +67,33 @@ header ul li + li:before {
   padding-left: 8px;
 }
 
-/* index/time selection bar */
+/* (squish the nav a bit on really small phones!) */
+
+@media screen and (max-width: 380px) {
+  header h1 {
+    font-size: 1.5em;
+    color: #eee;
+    text-decoration: none;
+  }
+  
+  header ul {
+    font-size: 1em;
+    list-style-type: none;
+    color: #999;
+  }
+  
+  header ul li {
+    display: inline-block;
+  }
+  
+  header ul li + li:before {
+    content: '|';
+    padding-right: 10px;
+    padding-left: 8px;
+  }
+}
+
+/* controls: layers and time */
 
 .leaflet-top.leaflet-left {
   background-color: gold;
@@ -98,25 +121,30 @@ header ul li + li:before {
   font-size: 1.25em;
 }
 
+/* index/time selection bar */
+
 .leaflet-top.leaflet-left .leaflet-bar-timecontrol {
   order: 1;
+  flex: 1;
 }
 
 .leaflet-bar-timecontrol .leaflet-control-timecontrol {
   background: none;
   border: 0;
   color: #444;
+  flex: 0 0 30px;
 }
 
 .leaflet-bar-timecontrol .leaflet-control-timecontrol:hover {
   background: none;
   border: 0;
   color: black;
+  flex: 0 0 30px;
 }
 
 a.leaflet-control-timecontrol.timecontrol-date,
 a.leaflet-control-timecontrol.timecontrol-date:hover {
-  min-width: 0;
+  min-width: 70px;
   width: auto;
   padding-left: 30px;
 }
@@ -129,10 +157,16 @@ a.leaflet-control-timecontrol.timecontrol-date.loading:before {
   top: 1px;
 }
 
+.leaflet-control-timecontrol.timecontrol-slider {
+  flex: 1 1 200px;
+}
+
 .leaflet-control-timecontrol.timecontrol-slider .slider {
   height: 2px;
-  background-color: #666;
+  width: 100%;
   margin-top: 14px;
+  margin-left: 0px;
+  background-color: #666;
   border: none;
 }
 
@@ -144,6 +178,8 @@ a.leaflet-control-timecontrol.timecontrol-date.loading:before {
   margin-top: -3px;
   border: 1px solid #666;
 }
+
+/* layer controls */
 
 .leaflet-control-layers-expanded, .leaflet-control-layers-expanded:hover {
   padding: 0;
@@ -179,4 +215,21 @@ form.leaflet-control-layers-list input[type="radio"] {
 
 form.leaflet-control-layers-list input[type="radio"]:checked + span::before {
   content: '>';
+}
+
+/* attribution and zoom (mostly just push the zoom control up a bit on narrow
+   screens */
+
+@media screen and (max-width: 450px) {
+
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom {
+    margin-bottom: 26px;
+  }
+}
+
+@media screen and (max-width: 405px) {
+
+  .leaflet-bottom.leaflet-left .leaflet-control-zoom {
+    margin-bottom: 42px;
+  }
 }

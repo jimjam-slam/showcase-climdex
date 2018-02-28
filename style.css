@@ -63,6 +63,7 @@ header ul {
   font-size: 1.25em;
   list-style-type: none;
   color: #999;
+  cursor: pointer;
 }
 
 header ul li {

@@ -1,24 +1,29 @@
 /* blah */
 
-/* toggle about overlay */
-function toggle_about() {
-
-  /* if already on, turn off */
-  if ($('#about').hasClass('toggled_on'))
-  {
-    $('#about').removeClass('toggled_on');
-    $('#nav-about').removeClass('toggled_on');
-    $('#nav-about').text('About');
-    console.log('About toggled off');
-  } else {
+/* about overlay controls */
+function turn_about_on() {
     $('#about').addClass('toggled_on');
     $('#nav-about').addClass('toggled_on');
     $('#nav-about').text('\u2715');
     console.log('About toggled on');
-  }
+}
+function turn_about_off() {
+  $('#about').removeClass('toggled_on');
+  $('#nav-about').removeClass('toggled_on');
+  $('#nav-about').text('About');
+  console.log('About toggled off');
+}
+function toggle_about() {
+
+  if ($('#about').hasClass('toggled_on'))
+    turn_about_off();
+  else
+    turn_about_on();
 }
 $('#nav-about').on('click touch', toggle_about);
 $('#close-about').on('click touch', toggle_about);
+
+/* map code! */
 
 var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
 var app_mode = 'data';

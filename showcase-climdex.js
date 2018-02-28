@@ -1,5 +1,25 @@
 /* blah */
 
+/* toggle about overlay */
+function toggle_about() {
+
+  /* if already on, turn off */
+  if ($('#about').hasClass('toggled_on'))
+  {
+    $('#about').removeClass('toggled_on');
+    $('#nav-about').removeClass('toggled_on');
+    $('#nav-about').text('About');
+    console.log('About toggled off');
+  } else {
+    $('#about').addClass('toggled_on');
+    $('#nav-about').addClass('toggled_on');
+    $('#nav-about').text('\u2715');
+    console.log('About toggled on');
+  }
+}
+$('#nav-about').on('click touch', toggle_about);
+$('#close-about').on('click touch', toggle_about);
+
 var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
 var app_mode = 'data';
 
@@ -29,6 +49,9 @@ function wipe_time_cache()
   }
 }
 
+/* TODO - event listener for window resize? maybe that'll help the time slider
+   from flickering on hover */
+
 // if (app_mode == 'data' | app_mode == 'tour')
 // {
 //   start_app(app_mode);
@@ -53,6 +76,7 @@ var mymap = L.map('map', {
     speedSlider: false,
     playerOptions: {
       loop: true,
+      transitionTime: 250,
       startOver: true
     }
   }

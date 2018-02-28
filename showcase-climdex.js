@@ -4,13 +4,11 @@
 function turn_about_on() {
     $('#about').addClass('toggled_on');
     $('#nav-about').addClass('toggled_on');
-    $('#nav-about').text('\u2715');
     console.log('About toggled on');
 }
 function turn_about_off() {
   $('#about').removeClass('toggled_on');
   $('#nav-about').removeClass('toggled_on');
-  $('#nav-about').text('About');
   console.log('About toggled off');
 }
 function toggle_about() {

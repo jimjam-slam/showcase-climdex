@@ -86,15 +86,16 @@ header ul li + li:before {
   justify-content: flex-end;
 }
 
-button.btn_naked {
+button.btn_close, button.btn_close:hover {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  
-  font-size: 1.5em;
-  color: #eee;
+  font-size: 3.5em;
 }
+
+button.btn_close { color: #999; }
+button.btn_close:hover { color: #eee; }
 
 /* (squish the nav a bit on really small phones!) */
 

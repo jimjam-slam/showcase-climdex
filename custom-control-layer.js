@@ -2,126 +2,57 @@
    https://github.com/Leaflet/Leaflet/blob/master/src/control/Control.Layers.js
    james goldie, feb 2018 */
 
-L.Control.Layers.DropdownSet = L.Control.Layers.include({
+L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
+
+  /* okay, here's the existing flow i need to get into:
+    - when the control is *initialised*, it takes in a list of base layers and
+      a list of overlays. it internally records them all in _layers with bools
+      indicating overlay (T) or not (F). public add/remove layer methods also do
+      this. i can basically ignore this stuff.
+    - however, _initLayout (called when the control is added to a map) does
+      create the form DOM elements to be populated. i *do* need to alter this
+      (hopefully to just tack other elements on the end)
+    - now, _update empties any existing dom elements and then iterates through
+      _layers, sorting them into a list of base layers and overlays again. it then it uses _addItem to actually do the dom work for each one. i need to
+      hit both of these, as i probably want to call _addItem on the options i
+      extract, not actual layers. */
   
-  options: {
-    form_count: 3,
-    id_sep: '_'
-  },
-
-  /* basically just the L.Control.Layers initialize fn, but it adds my options
-     and adds baseLayers from a different location (because my supplied
-     baselayers are more complicated) */
-  initialize: function(baseLayers, overlays, options) {
-    L.setOptions(this, options);
-
-		this._layerControlInputs = [];
-		this._layers = [];
-		this._lastZIndex = 0;
-		this._handlingClick = false;
-
-    // tweaked: add layers from .layers sub-object
-		for (var i in baseLayers.layers) {
-			this._addLayer(baseLayers[i], i);
-		}
-
-		for (i in overlays) {
-			this._addLayer(overlays[i], i, true);
-		}
-  },
+  // TODO - add options and initialize if i want the label delimiter or number
+  // of menus to be an option
   
-  // when this control is added:
-  // - initialise the layout,
-  // - run the first view update
-  // - add _checkDisabledLayers as an event handler for the end of a map zoom
-  // - add _onLayerChange as an event handler for each attached layer
-  // onAdd: function(map) {
-  //   // might only need to actually override these two!
-  //   this._initLayout();
-	// 	this._update();
-
-	// 	this._map = map;
-	// 	map.on('zoomend', this._checkDisabledLayers, this);
-    
-	// 	for (var i = 0; i < this._layers.length; i++) {
-	// 		this._layers[i].layer.on('add remove', this._onLayerChange, this);
-	// 	}
-
 	// 	return this._container;
 	// },
 
+  // DONE
   _initLayout: function() {
-    var className = 'leaflet-control-layers',
-		    container = this._container = DomUtil.create('div', className),
-        collapsed = this.options.collapsed;
-        
-    // makes this work on IE touch devices by stopping it from firing a
-    // mouseout event when the touch is released
-    container.setAttribute('aria-haspopup', true);
-    
-    // catch events
-    DomEvent.disableClickPropagation(container);
-    DomEvent.disableScrollPropagation(container);
 
-    // primary form
-    var form = this._form = DomUtil.create('form', className + '-list');
+    // get the usual stuff done first
+    L.Control.Layers.prototype._initLayout.call(this);
 
-    // add event handlers for expanding and collapsing
-    // TODO - i don't want the _whole_ set to collapse! just the one form
-    if (collapsed)
+    // convert the baselayer list into an array of three
+    this._baseLayersList = [
+      this._baseLayersList,
+      DomUtil.create('div', className + '-base', form),
+      DomUtil.create('div', className + '-base', form)
+    ]
+
+    // add classes to distinguish the three
+    for (i = 0; i < this._baseLayersList.length; i++)
     {
-      // collapse if we click anywhere else
-      this._map.on('click', this.collapse, this);
-
-			if (!Browser.android) {
-				DomEvent.on(container, {
-					mouseenter: this.expand,
-					mouseleave: this.collapse
-				}, this);
-			}
-		}
-
-    // the 'button' that expands the control
-    var link = this._layersLink =
-      DomUtil.create('a', className + '-toggle', container);
-		link.href = '#';
-    link.title = 'Primary Form';
-    // TODO - link contents should have the name of the selection!
-
-    if (Browser.touch)
-    {
-      // if touching, stop default event on link touch and expand
-			DomEvent.on(link, 'click', DomEvent.stop);
-			DomEvent.on(link, 'click', this.expand, this);
-    } else
-    {
-      // if no touch, expand when it gains focus (mouse hover already sorted!)
-			DomEvent.on(link, 'focus', this.expand, this);
+      L.Domutil.addClass(this._baseLayersList[i], 'baselayerlist-' + i);  
     }
-    
-    if (!collapsed) {
-			this.expand();
-    }
-    
-    // okay, here's the meat of it. creates sections for the base layers, the
-    // separator and the overlays (they're not populated with layers here)
-
-    // TODO - i need multiple forms!
-    this._baseLayersList = DomUtil.create('div', className + '-base', form);
-		this._separator = DomUtil.create('div', className + '-separator', form);
-		this._overlaysList = DomUtil.create('div', className + '-overlays', form);
-    // append the form to the container
-		container.appendChild(form);
-
   },
 
+  // DONE
   _update: function() {
 
     // return if this is missing a container
     if (!this._container) { return this; }
 
-    // clear out the present list of baselayers and overlay layers
-    DomUtil.empty(this._baseLayersList);
+    // clear out the present lists of baselayers and overlays
+    for (i = 0; i < this._baseLayersList.length; i++) {
+      DomUtil.empty(this._baseLayersList[i]);
+    }
     DomUtil.empty(this._overlaysList);
     
     this._layerControlInputs = [];
@@ -142,8 +73,10 @@ L.Control.Layers.DropdownSet = L.Control.Layers.include({
     
     // hide base layers section or overlay section if there's only one layer
 		if (this.options.hideSingleBase) {
-			baseLayersPresent = baseLayersPresent && baseLayersCount > 1;
-			this._baseLayersList.style.display = baseLayersPresent ? '' : 'none';
+      baseLayersPresent = baseLayersPresent && baseLayersCount > 1;
+      for (i = 0; i < this._baseLayersList.length; i++) {
+        this._baseLayersList[i].style.display = baseLayersPresent ? '' : 'none';
+      }
     }
     this._separator.style.display =
       overlaysPresent && baseLayersPresent ? '' : 'none';
@@ -153,50 +86,106 @@ L.Control.Layers.DropdownSet = L.Control.Layers.include({
 
   // called by _update! looks like this actually manipulates the dom
   // TODO - lots of work needs to go on here. i need to:
-  // (a) have multiple forms ready (see above),
+  // (a) have multiple forms ready (see above), DONE
   // (b) decide whether this elements requires new options in the form, and
   // (c) still register the layer, if that's happening
-  _addItem: function() {
+  // DONE
+  _addItem: function(obj) {
     
     // dom option components
-    var label = document.createElement('label'),
-		    checked = this._map.hasLayer(obj.layer),
+    var checked = this._map.hasLayer(obj.layer),
 		    input;
 
     // create either a checkbox or a radio button for the item
 		if (obj.overlay) {
+      var label = document.createElement('label');
+
 			input = document.createElement('input');
 			input.type = 'checkbox';
 			input.className = 'leaflet-control-layers-selector';
-			input.defaultChecked = checked;
-		} else {
-			input = this._createRadioElement('leaflet-base-layers', checked);
-		}
+      input.defaultChecked = checked;
 
-    // 
-		this._layerControlInputs.push(input);
-		input.layerId = Util.stamp(obj.layer);
+      // add this input to the list, and id its layer
+      this._layerControlInputs.push(input);
+      input.layerId = Util.stamp(obj.layer);
 
-    // event handler for selecting the option
-		DomEvent.on(input, 'click', this._onInputClick, this);
+      // event handler for selecting the option
+      DomEvent.on(input, 'click', this._onInputClick, this);
 
-		var name = document.createElement('span');
-		name.innerHTML = ' ' + obj.name;
+      var name = document.createElement('span');
+      name.innerHTML = ' ' + obj.name;
 
-		// Helps from preventing layer control flicker when checkboxes are disabled
-		// https://github.com/Leaflet/Leaflet/issues/2771
-		var holder = document.createElement('div');
+      // Helps prevent layer control flicker when checkboxes are disabled
+      // https://github.com/Leaflet/Leaflet/issues/2771
+      var holder = document.createElement('div');
 
-		label.appendChild(holder);
-		holder.appendChild(input);
-		holder.appendChild(name);
+      label.appendChild(holder);
+      holder.appendChild(input);
+      holder.appendChild(name);
+      this._overlaysList.appendChild(label);
 
-		var container = obj.overlay ? this._overlaysList : this._baseLayersList;
-		container.appendChild(label);
+    } else
+    {  
+      /* here's where ComboBaseLayer gets really different: we don't necessarily
+         need to create a dom element for each layer. there are 3 potential
+         new elements. we need to check whether each is needed (ie. no previous*/
 
-		this._checkDisabledLayers();
-		return label;
+      var name_fragments = obj.name.split("_", 3);
+      var inputs_toadd = [];
 
+      nextFragment:
+      for (var i = 0; i < name_fragments.length; i++)
+      {
+        /* if any previously added inputs share this layer name fragment, add
+           this layer to that input. if not, create a new
+           layerIds array for this input. */
+        for (prevInput of this._layerControlInputs)
+        {
+          if (
+            prevInput.layerId === undefined &&
+            $.grep(prevInput.layerIds, function(lid) 
+            {
+              return lid.match(name_fragments[i]) == null;
+            }))
+          {
+            prevInput.layerIds.push(Util.stamp(obj.layer));
+            inputs_toadd.push(false);
+            this._checkDisabledLayers();
+		        continue nextFragment;
+          }
+        }
+
+        /* no previous input found: create a new one as usual */
+        var input = this._createRadioElement('leaflet-base-layers', checked);
+        input.layerIds = [ Util.stamp(obj.layer) ];
+        this._layerControlInputs.push(input);
+
+        // event handler for selecting the option
+        DomEvent.on(input, 'click', this._onInputClick, this);
+
+        var name = document.createElement('span');
+        name.innerHTML = ' ' + name_fragments[i]; // TODO - add a 'long name'?
+
+        // Helps prevent layer control flicker when checkboxes are disabled
+        // https://github.com/Leaflet/Leaflet/issues/2771
+        var holder = document.createElement('div');
+
+        var label = document.createElement('label');
+        label.appendChild(holder);
+        holder.appendChild(input);
+        holder.appendChild(name);
+        this._baseLayersList[i].appendChild(label);
+        inputs_toadd.push(input);
+
+      }
+      
+      /* finally, add those inputs that actually need to be appended
+         (we have to add this at the end for baselayers to avoid the same layer
+          being counted as a previous one after the first fragment) */
+      this._layerControlInputs = this._layerControlInputs.concat(inputs_toadd);
+      this._checkDisabledLayers();
+    }
+    return;
   },
 
   /* also need to override this, since we need to react differently to options
@@ -206,20 +195,51 @@ L.Control.Layers.DropdownSet = L.Control.Layers.include({
     var inputs = this._layerControlInputs,
 		    input, layer;
 		var addedLayers = [],
-		    removedLayers = [];
+        removedLayers = [];
+    var activeFragments = [],
+        inactiveFragments = [];
 
 		this._handlingClick = true;
 
 		for (var i = inputs.length - 1; i >= 0; i--) {
-			input = inputs[i];
-			layer = this._getLayer(input.layerId).layer;
+      input = inputs[i];
+			// layer = this._getLayer(input.layerId).layer;
+
+      // okay, so _layerControlInputs is a list of all the
+      // layer options. presently that's 1:1 to layer ids, so it can just add
+      // layers for each checked one (as below).
+
+      // since basemaps are radio buttons, i ought to be able to construct a
+      // full layer id here. but i need to weed out the overlays and handle them
+      // separately. can i see whether they're overlays from here? not directly,
+      // but i can maybe see whether they're radio elements!
+
+      // TODO - I need to also get
 
 			if (input.checked) {
-				addedLayers.push(layer);
+        if (input.type == 'checkbox') {
+          addedLayers.push(layer);
+        } else if (input.type == 'radio') {
+          // TODO - checked base option: need to check other base options!
+          activeFragments.push(input.layerId);
+        }
 			} else if (!input.checked) {
-				removedLayers.push(layer);
+        if (input.type == 'checkbox') {
+          removedLayers.push(layer);
+        } else if (input.type == 'radio') {
+          // TODO - unchecked base option: what to do here? id the _one_
+          // previous base layer! can use map.hasLayer or eachLayer to check...
+          inactiveFragments.push(input.layerId);
+        }
 			}
 		}
+
+    // okay, now to arrange the fragments the right way...
+    // could brute-force this, trying every combo until _getLayer returns sth
+    // (it returns undefined if it doesn't find the id in _layers)
+    // THIS IS DUMB. i should be storing order data using list classes...
+
+
 
 		// Bugfix issue 2318: Should remove all old layers before readding new ones
 		for (i = 0; i < removedLayers.length; i++) {
@@ -233,14 +253,35 @@ L.Control.Layers.DropdownSet = L.Control.Layers.include({
 			}
 		}
 
-		this._handlingClick = false;
+    this._handlingClick = false;
+    
+    // NEW - recheck disabled layers, since they depend on what's selected
+    this._checkDisabledLayers();
 
     this._refocusOnMap();
     
-  }
+  },
+
+  /* crap, this gets called a lot. will have to totall reimplement, because
+     there's no longer a 1:1 link between inputs and layers. can still handle
+     the old way if it's an overlay, though! */
+  _checkDisabledLayers: function () {
+		var inputs = this._layerControlInputs,
+		    input,
+		    layer,
+		    zoom = this._map.getZoom();
+
+		for (var i = inputs.length - 1; i >= 0; i--) {
+			input = inputs[i];
+			layer = this._getLayer(input.layerId).layer;
+			input.disabled = (layer.options.minZoom !== undefined && zoom < layer.options.minZoom) ||
+			                 (layer.options.maxZoom !== undefined && zoom > layer.options.maxZoom);
+
+		}
+	}
 
 });
 
 L.control.layers.dropdownSet = function() {
-  return new L.Control.Layers.DropdownSet();
+  return new L.Control.Layers.ComboBaseLayer();
 }

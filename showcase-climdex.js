@@ -110,6 +110,7 @@ var geoserver_options = {
 };
 
 // a virtual 'time' layers for each climdex index 
+// TODO - switch from $.extend() to L.util.extend()
 var climdex_indices = {
   'CDD (Annual)': L.timeDimension.layer.wms(
     L.tileLayer.wms(

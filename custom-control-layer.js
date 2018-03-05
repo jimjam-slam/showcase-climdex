@@ -6,7 +6,7 @@
 
 
 
-L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
+L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
 
   /* okay, here's the existing flow i need to get into:
     - when the control is *initialised*, it takes in a list of base layers and
@@ -20,21 +20,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
       _layers, sorting them into a list of base layers and overlays again. it then it uses _addItem to actually do the dom work for each one. i need to
       hit both of these, as i probably want to call _addItem on the options i
       extract, not actual layers. */
-  
-  /* utility functions for manipulating arrays */
 
-  // https://stackoverflow.com/a/14438954/3246758
-  _onlyUnique: function(value, index, self) { 
-    return self.indexOf(value) === index;
-  },
-
-  // https://stackoverflow.com/a/29447130/3246758
-  _matchCount: function(source, target)
-  {
-      var result = source.filter(function(item) {
-        return target.indexOf(item) > -1});   
-      return result.length;
-  },
   
   // TODO - add options and initialize if i want the label delimiter or number
   // of menus to be an option
@@ -43,33 +29,42 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
   _initLayout: function() {
 
+    console.log('ComboBaseLayer: _initLayout - starting');
+
     // get the usual stuff done first
     L.Control.Layers.prototype._initLayout.call(this);
 
+    console.log('ComboBaseLayer: _initLayout - finished with parent call');
+
     // convert the baselayer list into an array of three
+    var className = 'leaflet-control-layers';
     this._baseLayersList = [
       this._baseLayersList,
-      DomUtil.create('div', className + '-base', form),
-      DomUtil.create('div', className + '-base', form)
+      L.DomUtil.create('div', className + '-base', this._form),
+      L.DomUtil.create('div', className + '-base', this._form)
     ]
 
     // add classes to distinguish the three
     for (i = 0; i < this._baseLayersList.length; i++)
     {
-      L.Domutil.addClass(this._baseLayersList[i], 'baselayerlist-' + i);  
+      L.DomUtil.addClass(this._baseLayersList[i], 'baselayerlist-' + i);  
     }
+
+    console.log('ComboBaseLayer: _initLayout - finished');
   },
 
   _update: function() {
+
+    console.log('ComboBaseLayer: _update - starting');
 
     // return if this is missing a container
     if (!this._container) { return this; }
 
     // clear out the present lists of baselayers, overlays and controls
     for (i = 0; i < this._baseLayersList.length; i++) {
-      DomUtil.empty(this._baseLayersList[i]);
+      L.DomUtil.empty(this._baseLayersList[i]);
     }
-    DomUtil.empty(this._overlaysList);
+    L.DomUtil.empty(this._overlaysList);
     
     this._layerControlInputs = [];
     var baseLayersPresent, overlaysPresent, i, obj, baseLayersCount = 0;
@@ -78,6 +73,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     // - call addItem on the layer
     // - update trackers of baselayers and overlays
     // - update counter
+    console.log('ComboBaseLayer: _update - _layer count ' + this._layers.length);
     for (i = 0; i < this._layers.length; i++)
     {
 			obj = this._layers[i];  // populated by _addLayer
@@ -97,11 +93,18 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     this._separator.style.display =
       overlaysPresent && baseLayersPresent ? '' : 'none';
 
+    // finally, move separator and overlays to the back
+    L.DomUtil.toFront(this._separator);
+    L.DomUtil.toFront(this._overlaysList);
+      
+    this._checkDisabledLayers();
+    console.log('ComboBaseLayer: _update - finished');
     return this;
   },
 
   _addItem: function(obj) {
     
+    console.log('ComboBaseLayer: _addItem - starting');
     // dom option components
     var checked = this._map.hasLayer(obj.layer),
 		    input;
@@ -117,10 +120,11 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
       // add this input to the list, and id its layer
       this._layerControlInputs.push(input);
-      input.layerId = Util.stamp(obj.layer);
+      input.layerId = L.Util.stamp(obj.layer);
+      // input.layerName = obj.name;
 
       // event handler for selecting the option
-      DomEvent.on(input, 'click', this._onInputClick, this);
+      L.DomEvent.on(input, 'click', this._onInputClick, this);
 
       var name = document.createElement('span');
       name.innerHTML = ' ' + obj.name;
@@ -138,8 +142,8 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     {  
       /* here's where ComboBaseLayer gets really different: we don't necessarily
          need to create a dom element for each layer. there are 3 potential
-         new elements. we need to check whether each is needed (ie. no previous*/
-
+         new elements. we need to check whether each is needed (ie. no
+         previous */
       var name_fragments = obj.name.split("_", 3);
       var inputs_toadd = [];
 
@@ -153,25 +157,30 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
         {
           if (
             prevInput.layerId === undefined &&
-            $.grep(prevInput.layerIds, function(lid) 
-            {
-              return lid.match(name_fragments[i]) == null;
-            }))
+            prevInput.fragmentName == name_fragments[i])
           {
-            prevInput.layerIds.push(Util.stamp(obj.layer));
-            inputs_toadd.push(false);
-            this._checkDisabledLayers();
+            prevInput.layerIds.push(L.Util.stamp(obj.layer));
+            prevInput.layerNames.push(obj.name);
+            // this._checkDisabledLayers();
 		        continue nextFragment;
           }
         }
 
         /* no previous input found: create a new one as usual */
-        var input = this._createRadioElement('leaflet-base-layers', checked);
-        input.layerIds = [ Util.stamp(obj.layer) ];
-        this._layerControlInputs.push(input);
+        // console.log('No input found...');
+        var input =
+          this._createRadioElement('leaflet-base-layers-' + i, checked);
+        input.layerIds = [ L.Util.stamp(obj.layer) ];
+        // console.log(JSON.stringify(input.layerIds));
+        input.layerNames = [ obj.name ];
+        input.fragmentName = name_fragments[i];
+        // console.log(JSON.stringify(obj.name));
+        // console.log(JSON.stringify([obj.name]));
+        // console.log(JSON.stringify(input.layerNames));
+        // this._layerControlInputs.push(input);
 
         // event handler for selecting the option
-        DomEvent.on(input, 'click', this._onInputClick, this);
+        L.DomEvent.on(input, 'click', this._onInputClick, this);
 
         var name = document.createElement('span');
         name.innerHTML = ' ' + name_fragments[i]; // TODO - add a 'long name'?
@@ -193,12 +202,15 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
          (we have to add this at the end for baselayers to avoid the same layer
           being counted as a previous one after the first fragment) */
       this._layerControlInputs = this._layerControlInputs.concat(inputs_toadd);
-      this._checkDisabledLayers();
     }
+    // this._checkDisabledLayers();
+    console.log('ComboBaseLayer: _addItem - finished');
     return;
   },
 
   _onInputClick: function() {
+
+    console.log('ComboBaseLayer: _onInputClick - starting');
 
     var inputs = this._layerControlInputs,
 		    input, layer;
@@ -234,7 +246,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
           // TODO - unchecked base option: what to do here? id the _one_
           // previous base layer! can use map.hasLayer or eachLayer to check...
           // inactiveFragments.push(input.layerId);
-          removedBaseLayers = removedBaseLayers.concat(input.layerIds);
+          notSelectedBaseLayers = notSelectedBaseLayers.concat(input.layerIds);
         }
 			}
 		}
@@ -260,7 +272,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     // removing and n times for adding (for n controls)
     var baseFreqs = {};
     selectedBaseLayers.forEach(function(x) {
-      if (baseFreqs.indexOf(x) < 0) {
+      if (baseFreqs[x] === undefined) {
         baseFreqs[x] = 0;
       }
       baseFreqs[x] += 1;
@@ -273,8 +285,11 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     notSelectedBaseLayers = notSelectedBaseLayers.filter(this._onlyUnique);
     
     // now compile the lists of layers and iterate through map
-    baseFreqs = Object.keys(baseFreqs);
+    baseFreqs = Object.keys(baseFreqs).map(Number);
     for (i = 0; i < baseFreqs.length; i++) {
+      // console.log(baseFreqs[i]);
+      // console.log(this._getLayer);
+      // console.log(this._getLayer(baseFreqs[i]));
       addedBaseLayers.push(this._getLayer(baseFreqs[i]).layer);
     }
     for (i = 0; i < notSelectedBaseLayers.length; i++) {
@@ -296,12 +311,14 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
     this._handlingClick = false;
     
-    // NEW - recheck disabled layers, since they depend on what's selected
     this._checkDisabledLayers();
     this._refocusOnMap();
+    console.log('ComboBaseLayer: _onInputClick - finished');
   },
 
   _checkDisabledLayers: function () {
+    console.log('ComboBaseLayer: _checkDisabledLayers - starting');
+
 		var inputs = this._layerControlInputs,
 		    input,
 		    layer,
@@ -325,22 +342,54 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
       }
     }
 
-    // for base layers, disable either if its zoom is outside our range of if
-    // none of its layerids appear on the selectable list
-    selectableBaseLayers.filter(onlyUnique);
+    // disable base layer inputs if either:
+    // - all associated layers are outside zoom range, or if
+    // - current selections prohibit all associated layers
+    selectableBaseLayers.filter(this._onlyUnique);
     for (var i = inputs.length - 1; i >= 0; i--) {
-      if (input.type == 'radio')
-        input.disabled =
-          (layer.options.minZoom !== undefined &&
-            zoom < layer.options.minZoom) ||
-          (layer.options.maxZoom !== undefined &&
-            zoom > layer.options.maxZoom) ||
-          this._matchCount(input.layerIds, selectableBaseLayers) < 1;
+      if (input.type == 'radio') {
+        this_control = this;
+        input.disabled = $.grep(
+          input.layerIds,
+          function(x) {
+            if (selectableBaseLayers.indexOf(x) < 0)
+              return false;
+            layer = this_control._getLayer(x).layer;
+            // console.log(this_control);
+            // console.log(layer);
+            return !(
+              (layer.options.minZoom !== undefined &&
+                zoom < layer.options.minZoom) ||
+              (layer.options.maxZoom !== undefined &&
+                zoom > layer.options.maxZoom));
+          }).length < 1;
+      }
     }
+    console.log('ComboBaseLayer: _checkDisabledLayers - finished');
+  },
+
+  /* why am i copying this in wholesale? */
+  // _getLayer: function (id) {
+  //   console.log('_getLayer: ' + this._layers.length + ' layers to check against id ' + id);
+  //   console.log('Argument id type ' + typeof id);
+  //   for (var i = 0; i < this._layers.length; i++) {
+  //     console.log('_getLayer layer ' + i + ' has id ' + L.Util.stamp(this._layers[i].layer) + ' and type ' + typeof L.Util.stamp(this._layers[i].layer));
+	// 		if (this._layers[i] && L.Util.stamp(this._layers[i].layer) === id) {
+	// 			return this._layers[i];
+  //     }
+  //   }
+  //   console.log('_getLayer: no matching layers found');
+	// },
+
+  /* utility functions for manipulating arrays */
+
+  // https://stackoverflow.com/a/14438954/3246758
+  _onlyUnique: function(value, index, self) { 
+    return self.indexOf(value) === index;
   }
   
 });
 
-L.control.layers.comboBaseLayer = function() {
-  return new L.Control.Layers.ComboBaseLayer();
-}
+// L.control.layers.comboBaseLayer = function() {
+//   return new L.Control.Layers.ComboBaseLayer();
+// }

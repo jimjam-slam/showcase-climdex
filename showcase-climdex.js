@@ -112,27 +112,27 @@ var geoserver_options = {
 // a virtual 'time' layers for each climdex index 
 // TODO - switch from $.extend() to L.util.extend()
 var climdex_indices = {
-  'CDD (Annual)': L.timeDimension.layer.wms(
+  'CDD_ann_series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
       $.extend({}, geoserver_options, { layers: 'CDD_ann_series' })),
     { cache: 12 }),
-  'CSDI (Annual)': L.timeDimension.layer.wms(
+  'CSDI_ann_series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
       $.extend({}, geoserver_options, { layers: 'CSDI_ann_series' })),
     { cache: 12 }),
-  'TXx (Annual)': L.timeDimension.layer.wms(
+  'TXx_ann_series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
       $.extend({}, geoserver_options, { layers: 'TXx_ann_series' })),
     { cache: 12 }),
-  'TXx (January)': L.timeDimension.layer.wms(
+  'TXx_jan_series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
       $.extend({}, geoserver_options, { layers: 'TXx_jan_series' })),
     { cache: 12 }),
-  'TXx (July)': L.timeDimension.layer.wms(
+  'TXx_jul_series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
       $.extend({}, geoserver_options, { layers: 'TXx_jul_series' })),
@@ -140,9 +140,13 @@ var climdex_indices = {
 };
 
 // add 'em with a layer control
-var climdex_indices_control = L.control.layers(climdex_indices, {}, {
-  position: 'topleft'
-}).addTo(mymap);
+// var climdex_indices_control = L.control.layers(climdex_indices, {}, {
+//   position: 'topleft'
+// }).addTo(mymap);
+var climdex_indices_control =
+  new L.Control.Layers.ComboBaseLayer(climdex_indices, {}, {
+    position: 'topleft'
+  }).addTo(mymap);
 
 // to improve performance, i need to clear cached time slices when new tiles
 // are requested in response to a pan or zoom

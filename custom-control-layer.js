@@ -49,7 +49,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     // return if this is missing a container
     if (!this._container) { return this; }
 
-    // clear out the present lists of baselayers and overlays
+    // clear out the present lists of baselayers, overlays and controls
     for (i = 0; i < this._baseLayersList.length; i++) {
       DomUtil.empty(this._baseLayersList[i]);
     }
@@ -190,14 +190,17 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
   /* also need to override this, since we need to react differently to options
      being selected */
+  // DONE
   _onInputClick: function() {
 
     var inputs = this._layerControlInputs,
 		    input, layer;
-		var addedLayers = [],
-        removedLayers = [];
-    var activeFragments = [],
-        inactiveFragments = [];
+		var addedOverlays = [],
+        removedOverlays = [],
+        addedBaseLayers = [],
+        removedBaseLayers = [],
+        selectedBaseLayers = [],
+        notSelectedBaseLayers = [];
 
 		this._handlingClick = true;
 
@@ -218,48 +221,90 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
 			if (input.checked) {
         if (input.type == 'checkbox') {
-          addedLayers.push(layer);
+          layer = this._getLayer(input.layerId).layer;
+          addedOverlays.push(layer);
         } else if (input.type == 'radio') {
           // TODO - checked base option: need to check other base options!
-          activeFragments.push(input.layerId);
+          selectedBaseLayers = selectedBaseLayers.concat(input.layerIds);
         }
 			} else if (!input.checked) {
         if (input.type == 'checkbox') {
-          removedLayers.push(layer);
+          layer = this._getLayer(input.layerId).layer;
+          removedOverlays.push(layer);
         } else if (input.type == 'radio') {
           // TODO - unchecked base option: what to do here? id the _one_
           // previous base layer! can use map.hasLayer or eachLayer to check...
-          inactiveFragments.push(input.layerId);
+          // inactiveFragments.push(input.layerId);
+          removedBaseLayers = removedBaseLayers.concat(input.layerIds);
         }
 			}
 		}
-
-    // okay, now to arrange the fragments the right way...
-    // could brute-force this, trying every combo until _getLayer returns sth
-    // (it returns undefined if it doesn't find the id in _layers)
-    // THIS IS DUMB. i should be storing order data using list classes...
-
-
-
+    
 		// Bugfix issue 2318: Should remove all old layers before readding new ones
-		for (i = 0; i < removedLayers.length; i++) {
-			if (this._map.hasLayer(removedLayers[i])) {
-				this._map.removeLayer(removedLayers[i]);
+		for (i = 0; i < removedOverlays.length; i++) {
+			if (this._map.hasLayer(removedOverlays[i])) {
+				this._map.removeLayer(removedOverlays[i]);
 			}
 		}
-		for (i = 0; i < addedLayers.length; i++) {
-			if (!this._map.hasLayer(addedLayers[i])) {
-				this._map.addLayer(addedLayers[i]);
+		for (i = 0; i < addedOverlays.length; i++) {
+			if (!this._map.hasLayer(addedOverlays[i])) {
+				this._map.addLayer(addedOverlays[i]);
+			}
+    }
+    
+    // elements in selectedBaseLayers should only actually be added if they
+    // appear n times where there are n controls.
+    // elements in removedBaseLayers only need to be present once, but they may
+    // not already be on the map (TODO - how can i narrow this down?)
+    
+    // 1) filter layer names down to those that occur at least 1 time for
+    // removing and n times for adding (for n controls)
+    var baseFreqs = {};
+    selectedBaseLayers.forEach(function(x) {
+      if (baseFreqs.indexOf(x) < 0) {
+        baseFreqs[x] = 0;
+      }
+      baseFreqs[x] += 1;
+    });
+    for (layer_i in baseFreqs) {
+      if (baseFreqs[layer_i] < 3) {
+        delete baseFreqs[layer_i];
+      }
+    }
+    // https://stackoverflow.com/a/14438954/3246758
+    // TODO - move fn to external file and include a shim
+    function onlyUnique(value, index, self) { 
+      return self.indexOf(value) === index;
+    }
+    notSelectedBaseLayers = notSelectedBaseLayers.filter(onlyUnique);
+    
+    // now compile the lists of layers and iterate through map
+    baseFreqs = Object.keys(baseFreqs);
+    for (i = 0; i < baseFreqs.length; i++) {
+      addedBaseLayers.push(this._getLayer(baseFreqs[i]).layer);
+    }
+    for (i = 0; i < notSelectedBaseLayers.length; i++) {
+      removedBaseLayers.push(this._getLayer(notSelectedBaseLayers[i]).layer);
+    }
+
+    // 3) finally, iterate through the layers and add or remove from map
+    // Bugfix issue 2318: Should remove all old layers before readding new ones
+		for (i = 0; i < removedBaseLayers.length; i++) {
+			if (this._map.hasLayer(removedBaseLayers[i])) {
+				this._map.removeLayer(removedBaseLayers[i]);
 			}
 		}
+		for (i = 0; i < addedBaseLayers.length; i++) {
+			if (!this._map.hasLayer(addedBaseLayers[i])) {
+				this._map.addLayer(addedBaseLayers[i]);
+			}
+    }
 
     this._handlingClick = false;
     
     // NEW - recheck disabled layers, since they depend on what's selected
     this._checkDisabledLayers();
-
     this._refocusOnMap();
-    
   },
 
   /* crap, this gets called a lot. will have to totall reimplement, because

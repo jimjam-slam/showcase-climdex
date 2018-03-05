@@ -2,6 +2,10 @@
    https://github.com/Leaflet/Leaflet/blob/master/src/control/Control.Layers.js
    james goldie, feb 2018 */
 
+/* utils: TODO - move fn to external file */
+
+
+
 L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
   /* okay, here's the existing flow i need to get into:
@@ -17,13 +21,26 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
       hit both of these, as i probably want to call _addItem on the options i
       extract, not actual layers. */
   
+  /* utility functions for manipulating arrays */
+
+  // https://stackoverflow.com/a/14438954/3246758
+  _onlyUnique: function(value, index, self) { 
+    return self.indexOf(value) === index;
+  },
+
+  // https://stackoverflow.com/a/29447130/3246758
+  _matchCount: function(source, target)
+  {
+      var result = source.filter(function(item) {
+        return target.indexOf(item) > -1});   
+      return result.length;
+  },
+  
   // TODO - add options and initialize if i want the label delimiter or number
   // of menus to be an option
   
-	// 	return this._container;
-	// },
+  /* overridden class functions */
 
-  // DONE
   _initLayout: function() {
 
     // get the usual stuff done first
@@ -43,7 +60,6 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     }
   },
 
-  // DONE
   _update: function() {
 
     // return if this is missing a container
@@ -84,12 +100,6 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     return this;
   },
 
-  // called by _update! looks like this actually manipulates the dom
-  // TODO - lots of work needs to go on here. i need to:
-  // (a) have multiple forms ready (see above), DONE
-  // (b) decide whether this elements requires new options in the form, and
-  // (c) still register the layer, if that's happening
-  // DONE
   _addItem: function(obj) {
     
     // dom option components
@@ -188,9 +198,6 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     return;
   },
 
-  /* also need to override this, since we need to react differently to options
-     being selected */
-  // DONE
   _onInputClick: function() {
 
     var inputs = this._layerControlInputs,
@@ -206,18 +213,10 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
 
 		for (var i = inputs.length - 1; i >= 0; i--) {
       input = inputs[i];
-			// layer = this._getLayer(input.layerId).layer;
 
       // okay, so _layerControlInputs is a list of all the
       // layer options. presently that's 1:1 to layer ids, so it can just add
       // layers for each checked one (as below).
-
-      // since basemaps are radio buttons, i ought to be able to construct a
-      // full layer id here. but i need to weed out the overlays and handle them
-      // separately. can i see whether they're overlays from here? not directly,
-      // but i can maybe see whether they're radio elements!
-
-      // TODO - I need to also get
 
 			if (input.checked) {
         if (input.type == 'checkbox') {
@@ -271,12 +270,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
         delete baseFreqs[layer_i];
       }
     }
-    // https://stackoverflow.com/a/14438954/3246758
-    // TODO - move fn to external file and include a shim
-    function onlyUnique(value, index, self) { 
-      return self.indexOf(value) === index;
-    }
-    notSelectedBaseLayers = notSelectedBaseLayers.filter(onlyUnique);
+    notSelectedBaseLayers = notSelectedBaseLayers.filter(this._onlyUnique);
     
     // now compile the lists of layers and iterate through map
     baseFreqs = Object.keys(baseFreqs);
@@ -307,24 +301,44 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
     this._refocusOnMap();
   },
 
-  /* crap, this gets called a lot. will have to totall reimplement, because
-     there's no longer a 1:1 link between inputs and layers. can still handle
-     the old way if it's an overlay, though! */
   _checkDisabledLayers: function () {
 		var inputs = this._layerControlInputs,
 		    input,
 		    layer,
-		    zoom = this._map.getZoom();
+        zoom = this._map.getZoom(),
+        selectableBaseLayers = [];
 
 		for (var i = inputs.length - 1; i >= 0; i--) {
-			input = inputs[i];
-			layer = this._getLayer(input.layerId).layer;
-			input.disabled = (layer.options.minZoom !== undefined && zoom < layer.options.minZoom) ||
-			                 (layer.options.maxZoom !== undefined && zoom > layer.options.maxZoom);
+      input = inputs[i];
+      if (input.type == 'checkbox') {
+        layer = this._getLayer(input.layerId).layer;
+        input.disabled =
+          (layer.options.minZoom !== undefined &&
+            zoom < layer.options.minZoom) ||
+          (layer.options.maxZoom !== undefined &&
+            zoom > layer.options.maxZoom);  
+      } else if (input.type == 'radio') {
+        // sort base layer controls into selected or not selected
+        if (input.checked == true) {
+          selectableBaseLayers = selectableBaseLayers.concat(input.layerIds);
+        }
+      }
+    }
 
-		}
-	}
-
+    // for base layers, disable either if its zoom is outside our range of if
+    // none of its layerids appear on the selectable list
+    selectableBaseLayers.filter(onlyUnique);
+    for (var i = inputs.length - 1; i >= 0; i--) {
+      if (input.type == 'radio')
+        input.disabled =
+          (layer.options.minZoom !== undefined &&
+            zoom < layer.options.minZoom) ||
+          (layer.options.maxZoom !== undefined &&
+            zoom > layer.options.maxZoom) ||
+          this._matchCount(input.layerIds, selectableBaseLayers) < 1;
+    }
+  }
+  
 });
 
 L.control.layers.dropdownSet = function() {

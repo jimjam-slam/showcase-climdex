@@ -270,6 +270,10 @@ form.leaflet-control-layers-list input[type="radio"]:checked + span::before {
   content: '>';
 }
 
+form.leaflet-control-layers-list input[type="radio"]:disabled + span::before {
+  content: 'X';
+}
+
 /* attribution and zoom (mostly just push the zoom control up a bit on narrow
    screens */
 

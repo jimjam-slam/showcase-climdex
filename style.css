@@ -247,15 +247,28 @@ a.leaflet-control-timecontrol.timecontrol-date.loading:before {
   background-color: gold;
   position: absolute;
   top: 50px;
-  width: 125px;
+  /* width: 250px; */
   padding: 5px 0;
 
   box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.15);
+  
+  display: flex;
+  flex-direction: row;
+
+}
+
+form.leaflet-control-layers-list .leaflet-control-layers-base {
+  width: 75px;
+}
+
+.baselayerlist-1, .baselayerlist-2 {
+  border-left: 1px solid goldenrod;
 }
 
 form.leaflet-control-layers-list label {
   /* border: 2px solid red; */
   padding: 5px 10px;
+  text-align: right;
 }
 
 form.leaflet-control-layers-list label:hover {
@@ -266,8 +279,14 @@ form.leaflet-control-layers-list input[type="radio"] {
   display: none;
 }
 
+form.leaflet-control-layers-list input[type="radio"] + span {
+  /* padding-left: 30px; */
+}
+
 form.leaflet-control-layers-list input[type="radio"]:checked + span::before {
   content: '>';
+  /* position: relative;
+  left: -30px; */
 }
 
 form.leaflet-control-layers-list input[type="radio"]:disabled + span::before {

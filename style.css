@@ -254,15 +254,34 @@ a.leaflet-control-timecontrol.timecontrol-date.loading:before {
   
   display: flex;
   flex-direction: row;
-
 }
 
-form.leaflet-control-layers-list .leaflet-control-layers-base {
-  width: 75px;
+.baselayerlist-0 {
+  width: 225px;
 }
 
 .baselayerlist-1, .baselayerlist-2 {
+  width: 75px;
   border-left: 1px solid goldenrod;
+}
+
+/* switch to vertical stacking for narrow screens */
+@media screen and (max-width: 400px) {
+  .leaflet-control-layers-expanded form.leaflet-control-layers-list {
+    flex-direction: column;
+    overflow-y: overlay;
+  }
+  
+  .baselayerlist-0 {
+    width: calc(100vw - 100px);
+  }
+
+  .baselayerlist-1, .baselayerlist-2 {
+    width: calc(100vw - 100px);
+    border-top: 1px solid goldenrod;
+    border-left: none;
+  }
+
 }
 
 form.leaflet-control-layers-list label {

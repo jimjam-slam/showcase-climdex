@@ -341,6 +341,6 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.include({
   
 });
 
-L.control.layers.dropdownSet = function() {
+L.control.layers.comboBaseLayer = function() {
   return new L.Control.Layers.ComboBaseLayer();
 }

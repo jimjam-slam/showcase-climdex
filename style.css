@@ -43,6 +43,7 @@ header {
 
 h1, header ul, button {
   font-family: 'Oswald', sans-serif;
+  text-shadow: 2px 2px #333;
   font-weight: 400;
   text-transform: uppercase;
   margin: 0;
@@ -50,9 +51,10 @@ h1, header ul, button {
 
 p, ul, ol {
   font-family: 'Lato', serif;
-  font-weight: 700;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-shadow: 2px 2px #333;
   font-size: 1em;
   line-height: 1.5em;
 }

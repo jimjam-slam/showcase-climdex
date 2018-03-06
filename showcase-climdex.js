@@ -115,27 +115,27 @@ var climdex_indices = {
   'CDD: Max dry spell length_Year_Series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'CDD_ann_series' })),
+      L.extend({ layers: 'CDD_ann_series' }, geoserver_options)),
     { cache: 12 }),
   'CSDI: Cold spell duration index_Year_Series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'CSDI_ann_series' })),
+      L.extend({ layers: 'CSDI_ann_series' }, geoserver_options)),
     { cache: 12 }),
   'TXx: Hottest daily max temp_Year_Series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'TXx_ann_series' })),
+      L.extend({ layers: 'TXx_ann_series' }, geoserver_options)),
     { cache: 12 }),
   'TXx: Hottest daily max temp_January_Series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'TXx_jan_series' })),
+      L.extend({ layers: 'TXx_jan_series' }, geoserver_options)),
     { cache: 12 }),
   'TXx: Hottest daily max temp_July_Series': L.timeDimension.layer.wms(
     L.tileLayer.wms(
       geoserver_base + '/climdex/wms?',
-      $.extend({}, geoserver_options, { layers: 'TXx_jul_series' })),
+      L.extend({ layers: 'TXx_jul_series' }, geoserver_options)),
     { cache: 12 })
 };
 

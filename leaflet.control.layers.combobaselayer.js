@@ -286,7 +286,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
 		    input,
 		    layer,
         zoom = this._map.getZoom(),
-        baseSelectionCount;
+        baseSelectionCount = 0;
 
 		for (var i = inputs.length - 1; i >= 0; i--) {
       input = inputs[i];

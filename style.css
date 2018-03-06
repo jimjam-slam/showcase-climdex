@@ -192,25 +192,29 @@ div#about.toggled_on {
   background: none;
   border: 0;
   color: black;
-  flex: 0 0 30px;
 }
 
 a.leaflet-control-timecontrol.timecontrol-date,
-a.leaflet-control-timecontrol.timecontrol-date:hover {
+a.leaflet-control-timecontrol.timecontrol-date:hover,
+a.leaflet-control-timecontrol.timecontrol-date.utc,
+a.leaflet-control-timecontrol.timecontrol-date.utc:hover {
   min-width: 70px;
   width: auto;
   padding-left: 30px;
 }
 
-a.leaflet-control-timecontrol.timecontrol-date.loading {
+a.leaflet-control-timecontrol.timecontrol-date.loading,
+a.leaflet-control-timecontrol.timecontrol-date.loading.utc, {
   background-color: gold;
 }
 
-a.leaflet-control-timecontrol.timecontrol-date.loading:before {
+a.leaflet-control-timecontrol.timecontrol-date.loading:before,
+a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
   top: 1px;
 }
 
-.leaflet-control-timecontrol.timecontrol-slider {
+.leaflet-control-timecontrol.timecontrol-slider,
+.leaflet-control-timecontrol.timecontrol-slider:hover {
   flex: 1 1 200px;
 }
 

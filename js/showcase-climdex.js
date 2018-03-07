@@ -23,7 +23,6 @@ $('#close-about').on('click touch', toggle_about);
 
 /* map code! */
 
-var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
 var app_mode = 'data';
 
 /* wipe_time_cache: if in data mode, destroy all non-visible layers (ie. cached
@@ -77,6 +76,7 @@ var mymap = L.map('map', {
   timeDimensionControlOptions: {
     position: 'topleft',
     speedSlider: false,
+    limitSliders: true,
     playerOptions: {
       loop: true,
       transitionTime: 250,
@@ -97,47 +97,6 @@ L.tileLayer(
     maxZoom: 16,
     ext: 'png'
   }).addTo(mymap);
-
-// base options for all geoserver wms requests
-var geoserver_options = {
-  service: 'WMS',
-  version: '1.1.0',
-  request: 'GetMap',
-  // layers: 'CDD_ann',
-  format: 'image/png',
-  className: 'blend_multiply',
-  transparent: true
-};
-
-// a virtual 'time' layers for each climdex index 
-// TODO - switch from $.extend() to L.util.extend()
-var climdex_indices = {
-  'CDD: Max dry spell length_Year_Series': L.timeDimension.layer.wms(
-    L.tileLayer.wms(
-      geoserver_base + '/climdex/wms?',
-      L.extend({ layers: 'CDD_ann_series' }, geoserver_options)),
-    { cache: 12 }),
-  'CSDI: Cold spell duration index_Year_Series': L.timeDimension.layer.wms(
-    L.tileLayer.wms(
-      geoserver_base + '/climdex/wms?',
-      L.extend({ layers: 'CSDI_ann_series' }, geoserver_options)),
-    { cache: 12 }),
-  'TXx: Hottest daily max temp_Year_Series': L.timeDimension.layer.wms(
-    L.tileLayer.wms(
-      geoserver_base + '/climdex/wms?',
-      L.extend({ layers: 'TXx_ann_series' }, geoserver_options)),
-    { cache: 12 }),
-  'TXx: Hottest daily max temp_January_Series': L.timeDimension.layer.wms(
-    L.tileLayer.wms(
-      geoserver_base + '/climdex/wms?',
-      L.extend({ layers: 'TXx_jan_series' }, geoserver_options)),
-    { cache: 12 }),
-  'TXx: Hottest daily max temp_July_Series': L.timeDimension.layer.wms(
-    L.tileLayer.wms(
-      geoserver_base + '/climdex/wms?',
-      L.extend({ layers: 'TXx_jul_series' }, geoserver_options)),
-    { cache: 12 })
-};
 
 // add 'em with a layer control
 // var climdex_indices_control = L.control.layers(climdex_indices, {}, {

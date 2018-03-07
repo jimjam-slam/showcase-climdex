@@ -229,17 +229,49 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
   width: 100%;
   margin-top: 14px;
   margin-left: 0px;
-  background-color: #666;
+  background-color: #66666666;  /* somewhat transparent! */
   border: none;
 }
 
+.leaflet-control-timecontrol.timecontrol-slider .slider .range {
+  height: 2px;
+  background-color: #666666;
+}
+
+/* knobs use background-clip, box-sizing and border to create an invisible
+   extended drag area. margins need to account for border + half the width
+   or height. */
+
 .leaflet-control-timecontrol.timecontrol-slider .slider .knob {
-  height: 8px;
-  border-radius: 4px;
+  /* going to use these two to give knob invisible extra drag areas */
+  background-clip: content-box;
+  box-sizing: content-box;
+  
+  border-radius: 0;
   background-color: #666;
-  /* border: none; */
-  margin-top: -3px;
-  border: 1px solid #666;
+  border: 10px solid transparent;
+}
+
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.main {
+  height: 20px;
+  width: 4px;
+  margin-left: -12px;
+  margin-top: -19px;
+}
+
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.lower,
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.upper {
+  height: 8px;
+  width: 8px;
+  margin-left: -14px;
+  margin-top: -13px;
+}
+
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.lower:before,
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.upper:before,
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.lower:after,
+.leaflet-control-timecontrol.timecontrol-slider .slider .knob.upper:after {
+  content: none;
 }
 
 /* layer controls */
@@ -270,16 +302,22 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
   width: 225px;
 }
 
-.baselayerlist-1, .baselayerlist-2 {
+.baselayerlist-1 {
+  width: 100px;
+  border-left: 1px solid goldenrod;
+}
+
+.baselayerlist-2 {
   width: 75px;
   border-left: 1px solid goldenrod;
 }
 
 /* switch to vertical stacking for narrow screens */
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
   .leaflet-control-layers-expanded form.leaflet-control-layers-list {
     flex-direction: column;
     overflow-y: overlay;
+    max-height: calc(100vh - 225px);
   }
   
   .baselayerlist-0 {

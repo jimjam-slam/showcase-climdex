@@ -126,7 +126,7 @@ for (index of indices) {
               geoserver_base + '/climdex/wms?',
               L.extend({ layers: index.short + '_' + months_short[i] + '_' + outputs_short[j] },
                 geoserver_options)),
-            { cache: 12 });
+            { cache: 67 });
       }
     }
 
@@ -139,7 +139,7 @@ for (index of indices) {
             geoserver_base + '/climdex/wms?',
             L.extend({ layers: index.short + '_ann_' + outputs_short[j] },
               geoserver_options)),
-          { cache: 12 });
+          { cache: 67 });
     }
 
   } else {

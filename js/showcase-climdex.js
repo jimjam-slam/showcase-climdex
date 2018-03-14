@@ -69,7 +69,7 @@ var mymap = L.map('map', {
   zoomControl: true,
   timeDimension: true,
   timeDimensionOptions: {
-      timeInterval: '1995-01-01T00:00:00.000Z/2004-01-01T00:00:00.000Z',
+      timeInterval: '1951-01-01T00:00:00.000Z/2017-01-01T00:00:00.000Z',
       period: 'P1Y'
   },
   timeDimensionControl: true,
@@ -112,6 +112,12 @@ var climdex_indices_control =
 mymap.on('zoomlevelschange resize movestart', wipe_time_cache);
 
 // TODO - add a legend (http://leafletjs.com/examples/choropleth/)
+// var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
+legend_url = geoserver_base +
+  'REQUEST=GetLegendGraphic&VERSION=1.1.0&&FORMAT=image/png&' +
+  'width=20&height=20&layer='
+
+// L.wmsLegend();
 
 // set to first frame
 // mymap.timeDimension.setCurrentTime(946728000000);

@@ -93,12 +93,12 @@ mymap.zoomControl.setPosition('bottomleft');
 var legend_dpi = 91;
 // var legend_dpi = 91 * Math.round(window.devicePixelRatio);
 // var legend_min_height = 12;
-legend_url = geoserver_base +
+var legend_url = geoserver_base +
   'REQUEST=GetLegendGraphic&VERSION=1.1.0&&FORMAT=image/png&height=12&' +
   'LEGEND_OPTIONS=fontName:Oswald-Medium;fontSize:12;fontColor:0x000000;dx:5;layout:horizontal;' +
   'dpi:' + legend_dpi +
   '&transparent=true&layer='
-var legend = L.wmsLegend(legend_url + 'TXx_ann_series');
+var legend = L.wmsLegend('img/1x1.png');
 
 // add tile layer
 L.tileLayer(

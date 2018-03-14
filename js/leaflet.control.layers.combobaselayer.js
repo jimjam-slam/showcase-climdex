@@ -264,13 +264,14 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
     // now compile the lists of layers and iterate through map
     this._baseLayerNames = [];
     baseFreqs = Object.keys(baseFreqs).map(Number);
+    for (i = 0; i < notSelectedBaseLayers.length; i++) {
+      removedBaseLayers.push(this._getLayer(notSelectedBaseLayers[i]).layer);
+      legend.update('img/1x1.png');
+    }
     for (i = 0; i < baseFreqs.length; i++) {
       addedBaseLayers.push(this._getLayer(baseFreqs[i]).layer);
       console.log(this._getLayer(baseFreqs[i]));
       legend.update(legend_url + this._getLayer(baseFreqs[i]).name);
-    }
-    for (i = 0; i < notSelectedBaseLayers.length; i++) {
-      removedBaseLayers.push(this._getLayer(notSelectedBaseLayers[i]).layer);
     }
 
     // 3) finally, iterate through the layers and add or remove from map

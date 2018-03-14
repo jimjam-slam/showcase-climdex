@@ -32,13 +32,13 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
     // get the usual stuff done first
     L.Control.Layers.prototype._initLayout.call(this);
 
-    // convert the baselayer list into an array of three
+    // convert the baselayer list into an array of n based on options
     var className = 'leaflet-control-layers';
-    this._baseLayersList = [
-      this._baseLayersList,
-      L.DomUtil.create('div', className + '-base', this._form),
-      L.DomUtil.create('div', className + '-base', this._form)
-    ]
+    this._baseLayersList = [ this._baseLayersList ];
+    for (i = 1; i < this._menu_count; i++) {
+      this._baseLayersList.push(
+        L.DomUtil.create('div', className + '-base', this._form));
+    }
 
     // add classes to distinguish the three
     for (i = 0; i < this._baseLayersList.length; i++)
@@ -135,7 +135,8 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
          need to create a dom element for each layer. there are 3 potential
          new elements. we need to check whether each is needed (ie. no
          previous */
-      var name_fragments = obj.name.split("_", 3);
+      var name_fragments = obj.name.split(
+        this._menu_delimiter, this._menu_count);
       var inputs_toadd = [];
 
       nextFragment:
@@ -171,9 +172,9 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
         name.innerHTML = ' ' + name_fragments[i]; // TODO - add a 'long name'?
         var description = document.createElement('p');
         console.log('Checking for match');
-        if (matches[name_fragments[i]] !== undefined) {
-          console.log(name_fragments[i] + ' matches ' + matches[name_fragments[i]]);
-          description.innerHTML = matches[name_fragments[i]];
+        if (this._matches[name_fragments[i]] !== undefined) {
+          console.log(name_fragments[i] + ' matches ' + this._matches[name_fragments[i]]);
+          description.innerHTML = this._matches[name_fragments[i]];
         } else {
           console.log('No match for ' + name_fragments[i]);
           description.innerHTML = name_fragments[i];
@@ -255,7 +256,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
       baseFreqs[x] += 1;
     });
     for (layer_i in baseFreqs) {
-      if (baseFreqs[layer_i] < 3) {
+      if (baseFreqs[layer_i] < this._menu_count) {
         delete baseFreqs[layer_i];
       }
     }
@@ -355,6 +356,30 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
   }
   
 });
+
+L.Control.Layers.ComboBaseLayer.addInitHook(function() {
+  // initialise matches (empty if undefined)
+  if (this.options.matches !== undefined) {
+    this._matches = this.options.matches ;
+  } else {
+    this._matches = {}
+  }
+
+  // set menu count to 3 if undefined
+  if (this.options.menu_count !== undefined) {
+    this._menu_count = this.options.menu_count;
+  } else {
+    this._menu_count = 2;
+  }
+
+  // set menu delimiter to '_' if undefined
+  if (this.options.menu_delimiter !== undefined) {
+    this._menu_delimiter = this.options.menu_delimiter;
+  } else {
+    this._menu_delimiter = '|';
+  }
+})
+
 
 L.control.layers.comboBaseLayer = function(baseLayers, overlays, options) {
   return new L.Control.Layers.ComboBaseLayer(baseLayers, overlays, options);

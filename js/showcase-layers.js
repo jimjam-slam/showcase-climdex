@@ -1,7 +1,7 @@
 /* set of layers with which to populate my custom controls */
 
 // base options for all geoserver wms requests
-var geoserver_base = 'https://climdex.org/geoserver/showcase/wms?';
+var geoserver_base = 'https://climdex.org/geoserver';
 var geoserver_options = {
   service: 'WMS',
   version: '1.1.0',
@@ -99,7 +99,7 @@ for (index of indices) {
           index.short + '_' + months_short[i] + '_' + outputs_short[j]] =
           L.timeDimension.layer.wms(
             L.tileLayer.wms(
-              geoserver_base + '/climdex/wms?',
+              geoserver_base + '/showcase/wms?',
               L.extend({ layers: index.short + '_' + months_short[i] + '_' + outputs_short[j] },
                 geoserver_options)),
             { cache: 67 });
@@ -110,7 +110,7 @@ for (index of indices) {
       climdex_indices[index.short + '_ann_' + outputs_short[j]] =
         L.timeDimension.layer.wms(
           L.tileLayer.wms(
-            geoserver_base + '/climdex/wms?',
+            geoserver_base + '/showcase/wms?',
             L.extend({ layers: index.short + '_ann_' + outputs_short[j] },
               geoserver_options)),
           { cache: 67 });

@@ -113,11 +113,14 @@ mymap.on('zoomlevelschange resize movestart', wipe_time_cache);
 
 // TODO - add a legend (http://leafletjs.com/examples/choropleth/)
 // var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
-legend_url = geoserver_base +
-  'REQUEST=GetLegendGraphic&VERSION=1.1.0&&FORMAT=image/png&' +
-  'width=20&height=20&layer='
+// other fun options for LEGEND_OPTIONS:
 
-// L.wmsLegend();
+legend_url = geoserver_base +
+  'REQUEST=GetLegendGraphic&VERSION=1.1.0&&FORMAT=image/png&height=12&' +
+  'LEGEND_OPTIONS=fontName:Oswald-Medium;fontSize:12;fontColor:0x000000;' +
+  'dx:5&transparent=true&layer=TXx_ann_series'
+
+L.wmsLegend(legend_url);
 
 // set to first frame
 // mymap.timeDimension.setCurrentTime(946728000000);

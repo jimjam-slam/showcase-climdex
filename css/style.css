@@ -376,3 +376,9 @@ form.leaflet-control-layers-list input[type="radio"]:disabled + span::before {
     margin-bottom: 42px;
   }
 }
+
+/* wmslegend control */
+.leaflet-control-wms-legend {
+  background: none;
+  box-shadow: none;
+}

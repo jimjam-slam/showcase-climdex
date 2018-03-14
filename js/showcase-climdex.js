@@ -86,6 +86,20 @@ var mymap = L.map('map', {
 });
 mymap.zoomControl.setPosition('bottomleft');
 
+// TODO - add a legend (http://leafletjs.com/examples/choropleth/)
+// var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
+// other fun options for LEGEND_OPTIONS:
+
+var legend_dpi = 91;
+// var legend_dpi = 91 * Math.round(window.devicePixelRatio);
+// var legend_min_height = 12;
+legend_url = geoserver_base +
+  'REQUEST=GetLegendGraphic&VERSION=1.1.0&&FORMAT=image/png&height=12&' +
+  'LEGEND_OPTIONS=fontName:Oswald-Medium;fontSize:12;fontColor:0x000000;dx:5;layout:horizontal;' +
+  'dpi:' + legend_dpi +
+  '&transparent=true&layer='
+var legend = L.wmsLegend(legend_url + 'TXx_ann_series');
+
 // add tile layer
 L.tileLayer(
   'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
@@ -110,17 +124,6 @@ var climdex_indices_control =
 // to improve performance, i need to clear cached time slices when new tiles
 // are requested in response to a pan or zoom
 mymap.on('zoomlevelschange resize movestart', wipe_time_cache);
-
-// TODO - add a legend (http://leafletjs.com/examples/choropleth/)
-// var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
-// other fun options for LEGEND_OPTIONS:
-
-legend_url = geoserver_base +
-  'REQUEST=GetLegendGraphic&VERSION=1.1.0&&FORMAT=image/png&height=12&' +
-  'LEGEND_OPTIONS=fontName:Oswald-Medium;fontSize:12;fontColor:0x000000;' +
-  'dx:5&transparent=true&layer=TXx_ann_series'
-
-L.wmsLegend(legend_url);
 
 // set to first frame
 // mymap.timeDimension.setCurrentTime(946728000000);

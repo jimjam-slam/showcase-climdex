@@ -169,6 +169,15 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
 
         var name = document.createElement('span');
         name.innerHTML = ' ' + name_fragments[i]; // TODO - add a 'long name'?
+        var description = document.createElement('p');
+        console.log('Checking for match');
+        if (matches[name_fragments[i]] !== undefined) {
+          console.log(name_fragments[i] + ' matches ' + matches[name_fragments[i]]);
+          description.innerHTML = matches[name_fragments[i]];
+        } else {
+          console.log('No match for ' + name_fragments[i]);
+          description.innerHTML = name_fragments[i];
+        }
 
         // Helps prevent layer control flicker when checkboxes are disabled
         // https://github.com/Leaflet/Leaflet/issues/2771
@@ -178,6 +187,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
         label.appendChild(holder);
         holder.appendChild(input);
         holder.appendChild(name);
+        holder.appendChild(description);
         this._baseLayersList[i].appendChild(label);
         inputs_toadd.push(input);
       }
@@ -252,9 +262,12 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
     notSelectedBaseLayers = notSelectedBaseLayers.filter(this._onlyUnique);
     
     // now compile the lists of layers and iterate through map
+    this._baseLayerNames = [];
     baseFreqs = Object.keys(baseFreqs).map(Number);
     for (i = 0; i < baseFreqs.length; i++) {
       addedBaseLayers.push(this._getLayer(baseFreqs[i]).layer);
+      console.log(this._getLayer(baseFreqs[i]));
+      legend.update(legend_url + this._getLayer(baseFreqs[i]).name);
     }
     for (i = 0; i < notSelectedBaseLayers.length; i++) {
       removedBaseLayers.push(this._getLayer(notSelectedBaseLayers[i]).layer);
@@ -270,7 +283,8 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
 		for (i = 0; i < addedBaseLayers.length; i++) {
 			if (!this._map.hasLayer(addedBaseLayers[i])) {
 				this._map.addLayer(addedBaseLayers[i]);
-			}
+      }
+      
     }
 
     this._handlingClick = false;

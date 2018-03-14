@@ -348,16 +348,25 @@ form.leaflet-control-layers-list input[type="radio"] {
 
 form.leaflet-control-layers-list input[type="radio"] + span {
   /* padding-left: 30px; */
+  display: none;
 }
 
-form.leaflet-control-layers-list input[type="radio"]:checked + span::before {
-  content: '>';
+form.leaflet-control-layers-list p {
+  font-family: 'Oswald', sans-serif;
+  text-shadow: none;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+form.leaflet-control-layers-list input[type="radio"]:checked ~ p::before {
+  content: '> ';
   /* position: relative;
   left: -30px; */
 }
 
-form.leaflet-control-layers-list input[type="radio"]:disabled + span::before {
-  content: 'X';
+form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
+  content: 'X ';
 }
 
 /* attribution and zoom (mostly just push the zoom control up a bit on narrow
@@ -378,7 +387,16 @@ form.leaflet-control-layers-list input[type="radio"]:disabled + span::before {
 }
 
 /* wmslegend control */
-.leaflet-control-wms-legend {
+.leaflet-control-wms-legend, .leaflet-control-wms-legend:hover {
   background: none;
   box-shadow: none;
+}
+
+.leaflet-control-wms-legend.wms-legend-collapsed {
+  border: 2px solid rgba(0,0,0,0.2);
+  background-color: #ffffff;
+  border-radius: 4px;
+  background-clip: padding-box;
+  width: 25px;
+  height: 25px;
 }

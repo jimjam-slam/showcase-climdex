@@ -118,7 +118,10 @@ L.tileLayer(
 // }).addTo(mymap);
 var climdex_indices_control =
   L.control.layers.comboBaseLayer(climdex_indices, {}, {
-    position: 'topleft'
+    position: 'topleft',
+    matches: matches,
+    menu_count: 3,
+    menu_delimiter: '_'
   }).addTo(mymap);
 
 // to improve performance, i need to clear cached time slices when new tiles

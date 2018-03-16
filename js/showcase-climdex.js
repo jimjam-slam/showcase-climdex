@@ -66,6 +66,7 @@ function wipe_time_cache()
 var mymap = L.map('map', {
   center: [10, -80],    // lat, lon
   zoom: 2,
+  crs: L.CRS.EPSG4326,    // need a matching basemap!
   zoomControl: true,
   timeDimension: true,
   timeDimensionOptions: {
@@ -102,12 +103,14 @@ var legend = L.wmsLegend('img/1x1.png');
 
 // add tile layer
 L.tileLayer(
-  'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
+  // 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.{ext}',
   // 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+  'https://server.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}',
   {
-    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    // attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     subdomains: 'abcd',
-    minZoom: 1,
+    minZoom: 2,
     maxZoom: 16,
     ext: 'png'
   }).addTo(mymap);

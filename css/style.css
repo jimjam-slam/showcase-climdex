@@ -15,6 +15,7 @@ html, body {
 #map {
   height: calc(100% - 50px);
   width: 100vw;
+  background-color: #cfcfcf;
 }
 
 /* blending modes for index layers */

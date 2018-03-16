@@ -1,15 +1,14 @@
 /* set of layers with which to populate my custom controls */
 
 // base options for all geoserver wms requests
-// var geoserver_base = 'https://climdex.org/geoserver/showcase/wms?';
-var geoserver_base = 'http://localhost:8080/geoserver/climdex/wms?';
+var geoserver_base = 'https://climdex.org/geoserver/showcase/wms?';
 var geoserver_options = {
   service: 'WMS',
   version: '1.1.0',
   request: 'GetMap',
-  srs: 'EPSG:4326',     // need a matching basemap!
+  srs: 'EPSG:4326',
   format: 'image/png',
-  // className: 'blend_multiply',
+  className: 'blend_multiply',
   transparent: true
 };
 

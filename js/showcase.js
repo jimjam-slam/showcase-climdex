@@ -210,7 +210,27 @@ function start_story_mode() {
 
 function load_story(event) {
   // use event.data.story_code to access stories
-  alert('Story item clicked! ' + event.data.story_code);
+  console.log('Story item clicked! ' + event.data.story_code);
+
+  $('#map-blackout').addClass('toggled_on').one('transitionend', function() {
+    
+    story = stories[event.data.story_code];
+
+    // first, turn off regular layers
+    for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
+      climdex_indices_control._layerControlInputs[i].checked = false;
+    }
+    climdex_indices_control._onInputClick();
+
+    // now, set initial map view
+    mymap.setView(story.init.center_start, story.init.zoom, { animate: false });
+
+    
+
+  });
+
+
+  
 }
 
 // decide which mode to initialise in (affects how we initialise)

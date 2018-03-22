@@ -34,7 +34,7 @@ html, body {
 
 #map-blackout.toggled_on {
   visibility: visible;
-  opacity: 1;
+  opacity: 0.25;        /* DEBUG - make 1 for production */
 }
 
 /* blending modes for index layers */
@@ -220,6 +220,36 @@ div#about.toggled_on {
   margin-top: 0.5em;
 }
 
+#tour-interrupt-msg {
+  position: absolute;
+  left: 0px;
+  bottom: 100px;
+  width: calc(100vw - 100px);
+  z-index: 1003;
+
+  font-weight: 700;
+  font-size: 2em;
+  color: #333;
+  text-shadow: 2px 2px gold;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 3s linear, opacity 3s linear, left 3s ease, bottom 1s ease, color 0.25s linear;
+}
+
+#tour-interrupt-msg.toggled_on {
+  left: 50px;
+  visibility: visible;
+  opacity: 1;
+}
+
+#tour-interrupt-msg.acted_on {
+  left: 50px;
+  bottom: 110px;
+  color: white;
+  visibility: hidden;
+  opacity: 0;
+}
 
 /* controls: layers and time */
 
@@ -493,7 +523,7 @@ div.leaflet-popup.story_text p {
   font-family: 'Oswald', sans-serif;
   font-size: 2em;
   text-shadow: 1px 1px #999;
-  text-shadow: none;
+  /* text-shadow: none; */
   font-weight: 700;
   text-transform: uppercase;
 }

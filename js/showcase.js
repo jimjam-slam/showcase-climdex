@@ -5,10 +5,10 @@
    in story or tour mode, it gets called whenever a story starts */
 function wipe_time_cache()
 {
-  current_time_id = mymap.timeDimension.getCurrentTime();
+  current_time_id = td.getCurrentTime();
   
   // ... for each time layer synced to the time dimension...
-  $.each(mymap.timeDimension._syncedLayers, function(sync_index, sync_value)
+  $.each(td._syncedLayers, function(sync_index, sync_value)
   {
     // ... and each time slice in the synced time layer...
     $.each(sync_value._layers, function(slice_index, slice_value)
@@ -29,28 +29,33 @@ var mymap = L.map('map', {
   zoom: 2,
   crs: L.CRS.EPSG4326,    // need a matching basemap!
   zoomControl: true,
-  maxBoundsViscosity: 0.5,
-  timeDimension: true,
-  timeDimensionOptions: {
-      timeInterval: '1951-01-01T00:00:00.000Z/2017-01-01T00:00:00.000Z',
-      period: 'P1Y'
-  },
-  timeDimensionControl: true,
-  timeDimensionControlOptions: {
-    position: 'topleft',
-    speedSlider: false,
-    limitSliders: true,
-    playerOptions: {
-      loop: true,
-      transitionTime: 250,
-      startOver: true
-    }
-  }
+  maxBoundsViscosity: 0.5
 });
+
+// initialise time dimension, control and player
+var td = new L.TimeDimension({
+  timeInterval: '1951-01-01T00:00:00.000Z/2017-01-01T00:00:00.000Z',
+  period: 'P1Y'
+});
+mymap.timeDimension = td;
+var td_player = new L.TimeDimension.Player({
+  buffer: 5,     // control to taste
+  loop: true,
+  transitionTime: 250,
+  startOver: true
+}, td);
+var td_control = new L.Control.TimeDimension({
+  position: 'topleft',
+  speedSlider: false,
+  limitSliders: true,
+  player: td_player
+});
+mymap.addControl(td_control);
+
 mymap.zoomControl.setPosition('bottomleft');
 mymap.setMaxBounds([[-90, -30], [95, 360]]);
+// when in data mode, wipe the time cache if the user pans/zooms/resizes
 mymap.on('zoomlevelschange resize movestart', function() {
-  // only look for caches to wipe if in data mode
   if (app_mode == 'data')
   {
     wipe_time_cache();
@@ -80,31 +85,32 @@ L.tileLayer(
 // populate story menu
 // enable and populate story menu
 for (i in stories) {
-  var story = stories[i];
-  var item = L.DomUtil.create('div', 'story_menu_item',
-    L.DomUtil.get('stories-list'));
-  
-  item_name = document.createElement('h2');
-  item_name.innerHTML = stories[i].name_long;
-  item.appendChild(item_name);
-  item_description = document.createElement('p');
-  item_description.innerHTML = stories[i].description;
-  item.appendChild(item_description);
-  
-  $(item).on('click touch', { story_code: i }, load_story);
+  if (stories[i].start_story) {
+    var story = stories[i];
+    var item = L.DomUtil.create('div', 'story_menu_item',
+      L.DomUtil.get('stories-list'));
+    
+    item_name = document.createElement('h2');
+    item_name.innerHTML = stories[i].name_long;
+    item.appendChild(item_name);
+    item_description = document.createElement('p');
+    item_description.innerHTML = stories[i].description;
+    item.appendChild(item_description);
+    
+    $(item).on('click touch', { story_code: i }, load_story);
+  }
 }
 
 function start_data_mode() {
   // remove old ui elements
   $('#nav-stories-list').removeClass('toggled_on');
 
-  
   // turn ui elements on
   app_mode = 'data';
   turn_data_on();
 
   // set map view and time 
-  mymap.timeDimension.setCurrentTime(1104537600000);
+  td.setCurrentTime(1104537600000);
   mymap.flyTo([15, 100], 2);
 }
 
@@ -120,19 +126,39 @@ function load_story(event) {
 
   $('#map-blackout').addClass('toggled_on').one('transitionend', function() {
     
-    story = stories[event.data.story_code];
+    var story = stories[event.data.story_code];
 
-    // first, turn off regular layers and the story list
+    // wipe regular layers, the story list ui and the existing time cache
     for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
       climdex_indices_control._layerControlInputs[i].checked = false;
     }
     climdex_indices_control._onInputClick();
     turn_stories_list_off();
+    wipe_time_cache();
 
-    // now, set initial map view
+    // now, set initial map view, legend and wipe 
     mymap.setView(story.init.center_start, story.init.zoom, { animate: false });
+    legend.update(legend_url + story.init.base_layer);
 
-    // next, load the story's layer and set the current time
+    // set upper/lower bounds and current time
+    var start_dt = new Date(story.init.year_start + '-01-01T00:00:00.000Z');
+    var end_dt = new (story.init.year_end + '-01-01T00:00:00.000Z');
+    if (td.getCurrentTime < start_dt) {
+      td.setUpperLimit(end_dt.valueOf());
+      td.setCurrentTime(start_dt.valueOf());
+      td.setLowerLimit(start_dt.valueOf());
+    } else {
+      td.setLowerLimit(start_dt.valueOf());
+      td.setCurrentTime(start_dt.valueOf());
+      td.setUpperLimit(end_dt.valueOf());
+    }
+
+    // get timedimension to prefetch the animation frames
+    td_player.setLooped(false);
+    td_player.setTransitionTime(5);
+    // td_player
+
+
 
 
   });
@@ -154,3 +180,15 @@ switch (window.location.search.substring(1)) {
   default:
     start_data_mode();
 }
+
+// DEBUG - a heap of event listeners
+td_player.on('play', function() { console.log('Event: play'); });
+td_player.on('running', function() { console.log('Event: running'); });
+td_player.on('stop', function() { console.log('Event: stop'); });
+td_player.on('waiting', function(ev) {
+  console.log('Event: waiting');
+  console.log(ev);
+});
+td_player.on('animationfinished', function() {
+  console.log('Event: animationfinished');
+});

@@ -347,6 +347,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
 
   // https://stackoverflow.com/a/14438954/3246758
   _onlyUnique: function(value, index, self) { 
+    // ALERT - this is ES2015!
     return self.indexOf(value) === index;
   }
   

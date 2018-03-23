@@ -216,15 +216,17 @@ function load_story(event) {
     
     story = stories[event.data.story_code];
 
-    // first, turn off regular layers
+    // first, turn off regular layers and the story list
     for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
       climdex_indices_control._layerControlInputs[i].checked = false;
     }
     climdex_indices_control._onInputClick();
+    turn_stories_list_off();
 
     // now, set initial map view
     mymap.setView(story.init.center_start, story.init.zoom, { animate: false });
 
+    // next, load the story's layer and set the current time
     
 
   });

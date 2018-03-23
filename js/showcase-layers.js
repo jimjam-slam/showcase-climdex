@@ -96,6 +96,7 @@ var indices = [
 ];
 
 var climdex_indices = {};
+// ALERT - this is ES2015!
 for (index of indices) {
   if (index.all_months == true) {
     for (i = 0; i < months_short.length; i++) {

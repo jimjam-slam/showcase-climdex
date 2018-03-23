@@ -68,3 +68,11 @@ var stories = {
     ]
   }
 }
+
+var climdex_stories_control =
+  L.control.layers(climdex_indices, {}, {
+    position: 'topleft',
+    matches: matches,
+    menu_count: 3,
+    menu_delimiter: '_'
+  })

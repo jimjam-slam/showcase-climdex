@@ -1,80 +1,5 @@
 /* blah */
 
-/* about overlay controls */
-function turn_about_on() {
-  turn_stories_list_off(); 
-  turn_data_off(); 
-  $('#about').addClass('toggled_on');
-  $('#nav-about').addClass('toggled_on');
-  console.log('About toggled on');
-}
-function turn_about_off() {
-  $('#about').removeClass('toggled_on');
-  $('#nav-about').removeClass('toggled_on');
-  console.log('About toggled off');
-}
-function toggle_about() {
-
-  if ($('#nav-about').hasClass('toggled_on'))
-    turn_about_off();
-  else
-    turn_about_on();
-}
-$('#nav-about').on('click touch', toggle_about);
-$('#close-about').on('click touch', toggle_about);
-
-/* story list */
-function turn_stories_list_on() {
-  turn_about_off();
-  turn_data_off();
-  $('#stories-list').addClass('toggled_on');
-  $('#nav-stories-list').addClass('toggled_on');
-  console.log('stories_list toggled on');
-}
-function turn_stories_list_off() {
-  $('#stories-list').removeClass('toggled_on');
-  $('#nav-stories-list').removeClass('toggled_on');
-  console.log('stories-list toggled off');
-}
-function toggle_stories_list() {
-
-if ($('#nav-stories-list').hasClass('toggled_on'))
-  turn_stories_list_off();
-else
-  turn_stories_list_on();
-}
-$('#nav-stories-list').on('click touch', toggle_stories_list);
-
-/* data mode */
-function turn_data_on() {
-  turn_stories_list_off();
-  turn_about_off();
-  $('#nav-data').addClass('toggled_on');
-  $('.leaflet-top.leaflet-left').css({
-    'visibility': 'visible',
-    'opacity': 1
-  });
-  console.log('data toggled on');
-}
-function turn_data_off() {
-  $('#nav-data').removeClass('toggled_on');
-  $('.leaflet-top.leaflet-left').css({
-    'visibility': 'hidden',
-    'opacity': 0
-  });
-  console.log('data toggled off');
-}
-function toggle_data() {
-
-  if ($('#nav-data').hasClass('toggled_on'))
-    turn_data_off();
-  else
-    turn_data_on();
-}
-$('#nav-data').on('click touch', toggle_data);
-$('#close-data').on('click touch', toggle_data);
-
-
 /* wipe_time_cache: destroy all non-visible layers (ie. cached time slices).
    in data mode, this gets called whenever the user pans or zooms.
    in story or tour mode, it gets called whenever a story starts */
@@ -152,15 +77,6 @@ L.tileLayer(
     ext: 'png'
   }).addTo(mymap);
 
-// initialise layer control
-var climdex_indices_control =
-  L.control.layers.comboBaseLayer(climdex_indices, {}, {
-    position: 'topleft',
-    matches: matches,
-    menu_count: 3,
-    menu_delimiter: '_'
-  }).addTo(mymap);
-
 // populate story menu
 // enable and populate story menu
 for (i in stories) {
@@ -181,14 +97,11 @@ for (i in stories) {
 function start_data_mode() {
   // remove old ui elements
   $('#nav-stories-list').removeClass('toggled_on');
+
   
   // turn ui elements on
   app_mode = 'data';
-  $('#nav-data').addClass('toggled_on');
-  $('.leaflet-top.leaflet-left').css({
-    'visibility': 'visible',
-    'opacity': 1
-  });
+  turn_data_on();
 
   // set map view and time 
   mymap.timeDimension.setCurrentTime(1104537600000);
@@ -196,16 +109,9 @@ function start_data_mode() {
 }
 
 function start_story_mode() {
-  // remove old ui elements
-  $('#nav-data').removeClass('toggled_on');
-  $('.leaflet-top.leaflet-left').css({
-    'visibility': 'hideen',
-    'opacity': 0
-  });
-  
-  // turn ui elements on
   app_mode = 'stories';
-  $('#nav-stories-list').addClass('toggled_on');
+  turn_data_off();
+  turn_stories_list_on();
 }
 
 function load_story(event) {
@@ -227,7 +133,7 @@ function load_story(event) {
     mymap.setView(story.init.center_start, story.init.zoom, { animate: false });
 
     // next, load the story's layer and set the current time
-    
+
 
   });
 

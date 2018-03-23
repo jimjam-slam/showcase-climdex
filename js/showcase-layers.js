@@ -163,3 +163,12 @@ var matches = {
   trend: 'Trend',
   avg: 'Average'
 };
+
+// initialise layer control
+var climdex_indices_control =
+  L.control.layers.comboBaseLayer(climdex_indices, {}, {
+    position: 'topleft',
+    matches: matches,
+    menu_count: 3,
+    menu_delimiter: '_'
+  });

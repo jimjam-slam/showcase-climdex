@@ -29,7 +29,7 @@ var mymap = L.map('map', {
   zoom: 2,
   crs: L.CRS.EPSG4326,    // need a matching basemap!
   zoomControl: true,
-  maxBoundsViscosity: 0.5
+  // maxBoundsViscosity: 0.5
 });
 
 // initialise time dimension, control and player
@@ -53,7 +53,7 @@ var td_control = new L.Control.TimeDimension({
 mymap.addControl(td_control);
 
 mymap.zoomControl.setPosition('bottomleft');
-mymap.setMaxBounds([[-90, -30], [95, 360]]);
+// mymap.setMaxBounds([[-90, -30], [95, 360]]);
 // when in data mode, wipe the time cache if the user pans/zooms/resizes
 mymap.on('zoomlevelschange resize movestart', function() {
   if (app_mode == 'data')

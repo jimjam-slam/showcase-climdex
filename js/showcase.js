@@ -82,24 +82,12 @@ L.tileLayer(
     ext: 'png'
   }).addTo(mymap);
 
-// populate story menu
-// enable and populate story menu
-for (i in stories) {
-  if (stories[i].start_story) {
-    var story = stories[i];
-    var item = L.DomUtil.create('div', 'story_menu_item',
-      L.DomUtil.get('stories-list'));
-    
-    item_name = document.createElement('h2');
-    item_name.innerHTML = stories[i].name_long;
-    item.appendChild(item_name);
-    item_description = document.createElement('p');
-    item_description.innerHTML = stories[i].description;
-    item.appendChild(item_description);
-    
-    $(item).on('click touch', { story_code: i }, load_story);
-  }
+// populate story menu. attach a general prep function to the btns too
+for (story of showcase_stories) {
+  story.createMenuItem('stories_list');
+  story.on('storyloading', cleanup_for_stories);
 }
+
 
 function start_data_mode() {
   // remove old ui elements
@@ -126,15 +114,15 @@ function load_story(event) {
 
   $('#map-blackout').addClass('toggled_on').one('transitionend', function() {
     
-    var story = stories[event.data.story_code];
+    // var story = stories[event.data.story_code];
 
-    // wipe regular layers, the story list ui and the existing time cache
-    for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
-      climdex_indices_control._layerControlInputs[i].checked = false;
-    }
-    climdex_indices_control._onInputClick();
-    turn_stories_list_off();
-    wipe_time_cache();
+    // // wipe regular layers, the story list ui and the existing time cache
+    // for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
+    //   climdex_indices_control._layerControlInputs[i].checked = false;
+    // }
+    // climdex_indices_control._onInputClick();
+    // turn_stories_list_off();
+    // wipe_time_cache();
 
     // now, set initial map view, legend and wipe 
     mymap.setView(story.init.center_start, story.init.zoom, { animate: false });

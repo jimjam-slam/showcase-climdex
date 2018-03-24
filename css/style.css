@@ -220,7 +220,7 @@ div#about.toggled_on {
   margin-top: 0.5em;
 }
 
-#tour-interrupt-msg {
+/* #tour-interrupt-msg {
   position: absolute;
   left: 0px;
   bottom: 100px;
@@ -241,7 +241,7 @@ div#about.toggled_on {
   left: 50px;
   visibility: visible;
   opacity: 1;
-}
+} */
 
 #tour-interrupt-msg.acted_on {
   left: 50px;

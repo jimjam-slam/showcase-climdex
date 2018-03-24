@@ -374,7 +374,7 @@ L.Control.Layers.ComboBaseLayer.addInitHook(function() {
   } else {
     this._menu_delimiter = '|';
   }
-})
+});
 
 
 L.control.layers.comboBaseLayer = function(baseLayers, overlays, options) {

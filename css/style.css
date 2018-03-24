@@ -25,7 +25,7 @@ html, body {
   top: 50px;
   margin: 0;
 
-  background-color: #000;
+  background-color: #a60;
   z-index: 1002;
   visibility: hidden;
   opacity: 0;
@@ -37,13 +37,15 @@ html, body {
   opacity: 0.25;        /* DEBUG - make 1 for production */
 }
 
-/* blending modes for index layers */
+/* blending and utility modes for climdex tile layers */
 
 .blend_multiply { mix-blend-mode: multiply; }
 .blend_color { mix-blend-mode: color; }
 .blend_difference { mix-blend-mode: difference; }
 .blend_overlay { mix-blend-mode: overlay; }
 .blend_normal { mix-blend-mode: normal; }
+
+.leaflet-layer.preparing { visibility: hidden; opacity: 0; }
 
 /* header bar */
 
@@ -177,6 +179,7 @@ div#about.toggled_on {
 }
 
 /* story-list */
+
 #stories-list {
   visibility: hidden;
   opacity: 0;
@@ -205,6 +208,12 @@ div#about.toggled_on {
 
 #stories-list .story_menu_item {
   padding: 20px 0;
+  display: block;
+  background: none;
+  border: none;
+  color: #eee;
+  text-align: left;
+
 }
 
 #stories-list .story_menu_item + .story_menu_item {
@@ -212,12 +221,13 @@ div#about.toggled_on {
 }
 
 #stories-list h2 {
-  font-size: 1.25em;
+  font-size: 1.5em;
 }
 
 #stories-list p {
-  font-size: 0.8em;
+  font-size: 1.25em;
   margin-top: 0.5em;
+  text-transform: none;
 }
 
 /* #tour-interrupt-msg {

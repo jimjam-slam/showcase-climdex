@@ -10,17 +10,15 @@ L.
 
 L.StoryBit = L.Evented.extend({
 
+  _movement_timers: [],
+  _annotation_timers: [],
+
   options: {
-    baselayer = {},
+    baselayer: {},
     movements: [],
     annotations: [],
     end_pause: 0
   },
-
-  // _story,
-  // _map,
-  _movement_timers: [],
-  _annotation_timers: [],
 
   setMap: function(map)     { this._map = map; },
   setStory: function(story) {
@@ -105,14 +103,26 @@ L.StoryBit = L.Evented.extend({
     }
 
     // and, finally, set a quit timer
-    this._quit_timer = setTimeout(this.quit,
+    this._end_timer = setTimeout(this.end,
       Math.max(ongoing_duration, latest_removal) + (this._end_pause * 1000))
   },
 
+  /* called when the function ends *naturally* */
+  end: function() {
+    this._wrapup();
+    this.fire('storybitend');
+  },
+
+  /* usually called by the associated story */
   quit: function() {
     // cancel existing quit timer
-    clearTimeout(this._quit_timer);
-    
+    clearTimeout(this._end_timer);
+    this._wrapup();
+  },
+
+  /* internal functions */
+
+  _wrapup: function() {
     // remove any layers that've been turned on and not turned off
     for (annotation in this._annotation)
       if (this._map.hasLayer(annotation.overlay))
@@ -121,16 +131,13 @@ L.StoryBit = L.Evented.extend({
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);
     for (id of this._annotation_timers) clearTimeout(id);
-    
-    // TODO - what happens if it's an interrupt and it goes to the next bit?
-    this.fire('storybitend')
-  }
-
-  /* timer functions */
+  },
 
   _move: function(at, options, samezoom) {
-    if (samezoom) this._map.panTo(at, options);
-    else          this._map.flyTo(at, options.zoom, options);
+    if (samezoom)
+      this._map.panTo(at, options);
+    else
+      this._map.flyTo(at, options.zoom, options);
   },
 
   _addAnnotation: function(overlay) {
@@ -139,7 +146,7 @@ L.StoryBit = L.Evented.extend({
   },
 
   _removeAnnotation: function(overlay) {
-
+    overlay.remove();
   }
 
 });
@@ -150,59 +157,66 @@ L.storyBit = function(options) {
 
 /* ========================================================================== */
 
-L.StoryBit.Animated = L.StoryBit.extend({
+// L.StoryBit.Animated = L.StoryBit.extend({
 
-});
+// });
 
-L.storyBit.animated = function() {
-  return new L.StoryBit.Animated();
-}
+// L.storyBit.animated = function() {
+//   return new L.StoryBit.Animated();
+// }
 
 /* ========================================================================== */
 
 L.Story = L.Evented.extend({
 
   options: {
-    name  : 'Default name',
-    description: 'Default description',
-    map
+    name: 'Default name',
+    description: 'Default description'
   },
 
   _current_storybit: 0,  // track currently playing story
 
-  initialize: function(storybits, options) {
+  initialize: function(storybits, options, map) {
     L.setOptions(this, options);
     this._name = this.options.name;
     this._description = this.options.description;
+    if (map !== undefined)
+      this.setMap(map);
 
     // add each storybit to the story and give it map and story handles
     this._storybits = [];
     if (storybits !== undefined)
       for (bit_i of storybits) {
         bit_i.setStory(this);
-        bit_i.setMap(this.map);
         this._storybits.push(bit_i);
+        if (map !== undefined)
+          bit_i.setMap(this._map);
       }
-      
-    // event handlers (mostly from child stories)
-    this.on('storybitfinished', this.nextStoryBit);
-    
   },
 
   addStoryBits: function(new_storybits) {
     for (bit_i of new_storybits) {
       bit_i.setStory(this);
-      bit_i.setMap(this.map);
       this._storybits.push(bit_i);
+      if (this._map !== undefined)
+      bit_i.setMap(this._map);
     }
   },
 
+  setMap: function(map) {
+    this._map = map;
+
+    for (bit_i of this._storybits) {
+      bit_i.setmap(map);
+    }
+  },
+
+
+
   /* createMenuItem: returns an html element that, when clicked,
-     calls this.loadStory. optionally attaches the element to a
+     calls this.load. optionally attaches the element to a
      parent dom id. */
   createMenuItem: function(parent_id) {
-    
-    
     var item;
     
     // create item div and optionally attach to parent
@@ -221,42 +235,53 @@ L.Story = L.Evented.extend({
     item.appendChild(item_description);
     
     // add event listener for button interaction
-    L.DomEvent.on(item, 'click touch', this.loadStory, this);
+    L.DomEvent.on(item, 'click touch', this.load, this);
     
     return item;
   },
 
-  /* loadStory: get things set up */
-  loadStory: function() {
+  /* load: get things set up */
+  load: function() {
     
     console.log(this._name + ': loading story');
     this.fire('storyloading');
 
-    if (this._storybits.length < 1)
+    if (this._storybits.length > 0)
+      this._storybits[this._current_storybit].load();
+    else
       console.error(this.name + ': no story bits loaded in this story!');
-    else {
-      this._storybits[_current_storybit].load();
-    }
+      
+    // event handlers
+    this.on('storybitend storybitskip', this._nextStoryBit);
+    
+    // TODO - register a callback for keyboard interrupts
   },
 
-  nextStoryBit: function() {
+  _nextStoryBit: function() {
     console.log(this._name + ': story bit finished');
 
-    _current_storybit++;
-
     // next story bit (if that wasn't the last one)
+    this._current_storybit++;
     if (this._current_storybit < this._storybits.length) {
       console.log(this._name + ': loading next story bit');
       this._storybits[_current_storybit].load();
-    } else {
-      // no more bits! story over
-      this.fire('storyend');
-    }
+    } else
+      this._end();
+  },
 
+  quit: function() {
+    // quit the current storybit as well, if one is still going
+    if (this._current_storybit < this._storybits.length)
+      this._storybits[_current_storybit].quit();
+    this.fire('storyquit');
+  },
+
+  _end: function() {
+    this.fire('storyend');
   }
 
 });
 
-L.story = function(storybits, options) {
-  return new L.Story(storybits, options);
+L.story = function(storybits, options, map) {
+  return new L.Story(storybits, options, map);
 }

@@ -21,18 +21,11 @@ L.StoryBit = L.Evented.extend({
   },
 
   setMap: function(map)     { this._map = map; },
-  setStory: function(story) {
+  _setStory: function(story) {
     this._story = story;
     this.addEventParent(story);
   },
 
-  /* _clearTimers: use to cancel the rest of the storybit elements (eg. if the
-    story is interrupted) */
-  _clearTimers: function() {
-    for (id of this._timer_ids) {
-      clearTimeout(id);
-    }
-  },
   
   initialize: function(at, zoom, options) {
     L.setOptions(this, options);
@@ -55,20 +48,22 @@ L.StoryBit = L.Evented.extend({
   },
 
   load: function() {
-    this.fire('storybitloading');
+    this.fire('storybitload');
 
     // attach the baselayer to the map if there's on of each
-    if (this._baselayer !== undefined)
+    if (this._baselayer !== undefined) {}
       if (this._map !== undefined) {
         this._baselayer.addTo(this._map);
+        this.play();
       }
-      else console.error(
-          'This StoryBit has no map associated with it. Either:\n' +
-          '  Add it to a story using story.addStoryBits(), or\n' +
-          '  Attach it to a map separately using this.setMap().');
+      else
+        console.error('This StoryBit has no map associated with it. Attach ' +
+          'a map either to this StoryBit using this.setMap() or to an ' +
+          'attached Story using story.setMap().');
   },
 
   play: function() {
+    this.fire('storybitplay');
     // okay, we're gonna set up a whole heap of event listeners for the pans and
     // annotations. when the last of either is done, we'll fire `storybitend`
 
@@ -103,24 +98,25 @@ L.StoryBit = L.Evented.extend({
     }
 
     // and, finally, set a quit timer
-    this._end_timer = setTimeout(this.end,
+    this._end_timer = setTimeout(this._end,
       Math.max(ongoing_duration, latest_removal) + (this._end_pause * 1000))
   },
-
-  /* called when the function ends *naturally* */
-  end: function() {
-    this._wrapup();
-    this.fire('storybitend');
-  },
-
-  /* usually called by the associated story */
+  
+  
+  /* usually called by the associated story but should work individually */
   quit: function() {
     // cancel existing quit timer
     clearTimeout(this._end_timer);
     this._wrapup();
   },
-
+  
   /* internal functions */
+  
+  /* called when the function ends *naturally* */
+  _end: function() {
+    this._wrapup();
+    this.fire('storybitend');
+  },
 
   _wrapup: function() {
     // remove any layers that've been turned on and not turned off
@@ -187,7 +183,7 @@ L.Story = L.Evented.extend({
     this._storybits = [];
     if (storybits !== undefined)
       for (bit_i of storybits) {
-        bit_i.setStory(this);
+        bit_i._setStory(this);
         this._storybits.push(bit_i);
         if (map !== undefined)
           bit_i.setMap(this._map);
@@ -196,7 +192,7 @@ L.Story = L.Evented.extend({
 
   addStoryBits: function(new_storybits) {
     for (bit_i of new_storybits) {
-      bit_i.setStory(this);
+      bit_i._setStory(this);
       this._storybits.push(bit_i);
       if (this._map !== undefined)
       bit_i.setMap(this._map);
@@ -244,7 +240,7 @@ L.Story = L.Evented.extend({
   load: function() {
     
     console.log(this._name + ': loading story');
-    this.fire('storyloading');
+    this.fire('storyload');
 
     if (this._storybits.length > 0)
       this._storybits[this._current_storybit].load();

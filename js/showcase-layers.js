@@ -18,10 +18,6 @@ var outputs_short = ['series'];
 
 var indices = [
   {
-    short: 'ACCESS10',
-    all_months: false
-  },
-  {
     short: 'CDD',
     all_months: false,
   },
@@ -62,6 +58,10 @@ var indices = [
     all_months: false,
   },
   {
+    short: 'R95p',
+    all_months: false,
+  },
+  {
     short: 'R99p',
     all_months: false,
   },
@@ -86,13 +86,33 @@ var indices = [
     all_months: true,
   },
   {
-    short: 'TXx',
+    short: 'TN90p',
+    all_months: true,
+  },
+  {
+    short: 'TNn',
+    all_months: true,
+  },
+  {
+    short: 'TNx',
+    all_months: true,
+  },
+  {
+    short: 'TX10p',
+    all_months: true,
+  },
+  {
+    short: 'TX90p',
     all_months: true,
   },
   {
     short: 'TXn',
     all_months: true,
   },
+  {
+    short: 'TXx',
+    all_months: true,
+  }
 ];
 
 var climdex_indices = {};
@@ -128,24 +148,33 @@ for (index of indices) {
 
 /* matches to be used to add descriptions to items */
 var matches = {
-  TXx: 'Hottest daily max temp',
-  TXn: 'Coolest daily max temp',
-  TN10p: 'Pct days w/ min temp <10th pct',
-  SU: 'Num summer days',
+  TXx: 'Hottest max temp',
+  TXn: 'Coolest max temp',
+  TX10p: 'Cool days',
+  TX90p: 'Hot days',
+  TNx: 'Hottest min temp',
+  TNn: 'Coolest min temp',
+  TN10p: 'Cold nights',
+  TN90p: 'Warm nights',
+  SU: 'Summer days',
+  TR: 'Tropical nights',
   SDII: 'Simple precip intensity index',
-  Rx5day: 'Precip on rainiest 5-day stretch',
-  Rx1day: 'Precip on rainiest day',
-  R99p: 'Total precip when rain rate >99th pct',
-  R20mm: 'Num. days w/ \u226520mm precip',
-  R10mm: 'Num. days w/ \u226510mm precip',
+  Rx5day: 'Max 5-day precip',
+  Rx1day: 'Max 1-day precip',
+  R95p: 'Very wet days',
+  R99p: 'Extremely wet days',
+  R20mm: 'Num. very heavy precip days',
+  R10mm: 'Num. heavy precip days',
   PRCPTOT: 'Annual total precip',
-  ID: 'Num icing days',
+  ID: 'Ice days',
   GSL: 'Growing season length',
-  FD: 'Number of frost days',
-  DTR: 'Daily temperature range',
+  FD: 'Frost days',
+  DTR: 'Daily Temp Range',
   CWD: 'Max wet spell length',
   CSDI: 'Cold spell duration index',
+  WSDI: 'Warm spell duration index',
   CDD: 'Max dry spell length',
+
   ann: 'Year',
   jan: 'January',
   feb: 'February',

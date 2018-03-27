@@ -415,19 +415,21 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
   
   display: flex;
   flex-direction: row;
+  overflow-y: auto;
+  font-size: 0.8em;
 }
 
 .baselayerlist-0 {
-  width: 225px;
+  width: 200px;
 }
 
 .baselayerlist-1 {
-  width: 100px;
+  width: 75px;
   border-left: 1px solid goldenrod;
 }
 
 .baselayerlist-2 {
-  width: 75px;
+  width: 50px;
   border-left: 1px solid goldenrod;
 }
 
@@ -435,7 +437,7 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
 @media screen and (max-width: 500px) {
   .leaflet-control-layers-expanded form.leaflet-control-layers-list {
     flex-direction: column;
-    overflow-y: overlay;
+    overflow-y: auto;
     max-height: calc(100vh - 225px);
   }
   

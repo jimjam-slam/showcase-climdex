@@ -420,11 +420,11 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
 }
 
 .baselayerlist-0 {
-  width: 200px;
+  width: 220px;
 }
 
 .baselayerlist-1 {
-  width: 100px;
+  width: 85px;
   border-left: 1px solid goldenrod;
 }
 
@@ -456,11 +456,17 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
 form.leaflet-control-layers-list label {
   /* border: 2px solid red; */
   padding: 5px 10px;
-  text-align: right;
+  text-align: left;
 }
 
 form.leaflet-control-layers-list label:hover {
   background-color: goldenrod;
+}
+
+form.leaflet-control-layers-list label div {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 
 form.leaflet-control-layers-list input[type="radio"] {
@@ -472,6 +478,11 @@ form.leaflet-control-layers-list input[type="radio"] + span {
   display: none;
 }
 
+form.leaflet-control-layers-list .baselayerlist-0 input[type="radio"] + span {
+  display: inline-block;
+  padding-left: 5px;
+}
+
 form.leaflet-control-layers-list p {
   font-family: 'Oswald', sans-serif;
   text-shadow: none;
@@ -480,10 +491,14 @@ form.leaflet-control-layers-list p {
   margin: 0;
 }
 
+form.leaflet-control-layers-list .baselayerlist-0 p {
+  opacity: 0.5;
+  display: inline;
+}
+
 form.leaflet-control-layers-list input[type="radio"]:checked ~ p::before {
   content: '> ';
-  /* position: relative;
-  left: -30px; */
+  padding-left: 5px;
 }
 
 form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {

@@ -24,7 +24,9 @@ var indices = [
     env_series: 'low:10;high:366',
     units_series: 'days',
     env_average: 'low:14;high:239',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-2;mid:0;high:2',
+    units_trendval: 'days/yr'
   },
   {
     short: 'CSDI',
@@ -32,7 +34,9 @@ var indices = [
     env_series: 'low:0;high:50',
     units_series: 'days',
     env_average: 'low:0;high:10',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-0.6;mid:0;high:0.6',
+    units_trendval: 'days/yr'
   },
   {
     short: 'CWD',
@@ -40,7 +44,9 @@ var indices = [
     env_series: 'low:0;high:30',
     units_series: 'days',
     env_average: 'low:1;high:19',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-0.15;mid:0;high:0.15',
+    units_trendval: 'days/yr'
   },
   {
     short: 'DTR',
@@ -48,7 +54,9 @@ var indices = [
     env_series: 'low:2;high:23',
     units_series: '°C',
     env_average: 'low:2;high:22',
-    units_average: '°C'
+    units_average: '°C',
+    env_trendval: 'low:-0.09;mid:0;high:0.09',
+    units_trendval: '°C/yr'
   },
   {
     short: 'FD',
@@ -56,7 +64,9 @@ var indices = [
     env_series: 'low:0;high:330',
     units_series: 'days',
     env_average: 'low:0;high:305',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-1.3;mid:0;high:1.3',
+    units_trendval: 'days/yr'
   },
   {
     short: 'GSL',
@@ -64,7 +74,9 @@ var indices = [
     env_series: 'low:0;high:366',
     units_series: 'days',
     env_average: 'low:0;high:366',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-1.2;mid:0;high:1.2',
+    units_trendval: 'days/yr'
   },
   {
     short: 'ID',
@@ -72,7 +84,9 @@ var indices = [
     env_series: 'low:0;high:285',
     units_series: 'days',
     env_average: 'low:0;high:270',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-1.1;mid:0;high:1.1',
+    units_trendval: 'days/yr'
   },
   {
     short: 'PRCPTOT',
@@ -80,7 +94,9 @@ var indices = [
     env_series: 'low:0;high:3500',
     units_series: 'mm',
     env_average: 'low:0;high:2630',
-    units_average: 'mm'
+    units_average: 'mm',
+    env_trendval: 'low:-12.5;mid:0;high:12.5',
+    units_trendval: 'mm/yr'
   },
   {
     short: 'R10mm',
@@ -88,7 +104,9 @@ var indices = [
     env_series: 'low:0;high:110',
     units_series: 'days',
     env_average: 'low:0;high:90',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-0.32;mid:0;high:0.32',
+    units_trendval: 'days/yr'
   },
   {
     short: 'R20mm',
@@ -96,7 +114,9 @@ var indices = [
     env_series: 'low:0;high:60',
     units_series: 'days',
     env_average: 'low:0;high:42',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-0.45;mid:0;high:0.45',
+    units_trendval: 'days/yr'
   },
   {
     short: 'R95p',
@@ -104,7 +124,9 @@ var indices = [
     env_series: 'low:0;high:1500',
     units_series: 'mm',
     env_average: 'low:0;high:875',
-    units_average: 'mm'
+    units_average: 'mm',
+    env_trendval: 'low:-12.5;mid:0;high:12.5',
+    units_trendval: 'mm/yr'
   },
   {
     short: 'R99p',
@@ -112,7 +134,9 @@ var indices = [
     env_series: 'low:0;high:900',
     units_series: 'mm',
     env_average: 'low:0;high:280',
-    units_average: 'mm'
+    units_average: 'mm',
+    env_trendval: 'low:-3;mid:0;high:3',
+    units_trendval: 'mm/yr'
   },
   {
     short: 'Rx1day',
@@ -120,7 +144,9 @@ var indices = [
     env_series: 'low:0;high:425',
     units_series: 'mm',
     env_average: 'low:0;high:200',
-    units_average: 'mm'
+    units_average: 'mm',
+    env_trendval: 'low:-1.1;mid:0;high:1.1',
+    units_trendval: 'mm/yr'
   },
   {
     short: 'Rx5day',
@@ -128,7 +154,9 @@ var indices = [
     env_series: 'low:0;high:940',
     units_series: 'mm',
     env_average: 'low:0;high:370',
-    units_average: 'mm'
+    units_average: 'mm',
+    env_trendval: 'low:-1.7;mid:0;high:1.7',
+    units_trendval: 'mm/yr'
   },
   {
     short: 'SDII',
@@ -136,7 +164,9 @@ var indices = [
     env_series: 'low:0;high:50',
     units_series: 'mm',
     env_average: 'low:0;high:30',
-    units_average: 'mm'
+    units_average: 'mm',
+    env_trendval: 'low:-0.45;mid:0;high:0.45',
+    units_trendval: 'mm/yr'
   },
   {
     short: 'SU',
@@ -144,7 +174,9 @@ var indices = [
     env_series: 'low:0;high:366',
     units_series: 'days',
     env_average: 'low:0;high:366',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-2;mid:0;high:2',
+    units_trendval: 'days/yr'
   },
   {
     short: 'TN10p',
@@ -152,7 +184,9 @@ var indices = [
     env_series: 'low:0;high:100',
     units_series: '%',
     env_average: 'low:0;high:22',
-    units_average: '%'
+    units_average: '%',
+    env_trendval: 'low:-1.4;mid:0;high:1.4',
+    units_trendval: 'p.p./yr'
   },
   {
     short: 'TN90p',
@@ -160,7 +194,9 @@ var indices = [
     env_series: 'low:0;high:100',
     units_series: '%',
     env_average: 'low:0;high:28',
-    units_average: '%'
+    units_average: '%',
+    env_trendval: 'low:-1.2;mid:0;high:1.2',
+    units_trendval: 'p.p./yr'
   },
   {
     short: 'TNn',
@@ -168,7 +204,9 @@ var indices = [
     env_series: 'low:-60;high:23',
     units_series: '°C',
     env_average: 'low:-60;high:23',
-    units_average: '°C'
+    units_average: '°C',
+    env_trendval: 'low:-0.25;mid:0;high:0.25',
+    units_trendval: '°C/yr'
   },
   {
     short: 'TNx',
@@ -176,7 +214,9 @@ var indices = [
     env_series: 'low:-30;high:35',
     units_series: '°C',
     env_average: 'low:-30;high:35',
-    units_average: '°C'
+    units_average: '°C',
+    env_trendval: 'low:-0.25;mid:0;high:0.25',
+    units_trendval: '°C/yr'
   },
   {
     short: 'TR',
@@ -184,7 +224,9 @@ var indices = [
     env_series: 'low:0;high:366',
     units_series: 'days',
     env_average: 'low:0;high:366',
-    units_average: 'days'
+    units_average: 'days',
+    env_trendval: 'low:-2.4;mid:0;high:2.4',
+    units_trendval: 'days/yr'
   },
   {
     short: 'TX10p',
@@ -192,7 +234,9 @@ var indices = [
     env_series: 'low:0;high:100',
     units_series: '%',
     env_average: 'low:0;high:30',
-    units_average: '%'
+    units_average: '%',
+    env_trendval: 'low:-1.35;mid:0;high:1.35',
+    units_trendval: 'p.p./yr'
   },
   {
     short: 'TX90p',
@@ -200,7 +244,9 @@ var indices = [
     env_series: 'low:0;high:100',
     units_series: '%',
     env_average: 'low:0;high:25',
-    units_average: '%'
+    units_average: '%',
+    env_trendval: 'low:-1.1;mid:0;high:1.1',
+    units_trendval: 'p.p./yr'
   },
   {
     short: 'TXn',
@@ -208,7 +254,9 @@ var indices = [
     env_series: 'low:-55;high:35',
     units_series: '°C',
     env_average: 'low:-55;high:35',
-    units_average: '°C'
+    units_average: '°C',
+    env_trendval: 'low:-0.25;mid:0;high:0.25',
+    units_trendval: '°C/yr'
   },
   {
     short: 'TXx',
@@ -216,7 +264,9 @@ var indices = [
     env_series: 'low:5;high:50',
     units_series: '°C',
     env_average: 'low:5;high:50',
-    units_average: '°C'
+    units_average: '°C',
+    env_trendval: 'low:-0.2;mid:0;high:0.2',
+    units_trendval: '°C/yr'
   },
   {
     short: 'WSDI',
@@ -224,8 +274,10 @@ var indices = [
     env_series: 'low:0;high:140',
     units_series: 'days',
     env_average: 'low:0;high:23',
-    units_average: 'days'
-  }
+    units_average: 'days',
+    env_trendval: 'low:-1.2;mid:0;high:1.2',
+    units_trendval: 'days/yr'
+  },
 ];
 
 var climdex_indices = {};

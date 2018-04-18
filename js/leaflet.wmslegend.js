@@ -66,7 +66,7 @@ L.Control.WMSLegend = L.Control.extend({
     },
 
     /* adding a function to update the legend with a new uri */
-    update: function(uri, label_low, label_high) {
+    update: function(uri, label_low = '', label_high = '') {
         this.options.uri = uri;
         this.img.src = this.options.uri;
         this.label_low.innerHTML = label_low

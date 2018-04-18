@@ -83,10 +83,10 @@ L.tileLayer(
   }).addTo(mymap);
 
 // populate story menu. attach a general prep function to the btns too
-for (story of showcase_stories) {
-  story.createMenuItem('stories_list');
-  story.on('storyloading', cleanup_for_stories);
-}
+// for (story of showcase_stories) {
+//   story.createMenuItem('stories_list');
+//   story.on('storyloading', cleanup_for_stories);
+// }
 
 
 function start_data_mode() {

@@ -23,8 +23,8 @@ var indices = [
     all_months: false,
     env_series: 'low:10;high:366',
     units_series: 'days',
-    env_average: 'low:14;high:239',
-    units_average: 'days',
+    env_avg: 'low:14;high:239',
+    units_avg: 'days',
     env_trendval: 'low:-2;mid:0;high:2',
     units_trendval: 'days/yr'
   },
@@ -33,8 +33,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:50',
     units_series: 'days',
-    env_average: 'low:0;high:10',
-    units_average: 'days',
+    env_avg: 'low:0;high:10',
+    units_avg: 'days',
     env_trendval: 'low:-0.6;mid:0;high:0.6',
     units_trendval: 'days/yr'
   },
@@ -43,8 +43,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:30',
     units_series: 'days',
-    env_average: 'low:1;high:19',
-    units_average: 'days',
+    env_avg: 'low:1;high:19',
+    units_avg: 'days',
     env_trendval: 'low:-0.15;mid:0;high:0.15',
     units_trendval: 'days/yr'
   },
@@ -52,19 +52,19 @@ var indices = [
     short: 'DTR',
     all_months: true,
     env_series: 'low:2;high:23',
-    units_series: '°C',
-    env_average: 'low:2;high:22',
-    units_average: '°C',
+    units_series: '&deg;C',
+    env_avg: 'low:2;high:22',
+    units_avg: '&deg;C',
     env_trendval: 'low:-0.09;mid:0;high:0.09',
-    units_trendval: '°C/yr'
+    units_trendval: '&deg;C/yr'
   },
   {
     short: 'FD',
     all_months: false,
     env_series: 'low:0;high:330',
     units_series: 'days',
-    env_average: 'low:0;high:305',
-    units_average: 'days',
+    env_avg: 'low:0;high:305',
+    units_avg: 'days',
     env_trendval: 'low:-1.3;mid:0;high:1.3',
     units_trendval: 'days/yr'
   },
@@ -73,8 +73,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:366',
     units_series: 'days',
-    env_average: 'low:0;high:366',
-    units_average: 'days',
+    env_avg: 'low:0;high:366',
+    units_avg: 'days',
     env_trendval: 'low:-1.2;mid:0;high:1.2',
     units_trendval: 'days/yr'
   },
@@ -83,8 +83,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:285',
     units_series: 'days',
-    env_average: 'low:0;high:270',
-    units_average: 'days',
+    env_avg: 'low:0;high:270',
+    units_avg: 'days',
     env_trendval: 'low:-1.1;mid:0;high:1.1',
     units_trendval: 'days/yr'
   },
@@ -93,8 +93,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:3500',
     units_series: 'mm',
-    env_average: 'low:0;high:2630',
-    units_average: 'mm',
+    env_avg: 'low:0;high:2630',
+    units_avg: 'mm',
     env_trendval: 'low:-12.5;mid:0;high:12.5',
     units_trendval: 'mm/yr'
   },
@@ -103,8 +103,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:110',
     units_series: 'days',
-    env_average: 'low:0;high:90',
-    units_average: 'days',
+    env_avg: 'low:0;high:90',
+    units_avg: 'days',
     env_trendval: 'low:-0.32;mid:0;high:0.32',
     units_trendval: 'days/yr'
   },
@@ -113,8 +113,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:60',
     units_series: 'days',
-    env_average: 'low:0;high:42',
-    units_average: 'days',
+    env_avg: 'low:0;high:42',
+    units_avg: 'days',
     env_trendval: 'low:-0.45;mid:0;high:0.45',
     units_trendval: 'days/yr'
   },
@@ -123,8 +123,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:1500',
     units_series: 'mm',
-    env_average: 'low:0;high:875',
-    units_average: 'mm',
+    env_avg: 'low:0;high:875',
+    units_avg: 'mm',
     env_trendval: 'low:-12.5;mid:0;high:12.5',
     units_trendval: 'mm/yr'
   },
@@ -133,8 +133,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:900',
     units_series: 'mm',
-    env_average: 'low:0;high:280',
-    units_average: 'mm',
+    env_avg: 'low:0;high:280',
+    units_avg: 'mm',
     env_trendval: 'low:-3;mid:0;high:3',
     units_trendval: 'mm/yr'
   },
@@ -143,8 +143,8 @@ var indices = [
     all_months: true,
     env_series: 'low:0;high:425',
     units_series: 'mm',
-    env_average: 'low:0;high:200',
-    units_average: 'mm',
+    env_avg: 'low:0;high:200',
+    units_avg: 'mm',
     env_trendval: 'low:-1.1;mid:0;high:1.1',
     units_trendval: 'mm/yr'
   },
@@ -153,8 +153,8 @@ var indices = [
     all_months: true,
     env_series: 'low:0;high:940',
     units_series: 'mm',
-    env_average: 'low:0;high:370',
-    units_average: 'mm',
+    env_avg: 'low:0;high:370',
+    units_avg: 'mm',
     env_trendval: 'low:-1.7;mid:0;high:1.7',
     units_trendval: 'mm/yr'
   },
@@ -163,8 +163,8 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:50',
     units_series: 'mm',
-    env_average: 'low:0;high:30',
-    units_average: 'mm',
+    env_avg: 'low:0;high:30',
+    units_avg: 'mm',
     env_trendval: 'low:-0.45;mid:0;high:0.45',
     units_trendval: 'mm/yr'
   },
@@ -173,28 +173,28 @@ var indices = [
     all_months: false,
     env_series: 'low:0;high:366',
     units_series: 'days',
-    env_average: 'low:0;high:366',
-    units_average: 'days',
+    env_avg: 'low:0;high:366',
+    units_avg: 'days',
     env_trendval: 'low:-2;mid:0;high:2',
     units_trendval: 'days/yr'
   },
   {
     short: 'TN10p',
     all_months: true,
-    env_series: 'low:0;high:100',
+    env_series: 'low:0;high:25',
     units_series: '%',
-    env_average: 'low:0;high:22',
-    units_average: '%',
+    env_avg: 'low:0;high:25',
+    units_avg: '%',
     env_trendval: 'low:-1.4;mid:0;high:1.4',
     units_trendval: 'p.p./yr'
   },
   {
     short: 'TN90p',
     all_months: true,
-    env_series: 'low:0;high:100',
+    env_series: 'low:0;high:30',
     units_series: '%',
-    env_average: 'low:0;high:28',
-    units_average: '%',
+    env_avg: 'low:0;high:30',
+    units_avg: '%',
     env_trendval: 'low:-1.2;mid:0;high:1.2',
     units_trendval: 'p.p./yr'
   },
@@ -202,29 +202,29 @@ var indices = [
     short: 'TNn',
     all_months: true,
     env_series: 'low:-60;high:23',
-    units_series: '°C',
-    env_average: 'low:-60;high:23',
-    units_average: '°C',
+    units_series: '&deg;C',
+    env_avg: 'low:-60;high:23',
+    units_avg: '&deg;C',
     env_trendval: 'low:-0.25;mid:0;high:0.25',
-    units_trendval: '°C/yr'
+    units_trendval: '&deg;C/yr'
   },
   {
     short: 'TNx',
     all_months: true,
     env_series: 'low:-30;high:35',
-    units_series: '°C',
-    env_average: 'low:-30;high:35',
-    units_average: '°C',
+    units_series: '&deg;C',
+    env_avg: 'low:-30;high:35',
+    units_avg: '&deg;C',
     env_trendval: 'low:-0.25;mid:0;high:0.25',
-    units_trendval: '°C/yr'
+    units_trendval: '&deg;C/yr'
   },
   {
     short: 'TR',
     all_months: false,
     env_series: 'low:0;high:366',
     units_series: 'days',
-    env_average: 'low:0;high:366',
-    units_average: 'days',
+    env_avg: 'low:0;high:366',
+    units_avg: 'days',
     env_trendval: 'low:-2.4;mid:0;high:2.4',
     units_trendval: 'days/yr'
   },
@@ -233,8 +233,8 @@ var indices = [
     all_months: true,
     env_series: 'low:0;high:100',
     units_series: '%',
-    env_average: 'low:0;high:30',
-    units_average: '%',
+    env_avg: 'low:0;high:30',
+    units_avg: '%',
     env_trendval: 'low:-1.35;mid:0;high:1.35',
     units_trendval: 'p.p./yr'
   },
@@ -243,8 +243,8 @@ var indices = [
     all_months: true,
     env_series: 'low:0;high:100',
     units_series: '%',
-    env_average: 'low:0;high:25',
-    units_average: '%',
+    env_avg: 'low:0;high:25',
+    units_avg: '%',
     env_trendval: 'low:-1.1;mid:0;high:1.1',
     units_trendval: 'p.p./yr'
   },
@@ -252,29 +252,29 @@ var indices = [
     short: 'TXn',
     all_months: true,
     env_series: 'low:-55;high:35',
-    units_series: '°C',
-    env_average: 'low:-55;high:35',
-    units_average: '°C',
+    units_series: '&deg;C',
+    env_avg: 'low:-55;high:35',
+    units_avg: '&deg;C',
     env_trendval: 'low:-0.25;mid:0;high:0.25',
-    units_trendval: '°C/yr'
+    units_trendval: '&deg;C/yr'
   },
   {
     short: 'TXx',
     all_months: true,
     env_series: 'low:5;high:50',
-    units_series: '°C',
-    env_average: 'low:5;high:50',
-    units_average: '°C',
+    units_series: '&deg;C',
+    env_avg: 'low:5;high:50',
+    units_avg: '&deg;C',
     env_trendval: 'low:-0.2;mid:0;high:0.2',
-    units_trendval: '°C/yr'
+    units_trendval: '&deg;C/yr'
   },
   {
     short: 'WSDI',
     all_months: false,
     env_series: 'low:0;high:140',
     units_series: 'days',
-    env_average: 'low:0;high:23',
-    units_average: 'days',
+    env_avg: 'low:0;high:23',
+    units_avg: 'days',
     env_trendval: 'low:-1.2;mid:0;high:1.2',
     units_trendval: 'days/yr'
   },
@@ -294,7 +294,9 @@ for (index of indices) {
               L.extend({
                 layers: index.short + '_' + months_short[i] + '_' +
                   outputs_short[j],
-                env: index['env_' + outputs_short[j]]},
+                env: index['env_' + outputs_short[j]],
+                leg_units: index['units_' + outputs_short[j]]
+              },
               geoserver_options)),
             { cache: 67 });
       }
@@ -307,7 +309,8 @@ for (index of indices) {
             geoserver_base,
             L.extend({
               layers: index.short + '_ann_' + outputs_short[j],
-              env: index['env_' + outputs_short[j]]
+              env: index['env_' + outputs_short[j]],
+              leg_units: index['units_' + outputs_short[j]]
             }, geoserver_options)),
           { cache: 67 });
     }
@@ -359,8 +362,8 @@ var matches = {
   nov: 'November',
   dec: 'December',
   series: 'Series',
-  trend: 'Trend (1951–2017)',
-  avg: 'Average (1951–2017)'
+  trendval: 'Trend (1951&ndash;2017)',
+  avg: 'Average (1951&ndash;2017)'
 };
 
 // initialise layer control

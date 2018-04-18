@@ -424,12 +424,12 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
 }
 
 .baselayerlist-1 {
-  width: 85px;
+  width: 90px;
   border-left: 1px solid goldenrod;
 }
 
 .baselayerlist-2 {
-  width: 75px;
+  width: 140px;
   border-left: 1px solid goldenrod;
 }
 
@@ -526,6 +526,9 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
 .leaflet-control-wms-legend, .leaflet-control-wms-legend:hover {
   background: none;
   box-shadow: none;
+  display: flex;
+  flex: row nowrap;
+  align-items: flex-start;
 }
 
 .leaflet-control-wms-legend.wms-legend-collapsed {
@@ -535,6 +538,14 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
   background-clip: padding-box;
   width: 25px;
   height: 25px;
+}
+
+.wms-legend-label {
+  text-shadow: 1px 1px #ccc;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 1em;
+  padding: 0 5px;
 }
 
 /* story popup styling */

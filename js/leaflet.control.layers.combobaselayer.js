@@ -263,11 +263,22 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
     baseFreqs = Object.keys(baseFreqs).map(Number);
     for (i = 0; i < notSelectedBaseLayers.length; i++) {
       removedBaseLayers.push(this._getLayer(notSelectedBaseLayers[i]).layer);
-      legend.update('img/1x1.png');
+      legend.update('img/1x1.png', '', '');
     }
     for (i = 0; i < baseFreqs.length; i++) {
       addedBaseLayers.push(this._getLayer(baseFreqs[i]).layer);
-      legend.update(legend_url + this._getLayer(baseFreqs[i]).name);
+      // get legend low and high values, then request the legend
+      var lab_env =
+        this._getLayer(baseFreqs[i]).layer._baseLayer.wmsParams.env;
+      var lab_units =
+        this._getLayer(baseFreqs[i]).layer._baseLayer.wmsParams.leg_units;
+      console.log(this._getLayer(baseFreqs[i]));
+      env_bits = lab_env.split(/:|;/);
+      var lab_low = env_bits[1] + ' ' + lab_units,
+          lab_high = env_bits[env_bits.length - 1] + ' ' + lab_units;
+      // update legdend with new 
+      legend.update(legend_url + this._getLayer(baseFreqs[i]).name,
+        lab_low, lab_high);
     }
 
     // 3) finally, iterate through the layers and add or remove from map

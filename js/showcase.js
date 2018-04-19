@@ -72,7 +72,7 @@ var legend_url = geoserver_base +
 var legend = L.wmsLegend('img/1x1.png');
 
 // add base tile layer
-L.tileLayer(
+var base_tiles = L.tileLayer(
   'https://tile.gbif.org/4326/omt/{z}/{x}/{y}@1x.png?style=gbif-light',
   {
     attribution: 'Tiles &copy; <a href="http://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> (reprojected by <a href="https://tile.gbif.org">GBIF</a>)',
@@ -82,12 +82,33 @@ L.tileLayer(
     ext: 'png'
   }).addTo(mymap);
 
-// populate story menu. attach a general prep function to the btns too
-// for (story of showcase_stories) {
-//   story.createMenuItem('stories_list');
-//   story.on('storyloading', cleanup_for_stories);
-// }
-
+// populate story menu and attach custom story code
+// (legend update + transitions)
+for (story of showcase_stories) {
+  story.createMenuItem('stories-list');
+  story.setMap(mymap);
+  story.on('storyload', cleanup_for_story);
+  story.on('storybitload', function(bit) {
+    // update legend according to storybit baselayer
+    //debugger;
+    if (bit._baselayer === undefined) {
+      legend.update('img/1x1.png');
+    } else {
+      console.log(bit);
+      var lab_env = bit._baselayer.wmsParams.env,
+        lab_units = bit._baselayer.wmsParams.leg_units,
+        env_bits = lab_env.split(/:|;/),
+        lab_low = env_bits[1] + ' ' + lab_units,
+        lab_high = env_bits[env_bits.length - 1] + ' ' + lab_units;
+      legend.update(legend_url + bit._baselayer.wmsParams.layers,
+        lab_low, lab_high);
+    }
+  });
+  story.on('storybitplay', storybit_ready);
+  story.on('storybitend', function() {
+    legend.update('img/1x1.png');
+  });
+}
 
 function start_data_mode() {
   // remove old ui elements
@@ -108,52 +129,45 @@ function start_story_mode() {
   turn_stories_list_on();
 }
 
-function load_story(event) {
-  // use event.data.story_code to access stories
-  console.log('Story item clicked! ' + event.data.story_code);
+// function load_story(event) {
+//   // use event.data.story_code to access stories
+//   console.log('Story item clicked! ' + event.data.story_code);
 
-  $('#map-blackout').addClass('toggled_on').one('transitionend', function() {
+//   $('#map-blackout').addClass('toggled_on').one('transitionend', function() {
     
-    // var story = stories[event.data.story_code];
+//     // var story = stories[event.data.story_code];
 
-    // // wipe regular layers, the story list ui and the existing time cache
-    // for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
-    //   climdex_indices_control._layerControlInputs[i].checked = false;
-    // }
-    // climdex_indices_control._onInputClick();
-    // turn_stories_list_off();
-    // wipe_time_cache();
+//     // // wipe regular layers, the story list ui and the existing time cache
+//     // for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++){
+//     //   climdex_indices_control._layerControlInputs[i].checked = false;
+//     // }
+//     // climdex_indices_control._onInputClick();
+//     // turn_stories_list_off();
+//     // wipe_time_cache();
 
-    // now, set initial map view, legend and wipe 
-    mymap.setView(story.init.center_start, story.init.zoom, { animate: false });
-    legend.update(legend_url + story.init.base_layer);
+//     // now, set initial map view, legend and wipe 
+//     mymap.setView(story.init.center_start, story.init.zoom, { animate: false });
+//     legend.update(legend_url + story.init.base_layer);
 
-    // set upper/lower bounds and current time
-    var start_dt = new Date(story.init.year_start + '-01-01T00:00:00.000Z');
-    var end_dt = new (story.init.year_end + '-01-01T00:00:00.000Z');
-    if (td.getCurrentTime < start_dt) {
-      td.setUpperLimit(end_dt.valueOf());
-      td.setCurrentTime(start_dt.valueOf());
-      td.setLowerLimit(start_dt.valueOf());
-    } else {
-      td.setLowerLimit(start_dt.valueOf());
-      td.setCurrentTime(start_dt.valueOf());
-      td.setUpperLimit(end_dt.valueOf());
-    }
+//     // set upper/lower bounds and current time
+//     var start_dt = new Date(story.init.year_start + '-01-01T00:00:00.000Z');
+//     var end_dt = new (story.init.year_end + '-01-01T00:00:00.000Z');
+//     if (td.getCurrentTime < start_dt) {
+//       td.setUpperLimit(end_dt.valueOf());
+//       td.setCurrentTime(start_dt.valueOf());
+//       td.setLowerLimit(start_dt.valueOf());
+//     } else {
+//       td.setLowerLimit(start_dt.valueOf());
+//       td.setCurrentTime(start_dt.valueOf());
+//       td.setUpperLimit(end_dt.valueOf());
+//     }
 
-    // get timedimension to prefetch the animation frames
-    td_player.setLooped(false);
-    td_player.setTransitionTime(5);
-    // td_player
-
-
-
-
-  });
-
-
-  
-}
+//     // get timedimension to prefetch the animation frames
+//     td_player.setLooped(false);
+//     td_player.setTransitionTime(5);
+//     // td_player
+//   });
+// }
 
 // decide which mode to initialise in (affects how we initialise)
 var app_mode;
@@ -163,20 +177,24 @@ switch (window.location.search.substring(1)) {
     break;
   case 'tour':
     // auto rotate stories
-    break
+    break;
   case 'data':
   default:
     start_data_mode();
 }
 
 // DEBUG - a heap of event listeners
-td_player.on('play', function() { console.log('Event: play'); });
-td_player.on('running', function() { console.log('Event: running'); });
-td_player.on('stop', function() { console.log('Event: stop'); });
-td_player.on('waiting', function(ev) {
-  console.log('Event: waiting');
-  console.log(ev);
-});
-td_player.on('animationfinished', function() {
-  console.log('Event: animationfinished');
-});
+mymap.on('tileloadstart', function() { console.log('tileloadstart'); });
+mymap.on('tileload', function() { console.log('tileload'); });
+mymap.on('tileloaderror', function() { console.log('tileloaderror'); });
+mymap.on('load', function() { console.log('load'); });
+// td_player.on('play', function() { console.log('Event: play'); });
+// td_player.on('running', function() { console.log('Event: running'); });
+// td_player.on('stop', function() { console.log('Event: stop'); });
+// td_player.on('waiting', function(ev) {
+//   console.log('Event: waiting');
+//   console.log(ev);
+// });
+// td_player.on('animationfinished', function() {
+//   console.log('Event: animationfinished');
+// });

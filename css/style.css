@@ -25,7 +25,14 @@ html, body {
   top: 50px;
   margin: 0;
 
-  background-color: #a60;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  color: #fff;
+  font-size: 1.5em;
+  
   z-index: 1002;
   visibility: hidden;
   opacity: 0;
@@ -34,7 +41,7 @@ html, body {
 
 #map-blackout.toggled_on {
   visibility: visible;
-  opacity: 0.25;        /* DEBUG - make 1 for production */
+  opacity: 0.8;        /* DEBUG - make 1 for production */
 }
 
 /* blending and utility modes for climdex tile layers */
@@ -153,6 +160,7 @@ button.btn_close:hover { color: #eee; }
 }
 
 /* about screen */
+
 div#about {
   visibility: hidden;
   opacity: 0;
@@ -251,7 +259,7 @@ div#about.toggled_on {
   left: 50px;
   visibility: visible;
   opacity: 1;
-} */
+}
 
 #tour-interrupt-msg.acted_on {
   left: 50px;
@@ -259,7 +267,7 @@ div#about.toggled_on {
   color: white;
   visibility: hidden;
   opacity: 0;
-}
+} */
 
 /* controls: layers and time */
 
@@ -549,26 +557,29 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
 }
 
 /* story popup styling */
-.story_text {
+
+.story-popup {
   margin: 0;
 }
 
-.story_text > .leaflet-popup-content-wrapper {
+.story-popup > .leaflet-popup-content-wrapper {
   background: none;
   box-shadow: none;
 }
 
-.story_text > .leaflet-popup-tip-container {
+.story-popup > .leaflet-popup-tip-container {
   display: none;
 }
 
-div.leaflet-popup.story_text h1,
-div.leaflet-popup.story_text h2,
-div.leaflet-popup.story_text p {
+div.leaflet-popup.story-popup p {
   font-family: 'Oswald', sans-serif;
-  font-size: 2em;
+  font-size: 4em;
   text-shadow: 1px 1px #999;
   /* text-shadow: none; */
   font-weight: 700;
   text-transform: uppercase;
+}
+
+div.leaflet-popup.story-popup p span.red {
+  color: red;
 }

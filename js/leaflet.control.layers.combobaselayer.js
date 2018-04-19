@@ -276,7 +276,7 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
       env_bits = lab_env.split(/:|;/);
       var lab_low = env_bits[1] + ' ' + lab_units,
           lab_high = env_bits[env_bits.length - 1] + ' ' + lab_units;
-      // update legdend with new 
+      // update legend with new 
       legend.update(legend_url + this._getLayer(baseFreqs[i]).name,
         lab_low, lab_high);
     }

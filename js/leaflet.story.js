@@ -1,12 +1,4 @@
-/* */
-
-L.
-
-/* ========================================================================== */
-
-/* L.StoryBit: a base class for story 'bits' that are displayed sequentially in a story. each 
-
-  */
+/* L.StoryBit: a base class for story 'bits' that are displayed sequentially in a story. */
 
 L.StoryBit = L.Evented.extend({
 
@@ -14,7 +6,7 @@ L.StoryBit = L.Evented.extend({
   _annotation_timers: [],
 
   options: {
-    baselayer: {},
+    baselayer: undefined,
     movements: [],
     annotations: [],
     end_pause: 0
@@ -27,28 +19,27 @@ L.StoryBit = L.Evented.extend({
   },
 
   
-  initialize: function(at, zoom, options) {
-    L.setOptions(this, options);
-
+  initialize: function(options) {
     // TODO - do some checking on movements and annotations
-    this._init = {};
-    this._init.at = at || L.latLng([0, 60]);
-    this._init.zoom = zoom || 4;
+    L.setOptions(this, options);
     this._baselayer = this.options.baselayer;
     this._movements = this.options.movements;
     this._annotations = this.options.annotations;
     this._end_pause = this.options.end_pause;
 
     // add event listeners
-    if (this._baselayer !== undefined) {
+
+    // TODO - jQuery dependency
+    if (this._baselayer !== undefined)
+    {
       this._baselayer.addEventParent(this);
-      this.one('load', this.play);
+      // this.one('load', this.play);
     }
     
   },
 
   load: function() {
-    this.fire('storybitload');
+    this.fire('storybitload', this, propogate = true);
 
     // attach the baselayer to the map if there's on of each
     if (this._baselayer !== undefined) {}
@@ -63,21 +54,20 @@ L.StoryBit = L.Evented.extend({
   },
 
   play: function() {
-    this.fire('storybitplay');
+
+    this.fire('storybitplay', this, propogate = true);
     // okay, we're gonna set up a whole heap of event listeners for the pans and
     // annotations. when the last of either is done, we'll fire `storybitend`
 
     // set up movements using setTimeout (and hold onto the timer ids!)
     var ongoing_duration = 0;
-    var ongoing_zoom = this._init.zoom;
+    var ongoing_zoom = this._map.getZoom();
     for (var i = 0; i < this._movements.length; i++) {
-      var samezoom = this.movements[i].options.zoom == ongoing_zoom;
-
+      var samezoom = this._movements[i].options.zoom == ongoing_zoom;
       this._movement_timers.push(
-        setTimeout(this._move, ongoing_duration, 
-          this.movements[i].at, this.movements[i].options, samezoom));
-      ongoing_zoom = this.movements[i].options.zoom;
-      ongoing_duration += (movement[1].duration * 1000);
+        setTimeout(this._move, ongoing_duration, this._map, this._movements[i].at, this._movements[i].options, samezoom));
+      ongoing_zoom = this._movements[i].options.zoom;
+      ongoing_duration += (this._movements[i].options.duration * 1000);
     }
 
     // now set up annotation toggles using setTimeout
@@ -91,7 +81,7 @@ L.StoryBit = L.Evented.extend({
         (this._annotations[i].duration * 1000);
 
       this._annotation_timers.push(
-        setTimeout(this._addAnnotation, when_start_i, overlay_i));
+        setTimeout(this._addAnnotation, when_start_i, overlay_i, this._map));
       this._annotation_timers.push(
         setTimeout(this._removeAnnotation, when_end_i, overlay_i))
       if (when_end_i > latest_removal) latest_removal = when_end_i;
@@ -99,13 +89,15 @@ L.StoryBit = L.Evented.extend({
 
     // and, finally, set a quit timer
     this._end_timer = setTimeout(this._end,
-      Math.max(ongoing_duration, latest_removal) + (this._end_pause * 1000))
+      Math.max(ongoing_duration, latest_removal) + (this._end_pause * 1000),
+      this)
   },
   
   
   /* usually called by the associated story but should work individually */
   quit: function() {
     // cancel existing quit timer
+    console.log('Quitting storybit');
     clearTimeout(this._end_timer);
     this._wrapup();
   },
@@ -113,31 +105,40 @@ L.StoryBit = L.Evented.extend({
   /* internal functions */
   
   /* called when the function ends *naturally* */
-  _end: function() {
-    this._wrapup();
-    this.fire('storybitend');
+  _end: function(this_bit) {
+    console.log('Ending storybit');
+    this_bit._wrapup();
+    this_bit.fire('storybitend', this_bit, propogate = true);
   },
 
   _wrapup: function() {
     // remove any layers that've been turned on and not turned off
+    console.log('Wrapping up storybit');
+    console.log(this);
     for (annotation in this._annotation)
       if (this._map.hasLayer(annotation.overlay))
         this._map.removeLayer(annotation.overlay);
+    
+    // remove the baselayer (if there is one)
+    if (this._baselayer !== undefined)
+      if (this._map.hasLayer(this._baselayer))
+        this._map.removeLayer(this._baselayer);
     
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);
     for (id of this._annotation_timers) clearTimeout(id);
   },
 
-  _move: function(at, options, samezoom) {
-    if (samezoom)
-      this._map.panTo(at, options);
-    else
-      this._map.flyTo(at, options.zoom, options);
+  _move: function(map, at, options, samezoom) {
+    console.log('Moving to [' + at[0] + ', ' + at[1] + '] (' + samezoom + ')');
+    // if (samezoom)
+    //   map.panTo(at, L.extend({ animate: true }, options));
+    // else
+      map.flyTo(at, options.zoom, L.extend({ animate: true }, options));
   },
 
-  _addAnnotation: function(overlay) {
-    overlay.addTo(this._map);
+  _addAnnotation: function(overlay, map) {
+    overlay.addTo(map);
 
   },
 
@@ -167,7 +168,9 @@ L.Story = L.Evented.extend({
 
   options: {
     name: 'Default name',
-    description: 'Default description'
+    description: 'Default description',
+    at: L.latLng([0, 60]),
+    zoom: 4
   },
 
   _current_storybit: 0,  // track currently playing story
@@ -203,11 +206,9 @@ L.Story = L.Evented.extend({
     this._map = map;
 
     for (bit_i of this._storybits) {
-      bit_i.setmap(map);
+      bit_i.setMap(map);
     }
   },
-
-
 
   /* createMenuItem: returns an html element that, when clicked,
      calls this.load. optionally attaches the element to a
@@ -236,12 +237,20 @@ L.Story = L.Evented.extend({
     return item;
   },
 
-  /* load: get things set up */
+  /* load: get things set up. really just exists to fire an event: i want to have transition code happen externally to this but still set the initail view
+  internally. separating load and play allows that to happen!  */
   load: function() {
     
     console.log(this._name + ': loading story');
-    this.fire('storyload');
+    this.fire('storyload', this);
+  },
 
+  play: function() {
+    
+    console.log(this._name + ': playing story');
+    this._map.setView(this.options.at, this.options.zoom, { animate: false });
+
+    // load first storybit, if it's there
     if (this._storybits.length > 0)
       this._storybits[this._current_storybit].load();
     else
@@ -251,6 +260,7 @@ L.Story = L.Evented.extend({
     this.on('storybitend storybitskip', this._nextStoryBit);
     
     // TODO - register a callback for keyboard interrupts
+
   },
 
   _nextStoryBit: function() {
@@ -269,11 +279,13 @@ L.Story = L.Evented.extend({
     // quit the current storybit as well, if one is still going
     if (this._current_storybit < this._storybits.length)
       this._storybits[_current_storybit].quit();
-    this.fire('storyquit');
+    this.fire('storyquit', this);
+    this._current_storybit = 0;
   },
 
   _end: function() {
-    this.fire('storyend');
+    this.fire('storyend', this);
+    this._current_storybit = 0;
   }
 
 });

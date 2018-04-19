@@ -32,6 +32,7 @@ $('#close-about').on('click touch', toggle_about);
 function turn_stories_list_on() {
   turn_about_off();
   turn_data_off();
+  app_mode = 'stories';
 
   // attach stories index layer control
   // climdex_stories_control.addTo(mymap);

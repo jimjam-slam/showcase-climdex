@@ -131,9 +131,9 @@ L.StoryBit = L.Evented.extend({
 
   _move: function(map, at, options, samezoom) {
     console.log('Moving to [' + at[0] + ', ' + at[1] + '] (' + samezoom + ')');
-    // if (samezoom)
-    //   map.panTo(at, L.extend({ animate: true }, options));
-    // else
+    if (samezoom)
+      map.panTo(at, L.extend({ animate: true }, options));
+    else
       map.flyTo(at, options.zoom, L.extend({ animate: true }, options));
   },
 

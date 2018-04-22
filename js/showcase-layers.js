@@ -348,7 +348,7 @@ var matches = {
   WSDI: 'Warm spell duration index',
   CDD: 'Max dry spell length',
 
-  ann: 'Year',
+  ann: 'Annual',
   jan: 'January',
   feb: 'February',
   mar: 'March',

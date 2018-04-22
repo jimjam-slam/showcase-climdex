@@ -110,14 +110,36 @@ for (story of showcase_stories) {
   });
 }
 
-// event listener: toggle timebar depending on layer selected in data mode
+// event listener: toggle timebar depending on layer selected in data mode, and
+// also update the laye rname on the menu button
 mymap.on('baselayerchange', function(ev) {
-  // console.log(ev);
-  if (app_mode == 'data' && ev.name.match('series') != null)
-    turn_timebar_on();
-  else
-    turn_timebar_off();
-})
+  console.log('baselayerchange');
+  var layer_code = ev.name,
+      new_title = '';
+  if (app_mode == 'data') {
+
+    // toggle the timebar and move the legend
+    if (layer_code.match('series') != null)
+      turn_timebar_on();
+    else
+      turn_timebar_off();
+
+    // get the long layer name and update the control title
+    layer_code = layer_code.split(climdex_indices_control._menu_delimiter);
+    for (var i = 0; i < layer_code.length; i++) {
+      if (climdex_indices_control._matches[layer_code[i]] != undefined)
+        new_title += climdex_indices_control._matches[layer_code[i]];
+      else
+        new_title += layer_code[i];
+      
+      if (i == 0)
+        new_title += ': ';
+      else
+        new_title += ' ';
+    }
+    $('.leaflet-control-layers-toggle').html(new_title);
+  }  
+});
 
 function start_data_mode() {
   // remove old ui elements
@@ -191,3 +213,5 @@ switch (window.location.search.substring(1)) {
   default:
     start_data_mode();
 }
+
+$('.leaflet-control-layers-toggle').html('Select an index');

@@ -281,7 +281,7 @@ div#about a:active, div#about a:hover, div#about a:visited
 
 /* controls: layers and time */
 
-.leaflet-top.leaflet-left {
+.leaflet-top.leaflet-left, .leaflet-bottom.leaflet-left {
   background-color: gold;
   min-height: 50px;
   width: calc(100vw - 20px);
@@ -297,12 +297,13 @@ div#about a:active, div#about a:hover, div#about a:visited
   opacity: 0;
 }
 
-.leaflet-top.leaflet-left.toggled_on {
+.leaflet-top.leaflet-left.toggled_on,
+.leaflet-bottom.leaflet-left.toggled_on {
   visibility: visible;
   opacity: 1;
 }
 
-.leaflet-top.leaflet-left .leaflet-bar-timecontrol,
+.leaflet-bottom.leaflet-left .leaflet-bar-timecontrol,
 .leaflet-top.leaflet-left .leaflet-control-layers
 {
   margin: 0;
@@ -319,16 +320,15 @@ div#about a:active, div#about a:hover, div#about a:visited
 
 /* index/time selection bar */
 
-.leaflet-top.leaflet-left .leaflet-bar-timecontrol {
-  order: 1;
-  flex: 1;
+.leaflet-bottom.leaflet-left .leaflet-bar-timecontrol {
+  width: 100%;
 }
 
 .leaflet-bar-timecontrol .leaflet-control-timecontrol {
   background: none;
   border: 0;
   color: #444;
-  flex: 0 0 30px;
+
 }
 
 .leaflet-bar-timecontrol .leaflet-control-timecontrol:hover {
@@ -356,9 +356,11 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
   top: 1px;
 }
 
+/* slide */
+
 .leaflet-control-timecontrol.timecontrol-slider,
 .leaflet-control-timecontrol.timecontrol-slider:hover {
-  flex: 1 1 200px;
+  width: 100%;
 }
 
 .leaflet-control-timecontrol.timecontrol-slider .slider {

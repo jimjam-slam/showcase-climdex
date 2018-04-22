@@ -32,6 +32,11 @@ var mymap = L.map('map', {
   attributionControl: false // it's on the about screen instead
   // maxBoundsViscosity: 0.5
 });
+mymap.zoomControl.setPosition('topleft');
+
+// L.control.zoom({
+//      position:'topright'
+// }).addTo(mymap);
 
 // DEBUG - a heap of event listeners
 // mymap.on('load', function() { console.log('load'); });
@@ -51,14 +56,12 @@ var td_player = new L.TimeDimension.Player({
   startOver: true
 }, td);
 var td_control = new L.Control.TimeDimension({
-  position: 'topleft',
+  position: 'bottomleft',
   speedSlider: false,
   limitSliders: true,
   player: td_player
 });
 mymap.addControl(td_control);
-
-mymap.zoomControl.setPosition('bottomleft');
 // mymap.setMaxBounds([[-90, -30], [95, 360]]);
 // when in data mode, wipe the time cache if the user pans/zooms/resizes
 mymap.on('zoomlevelschange resize movestart', function() {

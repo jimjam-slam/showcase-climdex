@@ -33,6 +33,11 @@ var mymap = L.map('map', {
   // maxBoundsViscosity: 0.5
 });
 
+// DEBUG - a heap of event listeners
+// mymap.on('load', function() { console.log('load'); });
+// mymap.on('zoom', function() { console.log('zoom'); });
+// mymap.on('move', function() { console.log('move'); });
+
 // initialise time dimension, control and player
 var td = new L.TimeDimension({
   timeInterval: '1951-01-01T00:00:00.000Z/2017-01-01T00:00:00.000Z',
@@ -79,7 +84,8 @@ var base_tiles = L.tileLayer(
     subdomains: 'abcd',
     minZoom: 1,
     maxZoom: 16,
-    ext: 'png'
+    ext: 'png',
+    updateWhenIdle: false
   }).addTo(mymap);
 
 // populate story menu and attach custom story code
@@ -182,19 +188,3 @@ switch (window.location.search.substring(1)) {
   default:
     start_data_mode();
 }
-
-// DEBUG - a heap of event listeners
-mymap.on('tileloadstart', function() { console.log('tileloadstart'); });
-mymap.on('tileload', function() { console.log('tileload'); });
-mymap.on('tileloaderror', function() { console.log('tileloaderror'); });
-mymap.on('load', function() { console.log('load'); });
-// td_player.on('play', function() { console.log('Event: play'); });
-// td_player.on('running', function() { console.log('Event: running'); });
-// td_player.on('stop', function() { console.log('Event: stop'); });
-// td_player.on('waiting', function(ev) {
-//   console.log('Event: waiting');
-//   console.log(ev);
-// });
-// td_player.on('animationfinished', function() {
-//   console.log('Event: animationfinished');
-// });

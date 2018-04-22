@@ -9,8 +9,8 @@ var geoserver_options = {
   srs: 'EPSG:4326',
   format: 'image/png',
   className: 'blend_multiply',
-  transparent: true
-  // env: 'low:11;high:13'
+  transparent: true,
+  updateWhenIdle: false
 };
 
 var months_short = ['ann', 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul',

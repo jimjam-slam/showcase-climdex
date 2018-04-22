@@ -80,6 +80,7 @@ function cleanup_for_story(story) {
     for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++)
       climdex_indices_control._layerControlInputs[i].checked = false;
     climdex_indices_control._onInputClick();
+    $('.leaflet-control-layers-toggle').html('Select an index');
     turn_stories_list_off();
     wipe_time_cache();
     story.play();

@@ -473,39 +473,41 @@ a.leaflet-control-layers-toggle:after {
   display: flex;
   flex-direction: row;
   overflow-y: auto;
+  max-height: calc(100vh - 180px);
   font-size: 0.8em;
 }
 
 .baselayerlist-0 {
   width: 220px;
+  /* border-right: 1px solid goldenrod; */
 }
 
 .baselayerlist-1 {
   width: 90px;
-  border-left: 1px solid goldenrod;
+  /* border-right: 1px solid goldenrod; */
 }
 
 .baselayerlist-2 {
   width: 140px;
-  border-left: 1px solid goldenrod;
+  border-right: none;
 }
 
 /* switch to vertical stacking for narrow screens */
 @media screen and (max-width: 500px) {
   .leaflet-control-layers-expanded form.leaflet-control-layers-list {
     flex-direction: column;
-    overflow-y: auto;
     max-height: calc(100vh - 225px);
   }
   
   .baselayerlist-0 {
     width: calc(100vw - 100px);
+    border: none;
   }
 
   .baselayerlist-1, .baselayerlist-2 {
     width: calc(100vw - 100px);
     border-top: 1px solid goldenrod;
-    border-left: none;
+    border-right: none;
   }
 
 }
@@ -558,28 +560,17 @@ form.leaflet-control-layers-list input[type="radio"]:checked ~ p::before {
   padding-left: 5px;
 }
 
-form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
+form.leaflet-control-layers-list input[type="radio"]:disabled ~ p {
+  text-decoration: line-through #66666666 solid;
+  color: #66666666;
+}
+
+/* form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
   content: 'X ';
-}
-
-/* attribution and zoom (mostly just push the zoom control up a bit on narrow
-   screens */
-
-/* @media screen and (max-width: 450px) {
-
-  .leaflet-bottom.leaflet-left .leaflet-control-zoom {
-    margin-bottom: 26px;
-  }
-}
-
-@media screen and (max-width: 405px) {
-
-  .leaflet-bottom.leaflet-left .leaflet-control-zoom {
-    margin-bottom: 42px;
-  }
 } */
 
 /* wmslegend control */
+
 .leaflet-bottom.leaflet-right .leaflet-control {
   margin-right: 2px;
   margin-bottom: 2px;

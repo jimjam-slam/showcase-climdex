@@ -186,6 +186,16 @@ div#about.toggled_on {
   opacity: 1;
 }
 
+div#about a {
+  color: gold;
+  text-decoration: none;
+}
+
+div#about a:active, div#about a:hover, div#about a:visited
+{
+  color: goldenrod;
+}
+
 /* story-list */
 
 #stories-list {

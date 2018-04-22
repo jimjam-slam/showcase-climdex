@@ -29,6 +29,7 @@ var mymap = L.map('map', {
   zoom: 2,
   crs: L.CRS.EPSG4326,    // need a matching basemap!
   zoomControl: true,
+  attributionControl: false // it's on the about screen instead
   // maxBoundsViscosity: 0.5
 });
 
@@ -75,7 +76,6 @@ var legend = L.wmsLegend('img/1x1.png');
 var base_tiles = L.tileLayer(
   'https://tile.gbif.org/4326/omt/{z}/{x}/{y}@1x.png?style=gbif-light',
   {
-    attribution: 'Tiles &copy; <a href="http://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> (reprojected by <a href="https://tile.gbif.org">GBIF</a>)',
     subdomains: 'abcd',
     minZoom: 1,
     maxZoom: 16,

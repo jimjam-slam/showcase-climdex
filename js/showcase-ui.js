@@ -96,3 +96,20 @@ function toggle_data() {
 
 $('#nav-data').on('click touch', toggle_data);
 $('#close-data').on('click touch', toggle_data);
+
+function turn_timebar_off() {
+  $('.leaflet-bottom.leaflet-left').removeClass('toggled_on');
+  $('.leaflet-control-wms-legend').removeClass('legend-on-timebar');
+}
+
+function turn_timebar_on() {
+  $('.leaflet-bottom.leaflet-left').addClass('toggled_on');
+  $('.leaflet-control-wms-legend').addClass('legend-on-timebar');
+}
+
+function toggle_timebar() {
+  if ($('.leaflet-bottom.leaflet-left').hasClass('toggled_on'))
+    turn_timebar_off();
+  else
+  turn_timebar_on();
+}

@@ -288,13 +288,20 @@ div#about a:active, div#about a:hover, div#about a:visited
   padding: 0 10px;
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
 
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
 
   transition: visibility 0.3s linear, opacity 0.3s linear;
   visibility: hidden;
   opacity: 0;
+}
+
+.leaflet-top.leaflet-left {
+  justify-content: space-between;
+}
+
+.leaflet-bottom.leaflet-left {
+  justify-content: flex-start;
 }
 
 .leaflet-top.leaflet-left.toggled_on,
@@ -304,15 +311,34 @@ div#about a:active, div#about a:hover, div#about a:visited
 }
 
 .leaflet-bottom.leaflet-left .leaflet-bar-timecontrol,
-.leaflet-top.leaflet-left .leaflet-control-layers
-{
+.leaflet-top.leaflet-left .leaflet-control-layers,
+.leaflet-top.leaflet-left .leaflet-control-zoom {
   margin: 0;
   border: 0;
   box-shadow: none;
   background: none;
+
   display: flex;
   align-items: center;
+}
 
+.leaflet-top.leaflet-left .leaflet-control-zoom {
+  order: 1;
+  flex-direction: row-reverse;
+}
+
+.leaflet-top.leaflet-left .leaflet-control-zoom a {
+  background: none;
+  border: 0;
+}
+
+.leaflet-bar a.leaflet-disabled {
+  color: #66666666
+}
+
+.leaflet-bottom.leaflet-left .leaflet-bar-timecontrol,
+.leaflet-top.leaflet-left .leaflet-control-layers
+{  
   font-family: 'Oswald', sans-serif;
   text-transform: uppercase;
   font-size: 1.25em;
@@ -356,7 +382,7 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
   top: 1px;
 }
 
-/* slide */
+/* timecontrol slider */
 
 .leaflet-control-timecontrol.timecontrol-slider,
 .leaflet-control-timecontrol.timecontrol-slider:hover {
@@ -528,7 +554,7 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
 /* attribution and zoom (mostly just push the zoom control up a bit on narrow
    screens */
 
-@media screen and (max-width: 450px) {
+/* @media screen and (max-width: 450px) {
 
   .leaflet-bottom.leaflet-left .leaflet-control-zoom {
     margin-bottom: 26px;
@@ -540,15 +566,24 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p::before {
   .leaflet-bottom.leaflet-left .leaflet-control-zoom {
     margin-bottom: 42px;
   }
-}
+} */
 
 /* wmslegend control */
+.leaflet-bottom.leaflet-right .leaflet-control {
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
 .leaflet-control-wms-legend, .leaflet-control-wms-legend:hover {
   background: none;
   box-shadow: none;
   display: flex;
   flex: row nowrap;
   align-items: flex-start;
+}
+
+.leaflet-bottom.leaflet-right .leaflet-control.legend-on-timebar {
+  margin-bottom: 52px;
 }
 
 .leaflet-control-wms-legend.wms-legend-collapsed {

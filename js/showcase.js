@@ -34,15 +34,6 @@ var mymap = L.map('map', {
 });
 mymap.zoomControl.setPosition('topleft');
 
-// L.control.zoom({
-//      position:'topright'
-// }).addTo(mymap);
-
-// DEBUG - a heap of event listeners
-// mymap.on('load', function() { console.log('load'); });
-// mymap.on('zoom', function() { console.log('zoom'); });
-// mymap.on('move', function() { console.log('move'); });
-
 // initialise time dimension, control and player
 var td = new L.TimeDimension({
   timeInterval: '1951-01-01T00:00:00.000Z/2017-01-01T00:00:00.000Z',
@@ -118,6 +109,15 @@ for (story of showcase_stories) {
     legend.update('img/1x1.png');
   });
 }
+
+// event listener: toggle timebar depending on layer selected in data mode
+mymap.on('baselayerchange', function(ev) {
+  // console.log(ev);
+  if (app_mode == 'data' && ev.name.match('series') != null)
+    turn_timebar_on();
+  else
+    turn_timebar_off();
+})
 
 function start_data_mode() {
   // remove old ui elements

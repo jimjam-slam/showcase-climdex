@@ -9,7 +9,8 @@ L.StoryBit = L.Evented.extend({
     baselayer: undefined,
     movements: [],
     annotations: [],
-    end_pause: 0
+    end_pause: 0,
+    commentary_parent: 'story-commentary'
   },
 
   setMap: function(map)     { this._map = map; },
@@ -26,6 +27,7 @@ L.StoryBit = L.Evented.extend({
     this._movements = this.options.movements;
     this._annotations = this.options.annotations;
     this._end_pause = this.options.end_pause;
+    this._commentary_parent_id = this.options.commentary_parent;
 
     // add event listeners
 
@@ -56,6 +58,8 @@ L.StoryBit = L.Evented.extend({
   play: function() {
 
     this.fire('storybitplay', this, propogate = true);
+    L.DomUtil.addClass(L.DomUtil.get(this._commentary_parent_id), 'toggled_on');
+
     // okay, we're gonna set up a whole heap of event listeners for the pans and
     // annotations. when the last of either is done, we'll fire `storybitend`
 
@@ -74,17 +78,44 @@ L.StoryBit = L.Evented.extend({
     // (we need separate timers for turning them on and off)
     var latest_removal = 0;
     for (var i = 0; i < this._annotations.length; i++) {
-      var overlay_i = this._annotations[i].overlay;
-      var when_start_i = this._annotations[i].when * 1000;
-      var when_end_i =
-        (this._annotations[i].when * 1000) +
-        (this._annotations[i].duration * 1000);
+      
+      var type = this._annotations[i].type,
+          content = this._annotations[i].content,
+          when = this._annotations[i].when * 1000;
+      
 
-      this._annotation_timers.push(
-        setTimeout(this._addAnnotation, when_start_i, overlay_i, this._map));
-      this._annotation_timers.push(
-        setTimeout(this._removeAnnotation, when_end_i, overlay_i))
-      if (when_end_i > latest_removal) latest_removal = when_end_i;
+      switch (type) {
+        case 'comment':
+          // comment: add to 
+          this._annotation_timers.push(
+            setTimeout(
+              this._addCommentary, when,
+              content, this._commentary_parent_id));
+          break;
+        case 'clear_comments':
+          // ... set up a timer to clear all comments
+          this._annotation_timers.push(
+            setTimeout(
+              this._clearCommentary, when, this._commentary_parent_id));
+          if (when > latest_removal) latest_removal = when;
+          break;
+        case 'layer':
+          // regular layers: set up timers to turn on and off
+          var duration = this._annotations[i].duration * 1000,
+              when_end = when + duration;
+
+          this._annotation_timers.push(
+            setTimeout(
+              this._addAnnotation, when, content, this._map));
+          this._annotation_timers.push(
+            setTimeout(this._removeAnnotation, when_end, content))
+          if (when_end > latest_removal) latest_removal = when_end;
+          break;
+        default:
+          console.error('storybitplay: annotation\'s overlay property should either be a string or a Leaflet layer.');
+      }
+
+      
     }
 
     // and, finally, set a quit timer
@@ -112,7 +143,7 @@ L.StoryBit = L.Evented.extend({
   },
 
   _wrapup: function() {
-    // remove any layers that've been turned on and not turned off
+    // remove any layers and comments that've been turned on and not turned off
     console.log('Wrapping up storybit');
     console.log(this);
     for (annotation in this._annotation)
@@ -123,6 +154,8 @@ L.StoryBit = L.Evented.extend({
     if (this._baselayer !== undefined)
       if (this._map.hasLayer(this._baselayer))
         this._map.removeLayer(this._baselayer);
+    
+    this._clearCommentary(this._commentary_parent_id);
     
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);
@@ -137,13 +170,46 @@ L.StoryBit = L.Evented.extend({
       map.flyTo(at, options.zoom, L.extend({ animate: true }, options));
   },
 
+  /* add and remove annotation layers from the map */
   _addAnnotation: function(overlay, map) {
     overlay.addTo(map);
-
   },
 
-  _removeAnnotation: function(overlay) {
+  _removeAnnotation: function(overlay, map) {
     overlay.remove();
+  },
+
+  /* add commentary p elements to the given parent, and clear them all */
+  _addCommentary: function(comment, parent) {
+    console.log('Adding commentary');
+    var parent_el = L.DomUtil.get(parent);
+    var to_append = document.createElement('p');
+    to_append.innerHTML = comment;
+    parent_el.appendChild(to_append);
+    L.DomUtil.addClass(to_append, 'toggled_on');
+  },
+
+  /* clear commentary from a parent. toggles it off first to allow for fades */
+  _clearCommentary: function(parent) {
+    console.log('Clearing commentary');
+    var parent_el = L.DomUtil.get(parent);
+    L.DomUtil.empty(parent_el);
+    // if (L.DomUtil.hasClass(parent_el, 'toggled_on')) {
+    //   console.log('Commentary pane on, transitioning off then emptying')
+    //   function empty_and_reset(parent_el) {
+    //     console.log('Transition ended, emptying commentary');
+    //     L.DomUtil.empty(parent_el);
+    //     L.DomEvent.off(parent_el, 'transitionend', empty_and_reset);
+    //     L.DomUtil.addClass(parent_el, 'toggled_on');
+    //   }
+    //   L.DomEvent.on(parent_el, 'transitionend', empty_and_reset);
+    //   L.DomUtil.removeClass(parent_el, 'toggled_on');
+    // }
+    // else {
+    //   console.log('Commentary pane already off, transitioning off')
+    //   L.DomUtil.empty(parent_el);
+    //   L.DomUtil.addClass(parent_el, 'toggled_on');
+    // }
   }
 
 });

@@ -39,28 +39,37 @@ var showcase_stories = [
             }
           ],
           annotations: [
-            { overlay: L.popup(story_popup_opts)
-                .setLatLng([35, 240])
-                .setContent('<p>Climate change is a <span class="red">global</span> phenomenon.<p>'),
-              when: 0, duration: 5
+            // { type: 'layer', when: 0, duration: 2,
+            //   content: L.popup(story_popup_opts)
+            //     .setLatLng([35, 240])
+            //     .setContent('<p>Climate change is a <span class="red">global</span> phenomenon.<p>')
+            // },
+            {
+              type: 'comment', when: 3,
+              content: 'Climate change is a <span class="red">global</span> phenomenon.'
             },
-            { overlay: L.popup(story_popup_opts)
-                .setLatLng([30, 250])
-                .setContent('<p>But not all places are affected equally.<p>'),
-              when: 2, duration: 3
+            {
+              type: 'comment', when: 4,
+              content: 'But not all places are affected equally.'
             },
-            { overlay: L.popup(story_popup_opts)
-                .setLatLng([25, 255])
-                .setContent('<p>Our hottest days have become <span class+"red">hotter</span>...<p>'),
-              when: 5, duration: 5
+            {
+              type: 'clear_comments', when: 6
             },
-            { overlay: L.popup(story_popup_opts)
-              .setLatLng([20, 260])
-              .setContent('<p>But not in the US mid-west.<p>'),
-            when: 7, duration: 3
+            {
+              type: 'comment', when: 6.5,
+              content: 'Our hottest days have become <span class="red">hotter</span>...'
+            },
+            {
+              type: 'comment', when: 7.5,
+              content: '... but not in the American mid-west.'
+            },
+            {
+              type: 'comment', when: 8.5,
+              content: 'There\'re a few reasons for this.'
             }
           ],
-          end_pause: 30
+          end_pause: 10//,
+          //commentary_parent = 'story-commentary'
         })
     ],
     {

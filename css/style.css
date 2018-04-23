@@ -260,6 +260,42 @@ div#about a:active, div#about a:hover, div#about a:visited
   text-transform: none;
 }
 
+/* story commentary */
+
+#story-commentary {
+  visibility: hidden;
+  opacity: 0;
+  display: block;
+  transition: visibility 0.3s linear, opacity 0.3s linear;
+  
+  z-index: 1000;
+  position: absolute;
+  top: 50px;
+  margin: 0;
+  padding: 20px;
+  width: calc(100vw - 40px);
+  height: calc(100vh - 50px);
+
+  background-color: #ff000033;     /* DEBUG: remove for production */
+}
+
+#story-commentary.toggled_on {
+  visibility: visible;
+  opacity: 1;
+}
+
+#story-commentary p {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.7s linear, opacity 0.7s linear;
+}
+
+#story-commentary p.toggled_on {
+  visibility: visible;
+  opacity: 1;
+}
+
+
 /* #tour-interrupt-msg {
   position: absolute;
   left: 0px;

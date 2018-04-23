@@ -44,6 +44,12 @@ html, body {
   opacity: 0.8;        /* DEBUG - make 1 for production */
 }
 
+#map-blackout h2 {
+  text-shadow: none;
+  margin-top: 20px;
+  font-size: 1.25em;
+}
+
 /* blending and utility modes for climdex tile layers */
 
 .blend_multiply { mix-blend-mode: multiply; }
@@ -242,12 +248,15 @@ div#about a:active, div#about a:hover, div#about a:visited
 }
 
 #stories-list h2 {
+  font-family: 'Oswald', sans-serif;
+  font-style: normal;
+  text-transform: uppercase;
   font-size: 1.5em;
 }
 
 #stories-list p {
   font-size: 1.25em;
-  margin-top: 0.5em;
+  margin-top: 0.25em;
   text-transform: none;
 }
 

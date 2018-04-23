@@ -186,7 +186,7 @@ L.StoryBit = L.Evented.extend({
     var to_append = document.createElement('p');
     to_append.innerHTML = comment;
     parent_el.appendChild(to_append);
-    L.DomUtil.addClass(to_append, 'toggled_on');
+    setTimeout(L.DomUtil.addClass, 10, to_append, 'toggled_on');
   },
 
   /* clear commentary from a parent. toggles it off first to allow for fades */

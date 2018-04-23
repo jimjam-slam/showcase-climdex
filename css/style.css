@@ -366,7 +366,8 @@ div#about a:active, div#about a:hover, div#about a:visited
   background: none;
   border: 0;
   color: #444;
-
+  min-width: 30px;
+  width: 30px;
 }
 
 .leaflet-bar-timecontrol .leaflet-control-timecontrol:hover {

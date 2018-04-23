@@ -71,19 +71,21 @@ header {
 }
 
 h1, h2, header ul, button {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Zilla Slab', sans-serif;
   text-shadow: 2px 2px #333;
-  font-weight: 400;
+  font-weight: 500;
+  font-style: italic;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-transform: uppercase;
   margin: 0;
 }
 
 p, ul, ol {
-  font-family: 'Lato', serif;
-  font-weight: 400;
-  text-shadow: 2px 2px #333;
+  font-family: 'Zilla Slab', serif;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* text-shadow: 2px 2px #333; */
   font-size: 1em;
   line-height: 1.5em;
 }
@@ -112,6 +114,7 @@ header ul li.toggled_on {
 header ul li + li:before {
   color: #999;
   content: '|';
+  font-style: normal;
   padding-right: 10px;
   padding-left: 8px;
 }
@@ -122,16 +125,16 @@ header ul li + li:before {
   justify-content: flex-end;
 }
 
-button.btn_close, button.btn_close:hover {
+#close-about, #close-about:hover {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  font-size: 3.5em;
+  font-size: 2em;
 }
 
-button.btn_close { color: #999; }
-button.btn_close:hover { color: #eee; }
+#close-about { color: #999; }
+#close-about:hover { color: #eee; }
 
 /* (squish the nav a bit on really small phones!) */
 
@@ -177,7 +180,7 @@ div#about {
   overflow-x: hidden;
   overflow-y: auto;
 
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: #222;
   color: #eee;
 }
 
@@ -215,7 +218,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   overflow-x: hidden;
   overflow-y: auto;
 
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: #222222cc;
   color: #eee;
 }
 

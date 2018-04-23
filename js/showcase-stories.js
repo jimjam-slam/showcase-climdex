@@ -77,10 +77,7 @@ var showcase_stories = [
    attach to storyloading events. */
 function cleanup_for_story(story) {
   $('#map-blackout').one('transitionend', function() {
-    for (var i = 0; i < climdex_indices_control._layerControlInputs.length; i++)
-      climdex_indices_control._layerControlInputs[i].checked = false;
-    climdex_indices_control._onInputClick();
-    $('.leaflet-control-layers-toggle').html('Select an index');
+    turn_data_off();
     turn_stories_list_off();
     wipe_time_cache();
     story.play();

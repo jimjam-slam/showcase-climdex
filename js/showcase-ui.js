@@ -65,10 +65,11 @@ $('#nav-stories-list').on('click touch', toggle_stories_list);
 function turn_data_on() {
   turn_stories_list_off();
   turn_about_off();
+  app_mode = 'data';
 
   // attach regular index layer control
   climdex_indices_control.addTo(mymap);
-
+  $('.leaflet-control-layers-toggle').html('Select an index');
   $('#nav-data').addClass('toggled_on');
   $('.leaflet-top.leaflet-left').addClass('toggled_on');
   console.log('data toggled on');
@@ -79,9 +80,16 @@ function turn_data_off() {
   // also need to only do this if the bar is _actually_ visible
   // (don't want several once-off event handlers stacking up!)
   if ($('.leaflet-top.leaflet-left').hasClass('toggled_on'))
-    $('.leaflet-top.leaflet-left').one(
-      'transitionend', climdex_indices_control.remove);
-  $('.leaflet-top.leaflet-left').removeClass('toggled_on');
+    $('.leaflet-top.leaflet-left').one('transitionend', function() {
+      for (
+        var i = 0;
+        i < climdex_indices_control._layerControlInputs.length;
+        i++)
+        climdex_indices_control._layerControlInputs[i].checked = false;
+      climdex_indices_control._onInputClick();
+      climdex_indices_control.remove();
+    }).removeClass('toggled_on');
+  $('.leaflet-bottom.leaflet-left').removeClass('toggled_on');
   $('#nav-data').removeClass('toggled_on');
   console.log('data toggled off');
 }

@@ -193,23 +193,14 @@ L.StoryBit = L.Evented.extend({
   _clearCommentary: function(parent) {
     console.log('Clearing commentary');
     var parent_el = L.DomUtil.get(parent);
-    L.DomUtil.empty(parent_el);
-    // if (L.DomUtil.hasClass(parent_el, 'toggled_on')) {
-    //   console.log('Commentary pane on, transitioning off then emptying')
-    //   function empty_and_reset(parent_el) {
-    //     console.log('Transition ended, emptying commentary');
-    //     L.DomUtil.empty(parent_el);
-    //     L.DomEvent.off(parent_el, 'transitionend', empty_and_reset);
-    //     L.DomUtil.addClass(parent_el, 'toggled_on');
-    //   }
-    //   L.DomEvent.on(parent_el, 'transitionend', empty_and_reset);
-    //   L.DomUtil.removeClass(parent_el, 'toggled_on');
-    // }
-    // else {
-    //   console.log('Commentary pane already off, transitioning off')
-    //   L.DomUtil.empty(parent_el);
-    //   L.DomUtil.addClass(parent_el, 'toggled_on');
-    // }
+    function empty_and_reset() {
+      console.log('Transition ended, emptying commentary');
+      L.DomEvent.off(this, 'transitionend', empty_and_reset, this);
+      L.DomUtil.empty(this);
+      L.DomUtil.addClass(this, 'toggled_on');
+    }
+    L.DomEvent.on(parent_el, 'transitionend', empty_and_reset, parent_el);
+    L.DomUtil.removeClass(parent_el, 'toggled_on');
   }
 
 });

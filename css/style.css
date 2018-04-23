@@ -275,8 +275,6 @@ div#about a:active, div#about a:hover, div#about a:visited
   padding: 20px;
   width: calc(100vw - 40px);
   height: calc(100vh - 50px);
-
-  background-color: #ff000033;     /* DEBUG: remove for production */
 }
 
 #story-commentary.toggled_on {
@@ -287,7 +285,7 @@ div#about a:active, div#about a:hover, div#about a:visited
 #story-commentary p {
   visibility: hidden;
   opacity: 0;
-  transition: visibility 0.7s linear, opacity 0.7s linear;
+  transition: visibility 0.3s linear, opacity 0.3s linear;
 }
 
 #story-commentary p.toggled_on {

@@ -46,7 +46,7 @@ var showcase_stories = [
             // },
             {
               type: 'comment', when: 3,
-              content: 'Climate change is a <span class="red">global</span> phenomenon.'
+              content: 'Climate change is a <span class="emph">global</span> phenomenon.'
             },
             {
               type: 'comment', when: 4,
@@ -57,7 +57,7 @@ var showcase_stories = [
             },
             {
               type: 'comment', when: 6.5,
-              content: 'Our hottest days have become <span class="red">hotter</span>...'
+              content: 'Our hottest days have become <span class="emph">hotter</span>...'
             },
             {
               type: 'comment', when: 7.5,

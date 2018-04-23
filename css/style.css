@@ -283,6 +283,12 @@ div#about a:active, div#about a:hover, div#about a:visited
 }
 
 #story-commentary p {
+  font-style: italic;
+  font-size: 2em;
+  text-shadow: 1px 1px 1px #666;
+
+  margin: 0 0 30px 0;
+
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s linear, opacity 0.3s linear;
@@ -291,6 +297,14 @@ div#about a:active, div#about a:hover, div#about a:visited
 #story-commentary p.toggled_on {
   visibility: visible;
   opacity: 1;
+}
+
+#story-commentary span.emph {
+  color: #fff;
+  font-weight: 700;
+  font-style: normal;
+  background-color: #333;
+  padding: 0 5px;
 }
 
 
@@ -652,7 +666,7 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p {
   padding: 0 5px;
 }
 
-/* story popup styling */
+/* story popup styling (probably won't be used now!) */
 
 .story-popup {
   margin: 0;

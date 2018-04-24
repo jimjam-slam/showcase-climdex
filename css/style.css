@@ -323,6 +323,13 @@ div#about a:active, div#about a:hover, div#about a:visited
   padding: 0 5px;
 }
 
+#story-commentary a {
+  color: #fff;
+  font-weight: 700;
+  font-style: normal;
+  background-color: #333;
+  padding: 0 5px;
+}
 
 /* #tour-interrupt-msg {
   position: absolute;

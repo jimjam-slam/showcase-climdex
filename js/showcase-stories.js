@@ -60,7 +60,7 @@ var showcase_stories = [
             },
             {
               type: 'comment', when: 8.5,
-              content: 'There\'re a few reasons for this.'
+              content: 'There\'re a few reasons for this. <a href="http://dx.doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
             }
           ],
           end_pause: 10//,
@@ -90,4 +90,12 @@ function cleanup_for_story(story) {
 
 function storybit_ready() {
   $('#map-blackout').removeClass('toggled_on');
+}
+
+function dynamic_padding_tl(map) {
+  var map_size = map.getSize(),
+      aspect = map_size.x / map_size.y;
+  return aspect <= 1.25 ?                      // max aspect ratio
+    [0,           (map_size.y - 50) / 2] :     // portrait padding
+    [map_size.x,  (map_size.y - 50)]           // landscape padding
 }

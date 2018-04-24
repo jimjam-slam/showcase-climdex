@@ -22,6 +22,8 @@ var story_popup_opts = {
 }
 
 var showcase_stories = [
+  
+  // us warming hole
   L.story(
     [
       L.storyBit(
@@ -64,7 +66,6 @@ var showcase_stories = [
             }
           ],
           end_pause: 10//,
-          //commentary_parent = 'story-commentary'
         })
     ],
     {
@@ -73,8 +74,63 @@ var showcase_stories = [
       selectable: true,
       at: [35, 225], 
       zoom: 4
-    })
-];
+    }),
+
+  // test story using bounds 
+  L.story(
+    [
+      L.storyBit(
+        {
+          baselayer:
+            L.tileLayer.wms(geoserver_base, L.extend({
+              layers: 'GSL_ann_avg',
+              env: 'low:20;high:366',
+              leg_units: 'days/yr'
+            }, geoserver_options)),
+          movements: [
+            {
+              by: [0, 50],
+              options: { duration: 10 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 3,
+              content: 'Climate change is a <span class="emph">global</span> phenomenon.'
+            },
+            {
+              type: 'comment', when: 4,
+              content: 'But not all places are affected equally.'
+            },
+            {
+              type: 'clear_comments', when: 6
+            },
+            {
+              type: 'comment', when: 6.5,
+              content: 'Our hottest days have become <span class="emph">hotter...</span>'
+            },
+            {
+              type: 'comment', when: 7.5,
+              content: '... but not in the American mid-west.'
+            },
+            {
+              type: 'comment', when: 8.5,
+              content: 'There\'re a few reasons for this. <a href="http://dx.doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
+            }
+          ],
+          end_pause: 10//,
+        })
+    ],
+    {
+      name: 'Bounds test',
+      description: 'Checking to see if we can use bounds instead. ',
+      selectable: true,
+      at: [[50, -129], [24, -60]],
+      padding_topleft: dynamic_padding_tl,
+      padding_bottomright: [0, 0]
+    }),
+
+  ];
 
 /* cleanup_for_stories: prep the ui for story mode (disable existing base
    layers, turn off story menu, wipe time cache).
@@ -92,10 +148,15 @@ function storybit_ready() {
   $('#map-blackout').removeClass('toggled_on');
 }
 
+/* dynamic_padding_tl: calculates padding for the story movements based on the
+   window's aspect ratio at the time (eg. device rotation mid-story).
+   compensates for the 50px header bar to match css styling */
 function dynamic_padding_tl(map) {
   var map_size = map.getSize(),
-      aspect = map_size.x / map_size.y;
-  return aspect <= 1.25 ?                      // max aspect ratio
-    [0,           (map_size.y - 50) / 2] :     // portrait padding
-    [map_size.x,  (map_size.y - 50)]           // landscape padding
+      aspect = map_size.x / (map_size.y + 50);
+  console.log('map size: ' + map_size.x + ', ' + map_size.y);
+  console.log('Apect ratio: ' + aspect);
+  return aspect <= 1.25 ?                             // max aspect ratio
+    [0,              ((map_size.y - 50) / 2) + 50] :  // portrait padding
+    [map_size.x / 2, 50]                              // landscape padding
 }

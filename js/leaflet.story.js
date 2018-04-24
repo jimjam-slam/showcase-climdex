@@ -10,15 +10,18 @@ L.StoryBit = L.Evented.extend({
     movements: [],
     annotations: [],
     end_pause: 0,
-    commentary_parent: 'story-commentary'
+    commentary_parent: 'story-commentary',
+    padding_topleft: [0, 0],
+    padding_bottomright: [0, 0]
   },
 
   setMap: function(map)     { this._map = map; },
   _setStory: function(story) {
     this._story = story;
     this.addEventParent(story);
+    this._padding_topleft = story.options.padding_topleft;
+    this._padding_bottomright = story.options.padding_bottomright;
   },
-
   
   initialize: function(options) {
     // TODO - do some checking on movements and annotations
@@ -28,6 +31,8 @@ L.StoryBit = L.Evented.extend({
     this._annotations = this.options.annotations;
     this._end_pause = this.options.end_pause;
     this._commentary_parent_id = this.options.commentary_parent;
+    this._padding_topleft = this.options.padding_topleft;
+    this._padding_bottomright = this.options.padding_bottomright;
 
     // add event listeners
 
@@ -66,12 +71,30 @@ L.StoryBit = L.Evented.extend({
     // set up movements using setTimeout (and hold onto the timer ids!)
     var ongoing_duration = 0;
     var ongoing_zoom = this._map.getZoom();
+
     for (var i = 0; i < this._movements.length; i++) {
-      var samezoom = this._movements[i].options.zoom == ongoing_zoom;
+
+      // determine movement type
+      var point_move_type;
+      if (this._movements[i].by != undefined)
+        point_move_type = 'panBy';
+      else if (this._movements[i].options.zoom == ongoing_zoom)
+        point_move_type = 'panTo';
+      else {
+        point_move_type = 'flyTo';
+        if (this._movements[i].options.zoom === undefined)
+          console.error('Storybit: flyTo movemenets require a zoom option');
+      }
+
+      // set a timer for the movement, then update ongoing duration and zoom
+      var movement = this._movements[i].by || this._movements[i].at;
       this._movement_timers.push(
-        setTimeout(this._move, ongoing_duration, this._map, this._movements[i].at, this._movements[i].options, samezoom));
-      ongoing_zoom = this._movements[i].options.zoom;
+        setTimeout(this._move, ongoing_duration,
+          movement, this, this._movements[i].options, point_move_type));
       ongoing_duration += (this._movements[i].options.duration * 1000);
+      if (point_move_type == 'flyTo')
+        ongoing_zoom = this._movements[i].options.zoom;
+
     }
 
     // now set up annotation toggles using setTimeout
@@ -83,8 +106,8 @@ L.StoryBit = L.Evented.extend({
           content = this._annotations[i].content,
           when = this._annotations[i].when * 1000;
       
-
       switch (type) {
+
         case 'comment':
           // comment: add to 
           this._annotation_timers.push(
@@ -92,6 +115,7 @@ L.StoryBit = L.Evented.extend({
               this._addCommentary, when,
               content, this._commentary_parent_id));
           break;
+
         case 'clear_comments':
           // ... set up a timer to clear all comments
           this._annotation_timers.push(
@@ -99,6 +123,7 @@ L.StoryBit = L.Evented.extend({
               this._clearCommentary, when, this._commentary_parent_id));
           if (when > latest_removal) latest_removal = when;
           break;
+
         case 'layer':
           // regular layers: set up timers to turn on and off
           var duration = this._annotations[i].duration * 1000,
@@ -111,6 +136,7 @@ L.StoryBit = L.Evented.extend({
             setTimeout(this._removeAnnotation, when_end, content))
           if (when_end > latest_removal) latest_removal = when_end;
           break;
+
         default:
           console.error('storybitplay: annotation\'s overlay property should either be a string or a Leaflet layer.');
       }
@@ -155,19 +181,48 @@ L.StoryBit = L.Evented.extend({
       if (this._map.hasLayer(this._baselayer))
         this._map.removeLayer(this._baselayer);
     
-    this._clearCommentary(this._commentary_parent_id);
+    this._clearCommentary(this._commentary_parent_id, back_on = false);
     
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);
     for (id of this._annotation_timers) clearTimeout(id);
   },
 
-  _move: function(map, at, options, samezoom) {
-    console.log('Moving to [' + at[0] + ', ' + at[1] + '] (' + samezoom + ')');
-    if (samezoom)
-      map.panTo(at, L.extend({ animate: true }, options));
-    else
-      map.flyTo(at, options.zoom, L.extend({ animate: true }, options));
+  /* _move: used to execute map movements. can either do a pan or fly to a
+     point, or a fly to a bounds (depending on at) */
+  _move: function(at, bit, options, move_point_type = 'flyTo') {
+
+    if (typeof at[0] == 'object' || typeof at.max == 'object') {
+      // bounds: use fitBounds (with padding depending on orientation)
+      bit._map.flyToBounds(at, L.extend({
+        paddingTopLeft:
+          typeof this._padding_topleft == 'function' ?
+            this._padding_topleft(this._bit._map) :
+            this._padding_topleft,
+        paddingBottomRight:
+          typeof this._padding_bottomright == 'function' ?
+            this._padding_bottomright(this._bit._map) :
+            this._padding_bottomright,
+        animate: false
+      }, options));
+    } else if (typeof at[0] == 'number' || typeof at.x == 'number') {
+      // point: use setView
+      switch (move_point_type) {
+        case 'panTo':
+          bit._map.panTo(at, L.extend({ animate: true }, options));
+          break;
+        case 'panBy':
+          bit._map.panBy(at, L.extend({ animate: true }, options))
+          break;
+        case 'flyTo':
+          bit._map.flyTo(at, options.zoom, L.extend({ animate: true },
+            options));
+          break;
+      }
+    } else {
+      console.error('Either give a point or a bounds for the story\'s at property.');
+    }
+
   },
 
   /* add and remove annotation layers from the map */
@@ -186,18 +241,19 @@ L.StoryBit = L.Evented.extend({
     var to_append = document.createElement('p');
     to_append.innerHTML = comment;
     parent_el.appendChild(to_append);
-    setTimeout(L.DomUtil.addClass, 10, to_append, 'toggled_on');
+    setTimeout(L.DomUtil.addClass, 20, to_append, 'toggled_on');
   },
 
   /* clear commentary from a parent. toggles it off first to allow for fades */
-  _clearCommentary: function(parent) {
+  _clearCommentary: function(parent, back_on = true) {
     console.log('Clearing commentary');
     var parent_el = L.DomUtil.get(parent);
     function empty_and_reset() {
       console.log('Transition ended, emptying commentary');
       L.DomEvent.off(this, 'transitionend', empty_and_reset, this);
       L.DomUtil.empty(this);
-      L.DomUtil.addClass(this, 'toggled_on');
+      if (back_on)
+        L.DomUtil.addClass(this, 'toggled_on');;
     }
     L.DomEvent.on(parent_el, 'transitionend', empty_and_reset, parent_el);
     L.DomUtil.removeClass(parent_el, 'toggled_on');
@@ -226,8 +282,10 @@ L.Story = L.Evented.extend({
   options: {
     name: 'Default name',
     description: 'Default description',
-    at: L.latLng([0, 60]),
-    zoom: 4
+    at: L.point([0, 60]),
+    zoom: 4,
+    padding_topleft: [0, 0],
+    padding_bottomright: [0, 0],
   },
 
   _current_storybit: 0,  // track currently playing story
@@ -236,6 +294,8 @@ L.Story = L.Evented.extend({
     L.setOptions(this, options);
     this._name = this.options.name;
     this._description = this.options.description;
+    this._padding_topleft = this.options.padding_topleft;
+    this._padding_bottomright = this.options.padding_bottomright;
     if (map !== undefined)
       this.setMap(map);
 
@@ -305,7 +365,32 @@ L.Story = L.Evented.extend({
   play: function() {
     
     console.log(this._name + ': playing story');
-    this._map.setView(this.options.at, this.options.zoom, { animate: false });
+
+    // either use setView or fitBounds, provided on whether a point or a
+    // bound is given. use padding and aspect ratio from options for the latter
+    if (
+      typeof this.options.at[0] == 'object' ||
+      typeof this.options.at.max == 'object') {
+      // bounds: use fitBounds (with padding depending on orientation)
+      this._map.fitBounds(this.options.at, {
+        paddingTopLeft:
+          typeof this._padding_topleft == 'function' ?
+            this._padding_topleft(this._map) :
+            this._padding_topleft,
+        paddingBottomRight:
+          typeof this._padding_bottomright == 'function' ?
+            this._padding_bottomright(this._map) :
+            this._padding_bottomright,
+        animate: false
+      });
+    } else if (
+      typeof this.options.at[0] == 'number' ||
+      typeof this.options.at.x == 'number') {
+      // point: use setView
+      this._map.setView(this.options.at, this.options.zoom, { animate: false });
+    } else {
+      console.error('Either give a point or a bounds for the story\'s at property.');
+    }
 
     // load first storybit, if it's there
     if (this._storybits.length > 0)

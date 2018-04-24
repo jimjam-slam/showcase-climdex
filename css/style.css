@@ -271,16 +271,14 @@ div#about a:active, div#about a:hover, div#about a:visited
   position: absolute;
   top: 50px;
   margin: 0;
-  width: 100%;
+  width: 90%;
   height: calc(100vh - 50px);
 
   display: flex;
   flex-flow: column nowrap;
-  /* justify-content: center; */ /* too many fade-in and positioning bugs! */
   justify-content: flex-start;
   align-items: flex-start;    /* left */
-  padding-top: calc(50px + 5%);
-  padding-left: 5%;
+  padding: calc(50px + 5%) 5% 5% 5%;
 }
 
 @media screen and (max-aspect-ratio: 5/4) {
@@ -288,8 +286,8 @@ div#about a:active, div#about a:hover, div#about a:visited
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-    padding-top: 70px;
-    padding-left: 0;
+    padding: 70px 10px 10px 10px;
+    width: calc(100% - 20px);
   }
 }
 

@@ -108,6 +108,20 @@ for (story of showcase_stories) {
   story.on('storybitend', function() {
     legend.update('img/1x1.png');
   });
+  story.on('storyend', function() {
+    
+    switch (app_mode) {
+      case 'tour':
+        // tour mode: load another story
+
+        break;
+
+      case 'stories':
+      default:
+        turn_stories_list_on();
+        break;
+    }
+  })
 }
 
 // event listener: toggle timebar depending on layer selected in data mode, and

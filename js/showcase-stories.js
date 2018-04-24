@@ -39,11 +39,6 @@ var showcase_stories = [
             }
           ],
           annotations: [
-            // { type: 'layer', when: 0, duration: 2,
-            //   content: L.popup(story_popup_opts)
-            //     .setLatLng([35, 240])
-            //     .setContent('<p>Climate change is a <span class="red">global</span> phenomenon.<p>')
-            // },
             {
               type: 'comment', when: 3,
               content: 'Climate change is a <span class="emph">global</span> phenomenon.'
@@ -57,7 +52,7 @@ var showcase_stories = [
             },
             {
               type: 'comment', when: 6.5,
-              content: 'Our hottest days have become <span class="emph">hotter</span>...'
+              content: 'Our hottest days have become <span class="emph">hotter...</span>'
             },
             {
               type: 'comment', when: 7.5,

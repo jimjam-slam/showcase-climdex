@@ -303,10 +303,10 @@ div#about a:active, div#about a:hover, div#about a:visited
   
 }
 
-#story-bitbar.toggled_on {
+/* #story-bitbar.toggled_on {
   visibility: visible;
   opacity: 0.5;
-}
+} */
 
 #story-bitbar h2 {
   font-family: 'Oswald', sans-serif;

@@ -84,8 +84,9 @@ var showcase_stories = [
           baselayer:
             L.tileLayer.wms(geoserver_base, L.extend({
               layers: 'GSL_ann_avg',
-              env: 'low:20;high:366',
-              leg_units: 'days/yr'
+              env: 'low:10;high:366',
+              leg_units: 'days/yr',
+              bounds: [[50, -136], [24, -60]]
             }, geoserver_options)),
           movements: [
             {

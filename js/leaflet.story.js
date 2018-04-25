@@ -336,9 +336,9 @@ L.Story = L.Evented.extend({
     // create item div and optionally attach to parent
     if (parent_id !== undefined && parent_id !== '')
       item = L.DomUtil.create(
-        'button', 'story_menu_item', L.DomUtil.get(parent_id));
+        'button', 'story-menu-item', L.DomUtil.get(parent_id));
     else
-      item = L.DomUtil.create('button', 'story_menu_item');
+      item = L.DomUtil.create('button', 'story-menu-item');
 
     // create and attach button contents
     var item_name = document.createElement('h2');

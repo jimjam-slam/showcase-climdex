@@ -82,8 +82,14 @@ var base_tiles = L.tileLayer(
     updateWhenIdle: false
   }).addTo(mymap);
 
-// populate story menu and attach custom story code
-// (legend update + transitions)
+// story menu: event listener for tour mode button
+$('#shuffle-stories').on('click touch', function() {
+  app_mode = 'shuffle';
+  showcase_stories[getRandomInt(showcase_stories.length)].load();
+});
+
+
+// populate story menu and attach custom story code (legend + transitions)
 for (story of showcase_stories) {
   story.createMenuItem('stories-list');
   story.setMap(mymap);
@@ -110,7 +116,7 @@ for (story of showcase_stories) {
   });
   story.on('storyend storyquit', function() {
     switch (app_mode) {
-      case 'tour':
+      case 'shuffle':
         showcase_stories[getRandomInt(showcase_stories.length)].load();
         break;
       case 'data':
@@ -215,8 +221,8 @@ function start_story_mode() {
 // decide which mode to initialise in (affects how we initialise)
 var app_mode;
 switch (window.location.search.substring(1)) {
-  case 'tour':
-    app_mode = 'tour';
+  case 'shuffle':
+    app_mode = 'shuffle';
     showcase_stories[getRandomInt(showcase_stories.length)].load();
     break;
   case 'data':

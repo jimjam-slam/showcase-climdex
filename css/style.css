@@ -219,6 +219,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   right: 0;
   margin: 0;
   padding: 0 20px;
+  /* TODO - do I need to set width explicitly? */
   max-width: calc(100vw - 40px);
   height: calc(100vh - 50px);
   overflow-x: hidden;
@@ -240,7 +241,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   border: none;
   color: #eee;
   text-align: left;
-
+  width: 100%;
 }
 
 /* manu item icon padding */
@@ -295,8 +296,8 @@ div#about a:active, div#about a:hover, div#about a:visited
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-    padding: 60px 10px 10px 10px;
-    width: calc(100% - 20px);
+    padding: 60px 20px 10px 20px;
+    width: calc(100% - 40px);
   }
 }
 

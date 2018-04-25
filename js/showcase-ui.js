@@ -105,6 +105,8 @@ function toggle_data() {
 $('#nav-data').on('click touch', toggle_data);
 $('#close-data').on('click touch', toggle_data);
 
+/* timebar */
+
 function turn_timebar_off() {
   $('.leaflet-bottom.leaflet-left').removeClass('toggled_on');
   $('.leaflet-control-wms-legend').removeClass('legend-on-timebar');

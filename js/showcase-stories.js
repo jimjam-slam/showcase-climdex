@@ -216,6 +216,9 @@ function storybit_ready() {
   $('#story-bitbar-label')
     .html(this._storybits[this._current_storybit]._baselayer_label)
     .addClass('toggled_on');
+  // also turn the year indicator on if it's animated
+  if (this._storybits[this._current_storybit] instanceof L.StoryBit.Animated)
+    $('#story-bitbar-td').removeClass('disabled');
   $('#map-blackout').removeClass('toggled_on');
 }
 
@@ -224,9 +227,8 @@ function storybit_wrapup() {
   legend.update('img/1x1.png');
   $('#story-bitbar').one('transitionend', function() {
     $('#story-bitbar-label').html('');
-    $('#story-bitbar-td').html('');
+    $('#story-bitbar-td').addClass('disabled');
   }).removeClass('toggled_on');
-  // $('#story-bitbar-label').html('');
 }
 
 /* dynamic_padding_tl: calculates padding for the story movements based on the

@@ -246,11 +246,11 @@ div#about a:active, div#about a:hover, div#about a:visited
 
 /* manu item icon padding */
 #stories-list .story-menu-item svg {
-  padding-left: 5px;
+  padding-left: 10px;
 }
 
 #stories-list .story-menu-item + .story-menu-item {
-  border-top: 1px solid #eee;
+  border-top: 1px solid #999;
 }
 
 #stories-list h2 {
@@ -280,7 +280,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   position: absolute;
   top: 50px;
   margin: 0;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 50px;
 
   display: flex;
@@ -317,6 +317,12 @@ div#about a:active, div#about a:hover, div#about a:visited
   text-shadow: 1px 1px 1px #eee;
   color: #444;
 }
+
+#story-bitbar-td.disabled {
+  visibility: hidden;
+  opacity: 0;
+}
+  
 
 /* story commentary */
 

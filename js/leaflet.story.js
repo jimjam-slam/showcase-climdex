@@ -102,6 +102,7 @@ L.StoryBit = L.Evented.extend({
     // now set up annotation toggles using setTimeout
     // (we need separate timers for turning them on and off)
     var latest_removal = 0;
+    console.log('Number of annotations: ' + this._annotations.length);
     for (var i = 0; i < this._annotations.length; i++) {
       
       var type = this._annotations[i].type,
@@ -340,7 +341,7 @@ L.StoryBit.Animated = L.StoryBit.extend({
         console.log(tdp);
         tdp.setLooped(false);
         tdp.setTransitionTime(5);
-        tdp.on('animationfinished', function() {
+        tdp.once('animationfinished', function() {
           tdp.setLooped(true);
           tdp.setTransitionTime(250);
           tdp.start();

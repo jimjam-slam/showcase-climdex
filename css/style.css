@@ -182,7 +182,7 @@ div#about {
   margin: 0;
   padding: 20px;
   width: calc(100vw - 40px);
-  height: calc(100vh - 50px);
+  height: calc(100vh - 90px);
   overflow-x: hidden;
   overflow-y: auto;
 

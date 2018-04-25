@@ -289,8 +289,8 @@ div#about a:active, div#about a:hover, div#about a:visited
   align-items: center;
   padding: 0 10px;
 
-  /* background-color: #222222cc; */
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
+  background: none;
 
   /* light striped background approach: think this might be too much...
   /* background-color: #aaaaaa;
@@ -303,10 +303,10 @@ div#about a:active, div#about a:hover, div#about a:visited
   
 }
 
-/* #story-bitbar.toggled_on {
+#story-bitbar.toggled_on {
   visibility: visible;
-  opacity: 0.5;
-} */
+  opacity: 1;
+}
 
 #story-bitbar h2 {
   font-family: 'Oswald', sans-serif;

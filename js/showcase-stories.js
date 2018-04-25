@@ -81,6 +81,7 @@ var showcase_stories = [
     [
       L.storyBit(
         {
+          baselayer_label: 'Growing season length: annual average (1951&ndash;2017)',
           baselayer:
             L.tileLayer.wms(geoserver_base, L.extend({
               layers: 'GSL_ann_avg',

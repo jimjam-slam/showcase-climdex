@@ -421,13 +421,13 @@ L.Story = L.Evented.extend({
     // quit the current storybit as well, if one is still going
     if (this._current_storybit < this._storybits.length)
       this._storybits[_current_storybit].quit();
-    this.fire('storyquit', this);
-    this._current_storybit = 0;
+      this._current_storybit = 0;
+      this.fire('storyquit', this);
   },
 
   _end: function() {
-    this.fire('storyend', this);
     this._current_storybit = 0;
+    this.fire('storyend', this);
   }
 
 });

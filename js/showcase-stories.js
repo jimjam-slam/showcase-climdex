@@ -22,8 +22,7 @@ var story_popup_opts = {
 }
 
 var showcase_stories = [
-  
-  // us warming hole
+  // us warming hole test
   L.story(
     [
       L.storyBit(
@@ -160,4 +159,9 @@ function dynamic_padding_tl(map) {
   return aspect <= 1.25 ?                             // max aspect ratio
     [0,              ((map_size.y - 50) / 2) + 50] :  // portrait padding
     [map_size.x / 2, 50]                              // landscape padding
+}
+
+/* getRandomInt: helper for getting random stories */
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 }

@@ -108,18 +108,16 @@ for (story of showcase_stories) {
   story.on('storybitend', function() {
     legend.update('img/1x1.png');
   });
-  story.on('storyend', function() {
-    
+  story.on('storyend storyquit', function() {
     switch (app_mode) {
       case 'tour':
-        // tour mode: load another story
-
+        showcase_stories[getRandomInt(showcase_stories.length)].load();
         break;
-
+      case 'data':
+        turn_data_on();
       case 'stories':
       default:
         turn_stories_list_on();
-        break;
     }
   })
 }
@@ -217,15 +215,15 @@ function start_story_mode() {
 // decide which mode to initialise in (affects how we initialise)
 var app_mode;
 switch (window.location.search.substring(1)) {
-  case 'stories':
-    start_story_mode();
-    break;
   case 'tour':
-    // auto rotate stories
+    app_mode = 'tour';
+    showcase_stories[getRandomInt(showcase_stories.length)].load();
     break;
   case 'data':
+    turn_data_on();
+  case 'stories':
   default:
-    start_data_mode();
+    turn_stories_list_on();
 }
 
 $('.leaflet-control-layers-toggle').html('Select an index');

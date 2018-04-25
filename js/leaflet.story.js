@@ -51,15 +51,15 @@ L.StoryBit = L.Evented.extend({
     this.fire('storybitload', this, propogate = true);
 
     // attach the baselayer to the map if there's on of each
-    if (this._baselayer !== undefined) {}
-      if (this._map !== undefined) {
+    if (this._map === undefined)
+      console.error('This StoryBit has no map associated with it. Attach ' +
+        'a map either to this StoryBit using this.setMap() or to an ' +
+        'attached Story using story.setMap().');
+    else {
+      if (this._baselayer !== undefined)
         this._baselayer.addTo(this._map);
-        this.play();
-      }
-      else
-        console.error('This StoryBit has no map associated with it. Attach ' +
-          'a map either to this StoryBit using this.setMap() or to an ' +
-          'attached Story using story.setMap().');
+      this.play();
+    }
   },
 
   play: function() {
@@ -85,7 +85,7 @@ L.StoryBit = L.Evented.extend({
       else {
         point_move_type = 'flyTo';
         if (this._movements[i].options.zoom === undefined)
-          console.error('Storybit: flyTo movemenets require a zoom option');
+          console.error('Storybit: flyTo movements require a zoom option');
       }
 
       // set a timer for the movement, then update ongoing duration and zoom
@@ -141,9 +141,7 @@ L.StoryBit = L.Evented.extend({
 
         default:
           console.error('storybitplay: annotation\'s overlay property should either be a string or a Leaflet layer.');
-      }
-
-      
+      }      
     }
 
     // and, finally, set a quit timer
@@ -270,13 +268,106 @@ L.storyBit = function(options) {
 
 /* ========================================================================== */
 
-// L.StoryBit.Animated = L.StoryBit.extend({
+L.StoryBit.Animated = L.StoryBit.extend({
 
-// });
+  options: {
+    // preparing_classname: 'storybit-preparing'
+    time_start: undefined,
+    time_end:   undefined
+  },
 
-// L.storyBit.animated = function() {
-//   return new L.StoryBit.Animated();
-// }
+  _td_player: undefined,
+  _set_td_player: function(td_player) { this._td_player = td_player; },
+
+  initialize: function(td_player, options) {
+    L.StoryBit.prototype.initialize.call(this, options);
+    this._set_td_player(td_player);
+    this._time_start = this.options.time_start;
+    this._time_end = this.options.time_end;
+  },
+
+  load: function() {
+    this.fire('storybitload', this, propogate = true);
+
+    // attach the baselayer to the map if there's on of each
+    if (this._map === undefined)
+      console.error('This StoryBit has no map associated with it. Attach ' +
+        'a map either to this StoryBit using this.setMap() or to an ' +
+        'attached Story using story.setMap().');
+    else if
+      (this._td_player === undefined || this._map.timeDimension === undefined)
+      console.error('Need a timeDimension associated with the map and a ' +
+        'timeDimension player associated with this StoryBit.');
+    else {
+      if (this._baselayer !== undefined) {
+        /* for StoryBit.Animated, we need to attach this layer, set the time
+           range, set the animation to start playing and, and only play once we
+           detect it's run its course (to make sure it's cached properly). */
+           
+        /* nb: i also want to hide the layer until i know it's run its course
+           (in the event this isn't the first storybit in the story), but i'm
+           not 100% sure that appending a css class before attaching will work
+           (b/c even if i take it off later, timedimension will continue to use
+           it for newly created time slices) */
+        this._baselayer.addTo(this._map);
+
+        if (this._time_start === undefined || this._time_end === undefined)
+          console.error('time_start and time_end options are required if you' +
+            'provide a timeDimension baselayer.');
+
+        // set upper/lower bounds and current time
+        var start_dt = new Date(this._time_start),
+            end_dt = new Date(this._time_end),
+            td = this._map.timeDimension,
+            tdp = this._td_player;
+        if (td.getCurrentTime < start_dt) {
+          td.setUpperLimit(end_dt.valueOf());
+          td.setCurrentTime(start_dt.valueOf());
+          td.setLowerLimit(start_dt.valueOf());
+        } else if (td.getCurrentTime > start_dt) {
+          td.setLowerLimit(start_dt.valueOf());
+          td.setCurrentTime(start_dt.valueOf());
+          td.setUpperLimit(end_dt.valueOf());
+        } else {
+          td.setLowerLimit(start_dt.valueOf());
+          td.setUpperLimit(end_dt.valueOf());
+        }
+
+        /* prefetch the animation frames. we do this by playing through the
+           animation once (with a v/ high fps), and then actually loading the
+           storybit once it finishes */
+        console.log('TDP');
+        console.log(tdp);
+        tdp.setLooped(false);
+        tdp.setTransitionTime(5);
+        tdp.on('animationfinished', function() {
+          tdp.setLooped(true);
+          tdp.setTransitionTime(250);
+          tdp.start();
+          this.play();
+        }, this);
+        tdp.start();
+      }
+      else
+        this.play();  // if there's no baselayer, just play the bit without it
+    }
+  },
+
+  // extra _wrapup: leave the timedimension player the way we found it
+  _wrapup: function() {
+    var tdp = this._td_player;
+    console.log(tdp);
+    tdp.stop();
+    tdp.setLooped(true);
+    tdp.setTransitionTime(250);
+    
+    L.StoryBit.prototype._wrapup.call(this);
+  }
+});
+
+L.storyBit.animated = function(td_player, options) {
+  return new L.StoryBit.Animated(td_player, options);
+}
 
 /* ========================================================================== */
 
@@ -360,7 +451,6 @@ L.Story = L.Evented.extend({
   /* load: get things set up. really just exists to fire an event: i want to have transition code happen externally to this but still set the initail view
   internally. separating load and play allows that to happen!  */
   load: function() {
-    
     console.log(this._name + ': loading story');
     this.fire('storyload', this);
   },
@@ -373,7 +463,7 @@ L.Story = L.Evented.extend({
     // bound is given. use padding and aspect ratio from options for the latter
     if (
       typeof this.options.at[0] == 'object' ||
-      typeof this.options.at.max == 'object') {
+      this.options.at instanceof L.Bounds) {
       // bounds: use fitBounds (with padding depending on orientation)
       this._map.fitBounds(this.options.at, {
         paddingTopLeft:
@@ -388,7 +478,7 @@ L.Story = L.Evented.extend({
       });
     } else if (
       typeof this.options.at[0] == 'number' ||
-      typeof this.options.at.x == 'number') {
+      this.options.at instanceof L.Point) {
       // point: use setView
       this._map.setView(this.options.at, this.options.zoom, { animate: false });
     } else {

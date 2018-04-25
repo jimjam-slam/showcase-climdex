@@ -140,10 +140,14 @@ Event             | Data | Description
 `storybitskip`    |      | Fired when a storybit is 'skipped' part way through.
 `storybitquit`    |      | Fired when the storybit is quit altogether.
 
-<!-- ## L.StoryBit.Animated
+## L.StoryBit.Animated
 
 ### Methods
 
 ### Options
 
-### Events -->
+Option                | Type   | Default                | Description                     
+----------------------|--------|------------------------|---------------------------------
+`preparing_classname` | String | `"storybit-preparing"` | A CSS class name to be appended to the layers created by 
+
+### Events

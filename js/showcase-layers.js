@@ -1,5 +1,24 @@
 /* set of layers with which to populate my custom controls */
 
+// initialise timedimension and associated control + player
+// (but don't attached to the map yet)
+var td = new L.TimeDimension({
+  timeInterval: '1951-01-01T00:00:00.000Z/2017-01-01T00:00:00.000Z',
+  period: 'P1Y'
+});
+var td_player = new L.TimeDimension.Player({
+  buffer: 5,     // control to taste
+  loop: true,
+  transitionTime: 250,
+  startOver: true
+}, td);
+var td_control = new L.Control.TimeDimension({
+  position: 'bottomleft',
+  speedSlider: false,
+  limitSliders: true,
+  player: td_player
+});
+
 // base options for all geoserver wms requests
 var geoserver_base = 'https://climdex.org/geoserver/showcase/wms?';
 var geoserver_options = {
@@ -374,3 +393,26 @@ var climdex_indices_control =
     menu_count: 3,
     menu_delimiter: '_'
   });
+
+/* wipe_time_cache: destroy all non-visible layers (ie. cached time slices).
+  in data mode, this gets called whenever the user pans or zooms.
+  in story or tour mode, it gets called whenever a story starts */
+function wipe_time_cache()
+{
+  current_time_id = td.getCurrentTime();
+  
+  // ... for each time layer synced to the time dimension...
+  $.each(td._syncedLayers, function(sync_index, sync_value)
+  {
+    // ... and each time slice in the synced time layer...
+    $.each(sync_value._layers, function(slice_index, slice_value)
+    {
+      // remove the slice if it doesn't match the current time
+      if (slice_index != current_time_id)
+      {
+        console.log('Deleting cached time slice');
+        mymap.removeLayer(slice_value);
+      }
+    });
+  });
+}

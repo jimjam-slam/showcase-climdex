@@ -58,7 +58,7 @@ html, body {
 .blend_overlay { mix-blend-mode: overlay; }
 .blend_normal { mix-blend-mode: normal; }
 
-.leaflet-layer.preparing { visibility: hidden; opacity: 0; }
+.leaflet-layer.storybit-preparing { visibility: hidden; opacity: 0; }
 
 /* header bar */
 

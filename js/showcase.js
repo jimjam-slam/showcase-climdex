@@ -82,13 +82,8 @@ var base_tiles = L.tileLayer(
     updateWhenIdle: false
   }).addTo(mymap);
 
-// story menu: event listener for tour mode button
-$('#shuffle-stories').on('click touch', function() {
-  app_mode = 'shuffle';
-  showcase_stories[getRandomInt(showcase_stories.length)].load();
-});
-
-
+// story menu: event listener for shuffle mode button
+$('#shuffle-stories').on('click touch', random_story);
 // populate story menu and attach custom story code (legend + transitions)
 for (story of showcase_stories) {
   story.createMenuItem('stories-list');
@@ -117,7 +112,7 @@ for (story of showcase_stories) {
   story.on('storyend storyquit', function() {
     switch (app_mode) {
       case 'shuffle':
-        showcase_stories[getRandomInt(showcase_stories.length)].load();
+        random_story();
         break;
       case 'data':
         turn_data_on();
@@ -158,25 +153,6 @@ mymap.on('baselayerchange', function(ev) {
     $('.leaflet-control-layers-toggle').html(new_title);
   }  
 });
-
-function start_data_mode() {
-  // remove old ui elements
-  $('#nav-stories-list').removeClass('toggled_on');
-
-  // turn ui elements on
-  app_mode = 'data';
-  turn_data_on();
-
-  // set map view and time 
-  td.setCurrentTime(1104537600000);
-  mymap.flyTo([15, 100], 2);
-}
-
-function start_story_mode() {
-  app_mode = 'stories';
-  turn_data_off();
-  turn_stories_list_on();
-}
 
 // function load_story(event) {
 //   // use event.data.story_code to access stories
@@ -222,11 +198,11 @@ function start_story_mode() {
 var app_mode;
 switch (window.location.search.substring(1)) {
   case 'shuffle':
-    app_mode = 'shuffle';
-    showcase_stories[getRandomInt(showcase_stories.length)].load();
+    random_story();
     break;
   case 'data':
     turn_data_on();
+    break;
   case 'stories':
   default:
     turn_stories_list_on();

@@ -165,3 +165,9 @@ function dynamic_padding_tl(map) {
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
+
+/* random_story: load a random story */
+function random_story() {
+  app_mode = 'shuffle';
+  showcase_stories[getRandomInt(showcase_stories.length)].load();
+}

@@ -27,6 +27,7 @@ var showcase_stories = [
     [
       L.storyBit(
         {
+          baselayer_label: 'Hottest day: annual trend (1951&ndash;2017)',
           baselayer:
             L.tileLayer.wms(geoserver_base, L.extend({
               layers: 'TXx_ann_trendval',
@@ -140,12 +141,28 @@ function cleanup_for_story(story) {
     turn_data_off();
     turn_stories_list_off();
     wipe_time_cache();
+    $('#story-bitbar').addClass('toggled_on');
     story.play();
   }).addClass('toggled_on');
 }
 
 function storybit_ready() {
+  console.log('storybitready handler');
+  console.log(this._storybits[this._current_storybit]._baselayer_label);
+  $('#story-bitbar-label')
+    .html(this._storybits[this._current_storybit]._baselayer_label)
+    .addClass('toggled_on');
   $('#map-blackout').removeClass('toggled_on');
+}
+
+function storybit_wrapup() {
+  console.log('storybitend handler');
+  legend.update('img/1x1.png');
+  $('#story-bitbar').one('transitionend', function() {
+    $('#story-bitbar-label').html('');
+    $('#story-bitbar-td').html('');
+  }).removeClass('toggled_on');
+  // $('#story-bitbar-label').html('');
 }
 
 /* dynamic_padding_tl: calculates padding for the story movements based on the

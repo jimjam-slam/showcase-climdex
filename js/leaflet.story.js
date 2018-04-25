@@ -6,6 +6,7 @@ L.StoryBit = L.Evented.extend({
   _annotation_timers: [],
 
   options: {
+    baselayer_label: 'No baselayer',
     baselayer: undefined,
     movements: [],
     annotations: [],
@@ -26,6 +27,7 @@ L.StoryBit = L.Evented.extend({
   initialize: function(options) {
     // TODO - do some checking on movements and annotations
     L.setOptions(this, options);
+    this._baselayer_label = this.options.baselayer_label;
     this._baselayer = this.options.baselayer;
     this._movements = this.options.movements;
     this._annotations = this.options.annotations;
@@ -156,6 +158,7 @@ L.StoryBit = L.Evented.extend({
     // cancel existing quit timer
     console.log('Quitting storybit');
     clearTimeout(this._end_timer);
+    this_bit.fire('storybitquit', this_bit, propogate = true);
     this._wrapup();
   },
   

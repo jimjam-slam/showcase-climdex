@@ -213,7 +213,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   display: block;
   transition: visibility 0.3s linear, opacity 0.3s linear;
   
-  z-index: 1001;
+  z-index: 1003;
   position: absolute;
   top: 50px;
   right: 0;
@@ -270,6 +270,54 @@ div#about a:active, div#about a:hover, div#about a:visited
   color: gold;
 } 
 
+/* story bit-bar */
+#story-bitbar {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s linear, opacity 0.3s linear;
+
+  z-index: 1001;
+  position: absolute;
+  top: 50px;
+  margin: 0;
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+
+  /* background-color: #222222cc; */
+  background-color: #eeeeee;
+
+  /* light striped background approach: think this might be too much...
+  /* background-color: #aaaaaa;
+  background: repeating-linear-gradient(
+    -45deg,
+    #aaaaaa,
+    #aaaaaa 4px,
+    #cccccc 4px,
+    #cccccc 8px); */
+  
+}
+
+#story-bitbar.toggled_on {
+  visibility: visible;
+  opacity: 0.5;
+}
+
+#story-bitbar h2 {
+  font-family: 'Oswald', sans-serif;
+  font-style: normal;
+  text-transform: uppercase;
+  font-size: 1em;
+  opacity: 1;
+  text-shadow: 1px 1px 1px #eee;
+  color: #444;
+}
+
 /* story commentary */
 
 #story-commentary {
@@ -277,7 +325,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   opacity: 0;
   transition: visibility 0.3s linear, opacity 0.3s linear;
   
-  z-index: 1000;
+  z-index: 1002;
   position: absolute;
   top: 50px;
   margin: 0;
@@ -296,7 +344,7 @@ div#about a:active, div#about a:hover, div#about a:visited
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-    padding: 60px 20px 10px 20px;
+    padding: 70px 20px 10px 20px;
     width: calc(100% - 40px);
   }
 }

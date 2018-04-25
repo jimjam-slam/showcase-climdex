@@ -105,10 +105,8 @@ for (story of showcase_stories) {
         lab_low, lab_high);
     }
   });
-  story.on('storybitplay', storybit_ready);
-  story.on('storybitend', function() {
-    legend.update('img/1x1.png');
-  });
+  story.on('storybitplay', storybit_ready, story);
+  story.on('storybitend storybitquit', storybit_wrapup, story);
   story.on('storyend storyquit', function() {
     switch (app_mode) {
       case 'shuffle':

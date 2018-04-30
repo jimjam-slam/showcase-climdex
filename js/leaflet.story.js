@@ -172,7 +172,7 @@ L.StoryBit = L.Evented.extend({
   _wrapup: function() {
     // remove any layers and comments that've been turned on and not turned off
     console.log('Wrapping up storybit');
-    console.log(this);
+    // console.log(this);
     for (annotation in this._annotation)
       if (this._map.hasLayer(annotation.overlay))
         this._map.removeLayer(annotation.overlay);
@@ -281,12 +281,16 @@ L.StoryBit.Animated = L.StoryBit.extend({
 
   _td_player: undefined,
   _set_td_player: function(td_player) { this._td_player = td_player; },
+  _frames: undefined,
+  _start_dt: undefined,
+  _end_dt: undefined,
 
   initialize: function(td_player, options) {
     L.StoryBit.prototype.initialize.call(this, options);
     this._set_td_player(td_player);
-    this._time_start = this.options.time_start;
-    this._time_end = this.options.time_end;
+    this._start_dt = new Date(this.options.time_start);
+    this._end_dt = new Date(this.options.time_end);
+    this._frames = this._baselayer.options.cache;
   },
 
   load: function() {
@@ -315,70 +319,93 @@ L.StoryBit.Animated = L.StoryBit.extend({
            it for newly created time slices) */
         this._baselayer.addTo(this._map);
 
-        if (this._time_start === undefined || this._time_end === undefined)
+        if (this._start_dt === undefined || this._end_dt === undefined)
           console.error('time_start and time_end options are required if you' +
             'provide a timeDimension baselayer.');
 
-        // set upper/lower bounds and current time
-        var start_dt = new Date(this._time_start),
-            end_dt = new Date(this._time_end),
-            td = this._map.timeDimension,
+        var td = this._map.timeDimension,
             tdp = this._td_player;
-        console.log('Before setting bounds: current time ' +
-          td.getCurrentTime());
-        if (td.getCurrentTime() < start_dt) {
-          td.setUpperLimit(end_dt.valueOf());
-          td.setCurrentTime(start_dt.valueOf());
-          td.setLowerLimit(start_dt.valueOf());
-        } else if (td.getCurrentTime() > start_dt) {
-          td.setLowerLimit(start_dt.valueOf());
-          td.setCurrentTime(start_dt.valueOf());
-          td.setUpperLimit(end_dt.valueOf());
-        } else {
-          td.setLowerLimit(start_dt.valueOf());
-          td.setUpperLimit(end_dt.valueOf());
-          // DEBUG - could calling this anyway help?
-          // td.setCurrentTime(start_dt.valueOf());
-        }
-        console.log('After setting bounds: current time ' +
-          td.getCurrentTime());
 
-        /* prefetch the animation frames, then play when we have them */
-        var frame_load_count = this._baselayer.options.cache;
-        console.log(frame_load_count + ' frames to preload');
-        function preload_storybit_frames() {
-          frame_load_count -= 1;
-          if (frame_load_count > 1) {
-            // more frames to load
-            console.log('timeloading. ' + frame_load_count + ' frames left');
+        /* set the time bounds for the story:
+           first limits going OUT, then current time, then limits going IN */
+        var currentIndices = [
+          td.getLowerLimitIndex() || 0,
+          td.getCurrentTimeIndex(),
+          td.getUpperLimitIndex() || td._availableTimes.length - 1,
+        ];
+        var newIndices = [
+          td._seekNearestTimeIndex(this._start_dt),
+          td._seekNearestTimeIndex(this._start_dt),
+          td._seekNearestTimeIndex(this._end_dt),
+        ];
+        console.log('Changing limits from ' + currentIndices + ' to ' +
+          newIndices);
+        
+        // limits moving OUT go BEFORE currentTime
+        if (currentIndices[0] > newIndices[0])
+          td.setLowerLimitIndex(newIndices[0]);
+        if (newIndices[2] > currentIndices[2])
+          td.setUpperLimitIndex(newIndices[2]);
 
-          } else {
-            // all done! take this listener off and start the story
-            console.log('let\'s go');
-            td.off('timeloading', preload_storybit_frames, this);
-            td.setCurrentTime(start_dt.valueOf());
-            tdp.start();
-            this.play();
-          }
-        }
-        td.on('timeloading', preload_storybit_frames, this);
-        td.prepareNextTimes(1, frame_load_count, true);
+        // move currentTime.
+        // gotcha: it won't actually upate 'til the layer has loaded!
+        td.on('timeload', this._prefetch_animation, this);
+        td.setCurrentTimeIndex(newIndices[1]);
+
+        // limits moving IN go AFTER currentTime
+        if (currentIndices[0] < newIndices[0])
+          td.setLowerLimitIndex(newIndices[0]);
+        if (newIndices[2] < currentIndices[2])
+          td.setUpperLimitIndex(newIndices[2]);
+        
+        // (limits not moving don't matter)
       }
       else
         this.play();  // if there's no baselayer, just play the bit without it
     }
   },
 
+  _prefetch_animation: function() {
+    td.off('timeload', this._prefetch_animation, this);
+    console.log('New limits are ' + [
+      td._lowerLimit, td._currentTimeIndex, td._upperLimit]);
+
+    /* prefetch the animation frames, then play when we have them */
+    this._baselayer.on('timeload', this._check_to_play, this);
+    console.log('Fetching ' + this._frames + ' frames before starting; ' +
+      td.getNumberNextTimesReady(1, this._frames, true) +
+      ' already available');
+    td.prepareNextTimes(1, this._frames, true);
+  },
+
+  _check_to_play: function() {
+    if (td.getNumberNextTimesReady(1, this._frames, true) < this._frames) {
+      // still waiting
+      // console.log('Waiting (' +
+      //   td.getNumberNextTimesReady(1, this._frames, true) + ' of ' +
+      //   this._frames + ' frames ready)')
+    } else {
+      // ready!
+      // console.log('let\'s go');
+      this._baselayer.off('timeload', this._check_to_play, this);
+      // td.off('timeload', preload_storybit_frames, this);
+      this._map.timeDimension.setCurrentTime(this._start_dt.valueOf());
+      this._td_player.start();
+      this.play();
+    }
+  },
+
   // extra _wrapup: leave the timedimension player the way we found it
   _wrapup: function() {
     var tdp = this._td_player;
-    console.log(tdp);
+    // console.log(tdp);
     tdp.stop();
-    tdp.setLooped(true);
-    tdp.setTransitionTime(250);
-    
+    // console.log(this);
+    // this._baselayer._unvalidateCache();
+    this._baselayer._evictCachedTimes(0, 0);
     L.StoryBit.prototype._wrapup.call(this);
   }
+
 });
 
 L.storyBit.animated = function(td_player, options) {

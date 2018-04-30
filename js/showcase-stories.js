@@ -129,7 +129,7 @@ var showcase_stories = [
               content: 'There\'re a few reasons for this. <a href="http://dx.doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
             }
           ],
-          end_pause: 10//,
+          end_pause: 1//,
         })
     ],
     {

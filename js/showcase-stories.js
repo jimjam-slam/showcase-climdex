@@ -21,6 +21,8 @@ var story_popup_opts = {
   className: 'story-popup'
 }
 
+var time_suffix = '-01-01T00:00:00.000Z';
+
 var showcase_stories = [
   // us warming hole test
 
@@ -94,8 +96,8 @@ var showcase_stories = [
                   bounds: [[50, -136], [24, -60]]
                 }, geoserver_options)),
               { cache: 10 }),
-          time_start: '1990-01-01T00:00:00.000Z',
-          time_end: '1999-01-01T00:00:00.000Z',
+          time_start: '1990' + time_suffix,
+          time_end: '1999' + time_suffix,
           movements: [
             {
               by: [0, 50],
@@ -202,11 +204,13 @@ var showcase_stories = [
    attach to storyloading events. */
 function cleanup_for_story(story) {
   $('#map-blackout').one('transitionend', function() {
+    console.log('#map-blackout transitionend handler');
     turn_data_off();
     turn_stories_list_off();
     wipe_time_cache();
     $('#story-bitbar').addClass('toggled_on');
     story.play();
+    console.log('#map-blackout transitionend handler DONE');
   }).addClass('toggled_on');
 }
 

@@ -169,7 +169,6 @@ L.StoryBit = L.Evented.extend({
     this_bit._wrapup();
     this_bit.fire('storybitend', this_bit, propogate = true);
   },
-
   _wrapup: function() {
     // remove any layers and comments that've been turned on and not turned off
     console.log('Wrapping up storybit');
@@ -180,8 +179,11 @@ L.StoryBit = L.Evented.extend({
     
     // remove the baselayer (if there is one)
     if (this._baselayer !== undefined)
-      if (this._map.hasLayer(this._baselayer))
-        this._map.removeLayer(this._baselayer);
+      this._baselayer.remove();
+      // if (this._map.hasLayer(this._baselayer)) {
+      //   console.log('Removing StoryBit baselayer');
+      //   this._map.removeLayer(this._baselayer);
+      // }
     
     this._clearCommentary(this._commentary_parent_id, back_on = false);
     
@@ -289,6 +291,7 @@ L.StoryBit.Animated = L.StoryBit.extend({
 
   load: function() {
     this.fire('storybitload', this, propogate = true);
+    console.log('Loading animated storybit');
 
     // attach the baselayer to the map if there's on of each
     if (this._map === undefined)
@@ -305,7 +308,7 @@ L.StoryBit.Animated = L.StoryBit.extend({
            range, set the animation to start playing and, and only play once we
            detect it's run its course (to make sure it's cached properly). */
            
-        /* nb: i also want to hide the layer until i know it's run its course
+        /* TODO - i also want to hide the layer until i know it's run its course
            (in the event this isn't the first storybit in the story), but i'm
            not 100% sure that appending a css class before attaching will work
            (b/c even if i take it off later, timedimension will continue to use
@@ -321,33 +324,45 @@ L.StoryBit.Animated = L.StoryBit.extend({
             end_dt = new Date(this._time_end),
             td = this._map.timeDimension,
             tdp = this._td_player;
-        if (td.getCurrentTime < start_dt) {
+        console.log('Before setting bounds: current time ' +
+          td.getCurrentTime());
+        if (td.getCurrentTime() < start_dt) {
           td.setUpperLimit(end_dt.valueOf());
           td.setCurrentTime(start_dt.valueOf());
           td.setLowerLimit(start_dt.valueOf());
-        } else if (td.getCurrentTime > start_dt) {
+        } else if (td.getCurrentTime() > start_dt) {
           td.setLowerLimit(start_dt.valueOf());
           td.setCurrentTime(start_dt.valueOf());
           td.setUpperLimit(end_dt.valueOf());
         } else {
           td.setLowerLimit(start_dt.valueOf());
           td.setUpperLimit(end_dt.valueOf());
+          // DEBUG - could calling this anyway help?
+          // td.setCurrentTime(start_dt.valueOf());
         }
+        console.log('After setting bounds: current time ' +
+          td.getCurrentTime());
 
-        /* prefetch the animation frames. we do this by playing through the
-           animation once (with a v/ high fps), and then actually loading the
-           storybit once it finishes */
-        console.log('TDP');
-        console.log(tdp);
-        tdp.setLooped(false);
-        tdp.setTransitionTime(5);
-        tdp.once('animationfinished', function() {
-          tdp.setLooped(true);
-          tdp.setTransitionTime(250);
-          tdp.start();
-          this.play();
-        }, this);
-        tdp.start();
+        /* prefetch the animation frames, then play when we have them */
+        var frame_load_count = this._baselayer.options.cache;
+        console.log(frame_load_count + ' frames to preload');
+        function preload_storybit_frames() {
+          frame_load_count -= 1;
+          if (frame_load_count > 1) {
+            // more frames to load
+            console.log('timeloading. ' + frame_load_count + ' frames left');
+
+          } else {
+            // all done! take this listener off and start the story
+            console.log('let\'s go');
+            td.off('timeloading', preload_storybit_frames, this);
+            td.setCurrentTime(start_dt.valueOf());
+            tdp.start();
+            this.play();
+          }
+        }
+        td.on('timeloading', preload_storybit_frames, this);
+        td.prepareNextTimes(1, frame_load_count, true);
       }
       else
         this.play();  // if there's no baselayer, just play the bit without it

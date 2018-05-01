@@ -200,6 +200,12 @@ div#about a {
   text-decoration: none;
 }
 
+#about #about-content {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 div#about a:active, div#about a:hover, div#about a:visited
 {
   color: goldenrod;

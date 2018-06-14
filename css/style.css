@@ -543,7 +543,7 @@ a.leaflet-control-timecontrol.timecontrol-date.loading.utc:before {
 
 .leaflet-control-timecontrol.timecontrol-slider .slider {
   height: 2px;
-  width: 100%;
+  width: 100px;
   margin-top: 14px;
   margin-left: 0px;
   background-color: #66666666;  /* somewhat transparent! */

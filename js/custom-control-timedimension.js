@@ -46,7 +46,7 @@ L.Control.TimeDimensionCustom = L.Control.TimeDimension.include({
     var sliderContainer,
       sliderbar,
       max,
-     knob, limits;
+      knob, limits;
     sliderContainer = L.DomUtil.create('div', className, container);
     /*L.DomEvent
         .addListener(sliderContainer, 'click', L.DomEvent.stopPropagation)
@@ -72,13 +72,13 @@ L.Control.TimeDimensionCustom = L.Control.TimeDimension.include({
       this._slidingTimeSlider = true;
       var time = this._timeDimension.getAvailableTimes()[e.target.getValue()];
       if (time) {
-          var date = new Date(time);
-          if (this._displayDate) {
+        var date = new Date(time);
+        if (this._displayDate) {
           this._displayDate.innerHTML = this._getDisplayDateFormat(date);
-          }
-          if (this.options.timeSliderDragUpdate){
+        }
+        if (this.options.timeSliderDragUpdate){
           this._sliderTimeValueChanged(e.target.getValue());
-          }
+        }
       }
     }, this);
 
@@ -132,7 +132,6 @@ L.Control.TimeDimensionCustom = L.Control.TimeDimension.include({
           // range bar?
           var rangebar;
           for (i = 0; i < sliderbar.children.length; i++) {
-            console.log(sliderbar.children[i].classList);
             if (sliderbar.children[i].classList.contains('range'))
               rangebar = sliderbar.children[i];
           }
@@ -185,7 +184,6 @@ L.Control.TimeDimensionCustom = L.Control.TimeDimension.include({
       // get handle to range bar, then update that too
       var rangebar;
       for (i = 0; i < sliderbar.children.length; i++) {
-        console.log(sliderbar.children[i].classList);
         if (sliderbar.children[i].classList.contains('range'))
           rangebar = sliderbar.children[i];
       }

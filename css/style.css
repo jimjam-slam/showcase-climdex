@@ -176,7 +176,7 @@ div#about {
   display: block;
   transition: visibility 0.3s linear, opacity 0.3s linear;
   
-  z-index: 1005;
+  z-index: 1004;
   position: absolute;
   top: 50px;
   margin: 0;

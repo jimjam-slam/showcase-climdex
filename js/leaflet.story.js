@@ -4,6 +4,7 @@ L.StoryBit = L.Evented.extend({
 
   _movement_timers: [],
   _annotation_timers: [],
+  _commentary_parent: null,
 
   options: {
     baselayer_label: 'No baselayer',
@@ -11,7 +12,7 @@ L.StoryBit = L.Evented.extend({
     movements: [],
     annotations: [],
     end_pause: 0,
-    commentary_parent: 'story-commentary',
+    commentary_parent_class: 'story-commentary',
     padding_topleft: [0, 0],
     padding_bottomright: [0, 0]
   },
@@ -32,7 +33,7 @@ L.StoryBit = L.Evented.extend({
     this._movements = this.options.movements;
     this._annotations = this.options.annotations;
     this._end_pause = this.options.end_pause;
-    this._commentary_parent_id = this.options.commentary_parent;
+    this._commentary_parent_class = this.options.commentary_parent_class;
     this._padding_topleft = this.options.padding_topleft;
     this._padding_bottomright = this.options.padding_bottomright;
 
@@ -64,39 +65,37 @@ L.StoryBit = L.Evented.extend({
 
   play: function() {
 
+    // create a commentary container
+    this._commentary_parent = L.DomUtil.create('div',
+      this._commentary_parent_class, document.body);
+    
+    
+    // turn the commentary container on if it's off
+    var commentary_box = L.DomUtil.get(this._commentary_parent_id);
     this.fire('storybitplay', this, propogate = true);
-    L.DomUtil.addClass(L.DomUtil.get(this._commentary_parent_id), 'toggled_on');
+    if (!L.DomUtil.hasClass(commentary_box, 'toggled_on'))
+      L.DomUtil.addClass(commentary_box, 'toggled_on');
+    
 
     // okay, we're gonna set up a whole heap of event listeners for the pans and
     // annotations. when the last of either is done, we'll fire `storybitend`
 
     // set up movements using setTimeout (and hold onto the timer ids!)
     var ongoing_duration = 0;
-    var ongoing_zoom = this._map.getZoom();
 
     for (var i = 0; i < this._movements.length; i++) {
 
-      // determine movement type
-      var point_move_type;
-      if (this._movements[i].by != undefined)
-        point_move_type = 'panBy';
-      else if (this._movements[i].options.zoom == ongoing_zoom)
-        point_move_type = 'panTo';
-      else {
-        point_move_type = 'flyTo';
-        if (this._movements[i].options.zoom === undefined)
-          console.error('Storybit: flyTo movements require a zoom option');
-      }
+      var movement;
+      if (this._movements[i].type == 'panBy')
+        movement = this._movements[i].by;
+      else
+        movement = this._movements[i].at;
 
-      // set a timer for the movement, then update ongoing duration and zoom
-      var movement = this._movements[i].by || this._movements[i].at;
       this._movement_timers.push(
         setTimeout(this._move, ongoing_duration,
-          movement, this, this._movements[i].options, point_move_type));
-      ongoing_duration += (this._movements[i].options.duration * 1000);
-      if (point_move_type == 'flyTo')
-        ongoing_zoom = this._movements[i].options.zoom;
+          movement, this, this._movements[i].options, this._movements[i].type));
 
+      ongoing_duration += (this._movements[i].options.duration * 1000);
     }
 
     // now set up annotation toggles using setTimeout
@@ -116,14 +115,12 @@ L.StoryBit = L.Evented.extend({
           this._annotation_timers.push(
             setTimeout(
               this._addCommentary, when,
-              content, this._commentary_parent_id));
+              content, this._commentary_parent));
           break;
 
         case 'clear_comments':
           // ... set up a timer to clear all comments
-          this._annotation_timers.push(
-            setTimeout(
-              this._clearCommentary, when, this._commentary_parent_id));
+          this._annotation_timers.push(setTimeout(this._resetCommentary, when));
           if (when > latest_removal) latest_removal = when;
           break;
 
@@ -185,7 +182,7 @@ L.StoryBit = L.Evented.extend({
       //   this._map.removeLayer(this._baselayer);
       // }
     
-    this._clearCommentary(this._commentary_parent_id, back_on = false);
+    this._destroyCommentary();
     
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);
@@ -196,37 +193,34 @@ L.StoryBit = L.Evented.extend({
      point, or a fly to a bounds (depending on at) */
   _move: function(at, bit, options, move_point_type = 'flyTo') {
 
-    if (typeof at[0] == 'object' || typeof at.max == 'object') {
-      // bounds: use fitBounds (with padding depending on orientation)
-      bit._map.flyToBounds(at, L.extend({
-        paddingTopLeft:
-          typeof this._padding_topleft == 'function' ?
-            this._padding_topleft(this._bit._map) :
-            this._padding_topleft,
-        paddingBottomRight:
-          typeof this._padding_bottomright == 'function' ?
-            this._padding_bottomright(this._bit._map) :
-            this._padding_bottomright,
-        animate: false
-      }, options));
-    } else if (typeof at[0] == 'number' || typeof at.x == 'number') {
-      // point: use setView
-      switch (move_point_type) {
-        case 'panTo':
-          bit._map.panTo(at, L.extend({ animate: true }, options));
-          break;
-        case 'panBy':
-          bit._map.panBy(at, L.extend({ animate: true }, options))
-          break;
-        case 'flyTo':
-          bit._map.flyTo(at, options.zoom, L.extend({ animate: true },
-            options));
-          break;
+    // TODO - needs some parameter error checking!
+    switch (move_point_type) {
+      case 'panTo':
+        bit._map.panTo(at, L.extend({ animate: true }, options));
+        break;
+      case 'panBy':
+        bit._map.panBy(at, L.extend({ animate: true }, options))
+        break;
+      case 'flyTo':
+        bit._map.flyTo(at, options.zoom, L.extend({ animate: true },
+          options));
+      case 'flyToBounds':
+        bit._map.flyToBounds(at, L.extend({
+          paddingTopLeft:
+            typeof this._padding_topleft == 'function' ?
+              this._padding_topleft(this._bit._map) :
+              this._padding_topleft,
+          paddingBottomRight:
+            typeof this._padding_bottomright == 'function' ?
+              this._padding_bottomright(this._bit._map) :
+              this._padding_bottomright,
+          animate: false
+        }, options));
+        break;
+      default:
+        console.error('Unrecognised movement type: should be ' +
+          'panBy, panTo, flyTo or flyToBounds.');
       }
-    } else {
-      console.error('Either give a point or a bounds for the story\'s at property.');
-    }
-
   },
 
   /* add and remove annotation layers from the map */
@@ -248,19 +242,31 @@ L.StoryBit = L.Evented.extend({
     setTimeout(L.DomUtil.addClass, 20, to_append, 'toggled_on');
   },
 
-  /* clear commentary from a parent. toggles it off first to allow for fades */
-  _clearCommentary: function(parent, back_on = true) {
-    console.log('Clearing commentary');
-    var parent_el = L.DomUtil.get(parent);
+  /* _resetCommentary: transition the comementary parent out, then empty it out.
+      finally, transition it back in (empty) */
+  _resetCommentary: function() {
     function empty_and_reset() {
       console.log('Transition ended, emptying commentary');
-      L.DomEvent.off(this, 'transitionend', empty_and_reset, this);
-      L.DomUtil.empty(this);
-      if (back_on)
-        L.DomUtil.addClass(this, 'toggled_on');;
+      L.DomEvent.off(this._commentary_parent, 'transitionend', empty_and_reset,
+        this);
+      L.DomUtil.empty(this._commentary_parent);
+      L.DomUtil.addClass(this._commentary_parent, 'toggled_on');
     }
-    L.DomEvent.on(parent_el, 'transitionend', empty_and_reset, parent_el);
-    L.DomUtil.removeClass(parent_el, 'toggled_on');
+    console.log('Resetting commentary after fade out');
+    L.DomEvent.on(parent_el, 'transitionend', empty_and_reset, this);
+    L.DomUtil.removeClass(this._commentary_parent, 'toggled_on');
+  },
+
+  /* _destroyCommentary: transition the commentary out, then destory it */
+  _destroyCommentary: function() {
+    function destroy() {
+      console.log('Transition ended, destroying commentary');
+      L.DomEvent.off(this._commentary_parent, 'transitionend', destroy, this);
+      L.DomUtil.remove(this._commentary_parent);
+    }
+    console.log('Destroying commentary after fade out');
+    L.DomEvent.on(parent_el, 'transitionend', destroy, this);
+    L.DomUtil.removeClass(this._commentary_parent, 'toggled_on');
   }
 
 });
@@ -529,8 +535,11 @@ L.Story = L.Evented.extend({
     }
 
     // load first storybit, if it's there
-    if (this._storybits.length > 0)
-      this._storybits[this._current_storybit].load();
+    if (this._storybits.length > 0) {
+      console.log('Story has ' + this._storybits.length + ' bits');
+      this._current_storybit = 0;
+      this._storybits[0].load();
+    }
     else
       console.error(this.name + ': no story bits loaded in this story!');
       
@@ -547,8 +556,9 @@ L.Story = L.Evented.extend({
     // next story bit (if that wasn't the last one)
     this._current_storybit++;
     if (this._current_storybit < this._storybits.length) {
-      console.log(this._name + ': loading next story bit');
-      this._storybits[_current_storybit].load();
+      console.log(this._name + ': loading next story bit (number ' +
+      this._current_storybit + ')');
+      this._storybits[this._current_storybit].load();
     } else
       this._end();
   },

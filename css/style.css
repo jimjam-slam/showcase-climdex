@@ -332,7 +332,7 @@ div#about a:active, div#about a:hover, div#about a:visited
 
 /* story commentary */
 
-#story-commentary {
+.story-commentary {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s linear, opacity 0.3s linear;
@@ -352,7 +352,7 @@ div#about a:active, div#about a:hover, div#about a:visited
 }
 
 @media screen and (max-aspect-ratio: 5/4) {
-  #story-commentary {
+  .story-commentary {
     justify-content: flex-start;
     align-items: center;
     text-align: center;
@@ -361,12 +361,12 @@ div#about a:active, div#about a:hover, div#about a:visited
   }
 }
 
-#story-commentary.toggled_on {
+.story-commentary.toggled_on {
   visibility: visible;
   opacity: 1;
 }
 
-#story-commentary p {
+.story-commentary p {
   font-style: italic;
   font-size: 6vmin;
   text-shadow: 1px 1px 1px #666;
@@ -378,12 +378,12 @@ div#about a:active, div#about a:hover, div#about a:visited
   transition: visibility 0.3s linear, opacity 0.3s linear;
 }
 
-#story-commentary p.toggled_on {
+.story-commentary p.toggled_on {
   visibility: visible;
   opacity: 1;
 }
 
-#story-commentary span.emph {
+.story-commentary span.emph {
   color: #fff;
   font-weight: 700;
   font-style: normal;
@@ -391,7 +391,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   box-shadow: 5px 0 0 #333, -5px 0 0 #333;
 }
 
-#story-commentary a {
+.story-commentary a {
   color: gold;
   font-weight: 700;
   font-style: normal;

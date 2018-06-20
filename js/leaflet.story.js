@@ -65,20 +65,15 @@ L.StoryBit = L.Evented.extend({
 
   play: function() {
 
-    // create a commentary container
+    // create a commentary container and turn it on
     this._commentary_parent = L.DomUtil.create('div',
       this._commentary_parent_class, document.body);
+    L.DomUtil.addClass(this._commentary_parent, 'toggled_on');
     
-    
-    // turn the commentary container on if it's off
-    var commentary_box = L.DomUtil.get(this._commentary_parent_id);
     this.fire('storybitplay', this, propogate = true);
-    if (!L.DomUtil.hasClass(commentary_box, 'toggled_on'))
-      L.DomUtil.addClass(commentary_box, 'toggled_on');
-    
 
-    // okay, we're gonna set up a whole heap of event listeners for the pans and
-    // annotations. when the last of either is done, we'll fire `storybitend`
+    /* okay, we're gonna set up a whole heap of event listeners for the pans and
+       annotations. when the last of either is done, we'll fire `storybitend` */
 
     // set up movements using setTimeout (and hold onto the timer ids!)
     var ongoing_duration = 0;
@@ -113,14 +108,14 @@ L.StoryBit = L.Evented.extend({
         case 'comment':
           // comment: add to 
           this._annotation_timers.push(
-            setTimeout(
-              this._addCommentary, when,
-              content, this._commentary_parent));
+            setTimeout(this._addCommentary, when, this._commentary_parent,
+                content));
           break;
 
         case 'clear_comments':
           // ... set up a timer to clear all comments
-          this._annotation_timers.push(setTimeout(this._resetCommentary, when));
+          this._annotation_timers.push(
+            setTimeout(this._resetCommentary, when, this._commentary_parent));
           if (when > latest_removal) latest_removal = when;
           break;
 
@@ -182,7 +177,7 @@ L.StoryBit = L.Evented.extend({
       //   this._map.removeLayer(this._baselayer);
       // }
     
-    this._destroyCommentary();
+    this._destroyCommentary(this._commentary_parent);
     
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);
@@ -233,40 +228,40 @@ L.StoryBit = L.Evented.extend({
   },
 
   /* add commentary p elements to the given parent, and clear them all */
-  _addCommentary: function(comment, parent) {
+  _addCommentary: function(target, comment) {
     console.log('Adding commentary');
-    var parent_el = L.DomUtil.get(parent);
     var to_append = document.createElement('p');
     to_append.innerHTML = comment;
-    parent_el.appendChild(to_append);
+    target.appendChild(to_append);
     setTimeout(L.DomUtil.addClass, 20, to_append, 'toggled_on');
   },
 
-  /* _resetCommentary: transition the comementary parent out, then empty it out.
-      finally, transition it back in (empty) */
-  _resetCommentary: function() {
+  /* _resetCommentary: transition the target comementary parent out, then empty
+     it out. finally, transition it back in (empty) */
+  _resetCommentary: function(target) {
     function empty_and_reset() {
       console.log('Transition ended, emptying commentary');
-      L.DomEvent.off(this._commentary_parent, 'transitionend', empty_and_reset,
-        this);
-      L.DomUtil.empty(this._commentary_parent);
-      L.DomUtil.addClass(this._commentary_parent, 'toggled_on');
+      L.DomEvent.off(this, 'transitionend', empty_and_reset, this);
+      L.DomUtil.empty(this);
+      L.DomUtil.addClass(this, 'toggled_on');
     }
     console.log('Resetting commentary after fade out');
-    L.DomEvent.on(parent_el, 'transitionend', empty_and_reset, this);
-    L.DomUtil.removeClass(this._commentary_parent, 'toggled_on');
+    L.DomEvent.on(target, 'transitionend', empty_and_reset, target);
+    L.DomUtil.removeClass(target, 'toggled_on');
   },
 
-  /* _destroyCommentary: transition the commentary out, then destory it */
-  _destroyCommentary: function() {
+  /* _destroyCommentary: transition the target commentary out, then destory
+     it */
+  _destroyCommentary: function(target) {
     function destroy() {
       console.log('Transition ended, destroying commentary');
-      L.DomEvent.off(this._commentary_parent, 'transitionend', destroy, this);
-      L.DomUtil.remove(this._commentary_parent);
+      console.log(this);
+      L.DomEvent.off(this, 'transitionend', destroy, this);
+      L.DomUtil.remove(this);
     }
     console.log('Destroying commentary after fade out');
-    L.DomEvent.on(parent_el, 'transitionend', destroy, this);
-    L.DomUtil.removeClass(this._commentary_parent, 'toggled_on');
+    L.DomEvent.on(target, 'transitionend', destroy, this);
+    L.DomUtil.removeClass(target, 'toggled_on');
   }
 
 });

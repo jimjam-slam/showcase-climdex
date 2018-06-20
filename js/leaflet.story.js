@@ -4,7 +4,7 @@ L.StoryBit = L.Evented.extend({
 
   _movement_timers: [],
   _annotation_timers: [],
-  _commentary_parent: null,
+  _commentary_el: null,
 
   options: {
     baselayer_label: 'No baselayer',
@@ -12,7 +12,8 @@ L.StoryBit = L.Evented.extend({
     movements: [],
     annotations: [],
     end_pause: 0,
-    commentary_parent_class: 'story-commentary',
+    commentary_el_class: 'story-commentary',
+    commentary_parent: document.body,
     padding_topleft: [0, 0],
     padding_bottomright: [0, 0]
   },
@@ -33,7 +34,7 @@ L.StoryBit = L.Evented.extend({
     this._movements = this.options.movements;
     this._annotations = this.options.annotations;
     this._end_pause = this.options.end_pause;
-    this._commentary_parent_class = this.options.commentary_parent_class;
+    this._commentary_el_class = this.options.commentary_el_class;
     this._padding_topleft = this.options.padding_topleft;
     this._padding_bottomright = this.options.padding_bottomright;
 
@@ -66,9 +67,9 @@ L.StoryBit = L.Evented.extend({
   play: function() {
 
     // create a commentary container and turn it on
-    this._commentary_parent = L.DomUtil.create('div',
-      this._commentary_parent_class, document.body);
-    L.DomUtil.addClass(this._commentary_parent, 'toggled_on');
+    this._commentary_el = L.DomUtil.create('div',
+      this._commentary_el_class, document.body);
+    L.DomUtil.addClass(this._commentary_el, 'toggled_on');
     
     this.fire('storybitplay', this, propogate = true);
 
@@ -108,14 +109,14 @@ L.StoryBit = L.Evented.extend({
         case 'comment':
           // comment: add to 
           this._annotation_timers.push(
-            setTimeout(this._addCommentary, when, this._commentary_parent,
+            setTimeout(this._addCommentary, when, this._commentary_el,
                 content));
           break;
 
         case 'clear_comments':
           // ... set up a timer to clear all comments
           this._annotation_timers.push(
-            setTimeout(this._resetCommentary, when, this._commentary_parent));
+            setTimeout(this._resetCommentary, when, this._commentary_el));
           if (when > latest_removal) latest_removal = when;
           break;
 
@@ -177,7 +178,7 @@ L.StoryBit = L.Evented.extend({
       //   this._map.removeLayer(this._baselayer);
       // }
     
-    this._destroyCommentary(this._commentary_parent);
+    this._destroyCommentary(this._commentary_el);
     
     // remove all timers (no sweat if they've already fired)
     for (id of this._movement_timers) clearTimeout(id);

@@ -122,13 +122,16 @@ Method             | Returns     | Description
 
 Option                  | Type            | Default              | Description                     
 ------------------------|-----------------|----------------------|---------------------------------
-`baselayer`             | Layer           | `{}`                 | A `L.GridLayer` object to display with the storybit.
+`baselayer`             | Layer           | `{}`                 | A `L.GridLayer` object to display with the StoryBit.
 `movements`             | Array           | `[]`                 | An array containing arguments for a series of `flyTo` or `panTo` calls. Each array element should be an object containing the arguments for these functions: `at`, an `L.LatLng` object or lat/lon array; and `options`, options to be passed on.
 `annotations`           | Array           | `[]`                 | An array of objects. Each object should have `overlay`, a layer to be shown; `when`, the time (in seconds) after playing the bit at which the annotation should be shown; and `duration`, the time (in seconds) for which it should be shown.
 `end_pause`             | Number          | `0`                  | The time (in seconds) for which the bit should pause after the last annotation disappears or movement completes before quitting.
-`commentary_parent`     | String          | `"story-commentary"` | The DOM ID of an element to which to append story commentary.
+`commentary_parent`     | Object          | `document.body`      | The DOM element to which to append the StoryBit's commentary container.
+`commentary_el_class`   | String          | `"story-commentary"` | A CSS class that will be applied to the StoryBit's commentary container.
 `padding_topleft`       | Array, Function | `[0, 0]`             | Either an array for padding `fitBounds` in the top-left, or a reference to a function that returns such an array (taking a map argument). Overridden by the associated story.
 `padding_bottomright`   | Array, Function | `[0, 0]`             | Either an array for padding `fitBounds` in the bottom-right, or a reference to a function that returns such an array (taking a map argument). Overridden by the associated story.
+commentary_el_class: 'story-commentary',
+    commentary_parent: document.body,
 
 ### Events
 

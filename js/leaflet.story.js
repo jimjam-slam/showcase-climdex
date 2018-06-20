@@ -260,7 +260,7 @@ L.StoryBit = L.Evented.extend({
       L.DomUtil.remove(this);
     }
     console.log('Destroying commentary after fade out');
-    L.DomEvent.on(target, 'transitionend', destroy, this);
+    L.DomEvent.on(target, 'transitionend', destroy, target);
     L.DomUtil.removeClass(target, 'toggled_on');
   }
 

@@ -64,7 +64,7 @@ var showcase_stories = [
   //           },
   //           {
   //             type: 'comment', when: 8.5,
-  //             content: 'There\'re a few reasons for this. <a href="http://dx.doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
+  //             content: 'There\'re a few reasons for this. <a href="https://doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
   //           }
   //         ],
   //         end_pause: 10//,
@@ -124,7 +124,7 @@ var showcase_stories = [
             },
             {
               type: 'comment', when: 8.5,
-              content: 'There\'re a few reasons for this. <a href="http://dx.doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
+              content: 'There\'re a few reasons for this. <a href="https://doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
             }
           ],
           end_pause: 1//,
@@ -331,7 +331,7 @@ var showcase_stories = [
   //           },
   //           {
   //             type: 'comment', when: 8.5,
-  //             content: 'There\'re a few reasons for this. <a href="http://dx.doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
+  //             content: 'There\'re a few reasons for this. <a href="https://doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
   //           }
   //         ],
   //         end_pause: 10//,

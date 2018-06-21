@@ -155,10 +155,6 @@ var showcase_stories = [
           movements: [
             {
               by: [0, 50], type: 'panBy', options: { duration: 6 }
-            },
-            {
-              at: [[15, -130], [50, -75]], type: 'flyToBounds',    // usa
-              options: { duration: 1 }
             }
           ],
           annotations: [
@@ -193,6 +189,10 @@ var showcase_stories = [
           //   }, geoserver_options)),
           movements: [
             {
+              at: [[15, -130], [50, -75]], type: 'flyToBounds',    // usa
+              options: { duration: 1 }
+            },
+            {
               by: [0, 50], type: 'panBy',
               options: { duration: 10 }
             }
@@ -211,7 +211,7 @@ var showcase_stories = [
               type: 'layer', when: 3, duration: 7,
               content: L.terminator({ 
                 // resolution, color, fillColor, fillOpacity,
-                time: '2018-06-18T18:00:00Z' 
+                time: '2018-06-18T02:00:00Z' 
               })
             },
             // {

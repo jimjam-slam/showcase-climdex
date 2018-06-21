@@ -125,6 +125,13 @@ L.StoryBit = L.Evented.extend({
           var duration = this._annotations[i].duration * 1000,
               when_end = when + duration;
 
+          console.log('Adding annotation layer:');
+          // add a className option to the content
+          if (content.options.className === undefined)
+            content.options.className = 'story-annotation'
+          else
+            content.options.className += ' story-annotation'
+          
           this._annotation_timers.push(
             setTimeout(
               this._addAnnotation, when, content, this._map));
@@ -221,11 +228,41 @@ L.StoryBit = L.Evented.extend({
 
   /* add and remove annotation layers from the map */
   _addAnnotation: function(overlay, map) {
+
+    // add story-annotation to the overlay's class list
+    if (overlay.options.className == undefined) {
+      overlay.options.className = 'story-annotation'
+    } else {
+      overlay.options.className += ' story-annotation'
+    }
+    
     overlay.addTo(map);
+
+    // now, add the toggled_on class to each node
+    // (for some reason, setStyle can't be used after attaching to the map)
+    // (also, a timer is needed to trigger animation)
+    if (overlay._renderer instanceof L.SVG) {
+      for (i = 0; i < overlay._renderer._rootGroup.children.length; i++) {
+        setTimeout(function(overlay_child) {
+          overlay_child.classList.add('toggled_on');
+        }, 0, overlay._renderer._rootGroup.children[i])
+      }
+    }
   },
 
   _removeAnnotation: function(overlay, map) {
-    overlay.remove();
+
+    // remove toggled_on from each overlay node (if SVG)
+    if (overlay._renderer instanceof L.SVG) {
+      for (i = 0; i < overlay._renderer._rootGroup.children.length; i++) {
+        setTimeout(function(overlay_child) {
+          overlay_child.classList.remove('toggled_on');
+        }, 0, overlay._renderer._rootGroup.children[i])
+      }
+    }
+
+    // not sure how to remove it on an event, so i'll just a use a hacky timer
+    setTimeout(function() { overlay.remove(); }, 500);
   },
 
   /* add commentary p elements to the given parent, and clear them all */

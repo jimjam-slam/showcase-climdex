@@ -399,6 +399,16 @@ div#about a:active, div#about a:hover, div#about a:visited
   box-shadow: 5px 0 0 #333, -5px 0 0 #333;
 }
 
+/* story annotation layers (svg renderer only) */
+.story-annotation {
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
+
+.story-annotation.toggled_on {
+  opacity: 1;
+}
+
 /* #tour-interrupt-msg {
   position: absolute;
   left: 0px;

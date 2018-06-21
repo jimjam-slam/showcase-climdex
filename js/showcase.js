@@ -1,5 +1,15 @@
 /* blah */
 
+// initial browser checks
+if (!L.Browser.svg) {
+  console.warn('SVG is unavailable. ' +
+    'Things like overlay transitions may not work.');
+}
+if (L.Browser.ielt9) {
+  console.warn('IE < 9 not supported.');
+  alert('Explore Climdex currently only works on modern browsers.');
+}
+
 // initialise map; attach timedimension and its control
 var mymap = L.map('map', {
   center: [10, 50],    // lat, lon

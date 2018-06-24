@@ -1,0 +1,20 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 132">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #222;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <title>icon-swrad</title>
+  <path id="rad8" class="cls-1" d="M100.5,47v81c0,1.93-3-3-7.53-7.52"/>
+  <path id="rad7" class="cls-1" d="M140.5,32v81c0,1.92,3-3,7.53-7.53"/>
+  <path id="rad6" class="cls-1" d="M180.5,17V98c0,1.92,3-3,7.53-7.53"/>
+  <path id="rad5" class="cls-1" d="M60.5,32v81c0,1.92-3-3-7.53-7.53"/>
+  <path id="rad4" class="cls-1" d="M20.5,17V98c0,1.92-3-3-7.53-7.53"/>
+  <path id="rad3" class="cls-1" d="M100.5,17V98c0,1.92,3-3,7.53-7.53"/>
+  <path id="rad2" class="cls-1" d="M140.5,2V83c0,1.92-3-3-7.53-7.53"/>
+  <path id="rad1" class="cls-1" d="M60.5,2V83c0,1.92,3-3,7.53-7.53"/>
+</svg>

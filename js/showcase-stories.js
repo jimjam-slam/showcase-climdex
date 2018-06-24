@@ -207,7 +207,7 @@ var showcase_stories = [
           baselayer:
             L.tileLayer.wms(geoserver_base, L.extend({
               layers: 'DTR_ann_avg',
-              env: 'low:7;high:18',
+              env: 'low:9;high:15',
               leg_units: '&deg;C',
               bounds: [[-10, 112], [-44, 153]]    // australia
             }, geoserver_options)),
@@ -226,26 +226,67 @@ var showcase_stories = [
               content: 'DTR tells us how <span class="emph">daytime</span> and <span class="emph">nighttime</span> temperatures differ.'
             },
             {
-              type: 'layer', when: 3, duration: 15,
+              type: 'layer', when: 3, duration: 9,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
-                className: 'story-popup'
-              }).setLatLng([-25.84, 131.1]).setContent(
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([-23.84, 133.1]).setContent(
                 '<h1>High DTR</h1><p>Hot days and cold nights.</p>')
             },
             {
-              type: 'layer', when: 6, duration: 12,
+              type: 'layer', when: 6, duration: 6,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
-                className: 'story-popup'
-              }).setLatLng([-19.22, 146.8]).setContent(
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([-18.22, 146.8]).setContent(
                 '<h1>Low DTR</h1><p>Smaller temperature swings across the day.</p>')
             }
           ],
           end_pause: 0
         }),
+
+        L.storyBit(
+          {
+            baselayer_label: 'Daily temperature range: annual trend (1951&ndash;2017)',
+            baselayer:
+              L.tileLayer.wms(geoserver_base, L.extend({
+                layers: 'DTR_ann_trendval',
+                env: 'low:-0.08;mid:0;high:0.08',
+                leg_units: '&deg;C',
+                bounds: [[-80, -179], [80, 179]]    // zoom out
+              }, geoserver_options)),
+            movements: [
+              {
+                at: [[-30, -120], [30, 120]], type: 'flyToBounds',
+                options: { animate: true, duration: 1 }
+              },
+              {
+                  by: [0, -50], type: 'panBy',
+                  options: { duration: 10 }
+              }
+            ],
+            annotations: [
+              {
+                type: 'comment', when: 1,
+                content: 'Global DTR has <span class="emph">fallen</span> slightly over the last 50 years.'
+              },
+              {
+                type: 'comment', when: 4,
+                content: 'So <span class="emph">nights are warming faster</span> than days.'
+              },
+              {
+                type: 'clear_comments', when: 7
+              },
+              {
+                type: 'comment', when: 8,
+                content: 'This catch-up helps us <span class="emph">attribute</span> climate changes to the greenhouse effect.'
+              },
+              
+            ],
+            end_pause: 0
+          }),
 
     ],
     {

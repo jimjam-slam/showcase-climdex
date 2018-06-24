@@ -179,17 +179,9 @@ var showcase_stories = [
 
       L.storyBit(
         {
-          // baselayer_label: 'Daily temperature range: annual average (1951&ndash;2017)',
-          // baselayer:
-          //   L.tileLayer.wms(geoserver_base, L.extend({
-          //     layers: 'DTR_ann_avg',
-          //     env: 'low:7;high:18',
-          //     leg_units: '&deg;C',
-          //     bounds: [[15, -130], [50, -75]]
-          //   }, geoserver_options)),
           movements: [
             {
-              at: [[15, -130], [50, -75]], type: 'flyToBounds',    // usa
+              at: [[15, -130], [50, -75]], type: 'flyToBounds', // usa
               options: { duration: 1 }
             },
             {
@@ -198,11 +190,16 @@ var showcase_stories = [
             }
           ],
           annotations: [
-            // {
-            //   type: 'layer', when: 1, duration: 4,
-            //   content: // incoming SW layer object here
-
-            // },
+            {
+              type: 'layer', when: 1, duration: 9,
+              content: L.marker([40, -109], {
+                icon: L.icon({
+                  iconUrl: 'img/icon-swrad.png',
+                  iconSize:     [200, 132],
+                  iconAnchor:   [100, 102]
+                })
+              })
+            },
             {
               type: 'comment', when: 1,
               content: 'Heat comes in from the Sun during the <span class="emph">day...</span>'
@@ -214,11 +211,16 @@ var showcase_stories = [
                 time: '2018-06-18T02:00:00Z' 
               })
             },
-            // {
-            //   type: 'layer', when: 3, duration: 7,
-            //   content: // outgoing LW layer object here
-
-            // },
+            {
+              type: 'layer', when: 3, duration: 7,
+              content: L.marker([36, -86], {
+                icon: L.icon({
+                  iconUrl: 'img/icon-lwrad.png',
+                  iconSize:     [200, 132],
+                  iconAnchor:   [100, 102]
+                })
+              })
+            },
             {
               type: 'comment', when: 3,
               content: '... and escapes at <span class="emph">night.</span>'

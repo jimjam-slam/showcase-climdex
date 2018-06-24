@@ -98,7 +98,7 @@ var showcase_stories = [
           time_end: '1999' + time_suffix,
           movements: [
             {
-              by: [0, 50],
+              by: [0, 50], type: 'panBy',
               options: { duration: 10 }
             }
           ],

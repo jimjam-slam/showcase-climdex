@@ -22,8 +22,8 @@ L.StoryBit = L.Evented.extend({
   _setStory: function(story) {
     this._story = story;
     this.addEventParent(story);
-    this._padding_topleft = story.options.padding_topleft;
-    this._padding_bottomright = story.options.padding_bottomright;
+    this._padding_topleft = story._padding_topleft;
+    this._padding_bottomright = story._padding_bottomright;
   },
   
   initialize: function(options) {
@@ -91,7 +91,9 @@ L.StoryBit = L.Evented.extend({
         setTimeout(this._move, ongoing_duration,
           movement, this, this._movements[i].options, this._movements[i].type));
 
-      ongoing_duration += (this._movements[i].options.duration * 1000);
+      if (!isNaN(this._movements[i].options.duration))
+        ongoing_duration += (this._movements[i].options.duration * 1000);
+      console.log('Ongoing duration:  ' + ongoing_duration);
     }
 
     // now set up annotation toggles using setTimeout
@@ -127,7 +129,7 @@ L.StoryBit = L.Evented.extend({
 
           console.log('Adding annotation layer:');
           // add a className option to the content
-          if (content.options.className === undefined)
+          if (content.options.className == undefined)
             content.options.className = 'story-annotation'
           else
             content.options.className += ' story-annotation'
@@ -142,10 +144,14 @@ L.StoryBit = L.Evented.extend({
 
         default:
           console.error('storybitplay: annotation\'s overlay property should either be a string or a Leaflet layer.');
-      }      
+      }
+      console.log('Latest removal:  ' + latest_removal);
     }
 
     // and, finally, set a quit timer
+    console.log('Setting bit end timer for ' +
+      (Math.max(ongoing_duration, latest_removal) +
+      (this._end_pause * 1000)));
     this._end_timer = setTimeout(this._end,
       Math.max(ongoing_duration, latest_removal) + (this._end_pause * 1000),
       this)
@@ -204,51 +210,45 @@ L.StoryBit = L.Evented.extend({
       case 'panBy':
         bit._map.panBy(at, L.extend({ animate: true }, options))
         break;
-      case 'flyTo':
-        bit._map.flyTo(at, options.zoom, L.extend({ animate: true },
-          options));
       case 'flyToBounds':
         bit._map.flyToBounds(at, L.extend({
           paddingTopLeft:
-            typeof this._padding_topleft == 'function' ?
-              this._padding_topleft(this._bit._map) :
-              this._padding_topleft,
+            typeof bit._padding_topleft == 'function' ?
+              bit._padding_topleft(bit._map) :
+              bit._padding_topleft,
           paddingBottomRight:
-            typeof this._padding_bottomright == 'function' ?
-              this._padding_bottomright(this._bit._map) :
-              this._padding_bottomright 
+            typeof bit._padding_bottomright == 'function' ?
+              bit._padding_bottomright(bit._map) :
+              bit._padding_bottomright 
         }, options));
         break;
       case 'fitWorld':
         bit._map.fitWorld(L.extend({
           paddingTopLeft:
-            typeof this._padding_topleft == 'function' ?
-              this._padding_topleft(this._bit._map) :
-              this._padding_topleft,
+            typeof bit._padding_topleft == 'function' ?
+              bit._padding_topleft(bit._map) :
+              bit._padding_topleft,
           paddingBottomRight:
-            typeof this._padding_bottomright == 'function' ?
-              this._padding_bottomright(this._bit._map) :
-              this._padding_bottomright
+            typeof bit._padding_bottomright == 'function' ?
+              bit._padding_bottomright(bit._map) :
+              bit._padding_bottomright
         }, options));
         break;
+      case 'flyTo':
+        bit._map.flyTo(at, options.zoom, L.extend({ animate: true },
+          options));
       default:
         console.error('Unrecognised movement type: should be ' +
-          'panBy, panTo, flyTo or flyToBounds.');
+          'panBy, panTo, fitWorld, flyTo or flyToBounds.');
       }
   },
 
   /* add and remove annotation layers from the map */
   _addAnnotation: function(overlay, map) {
-
-    // add story-annotation to the overlay's class list
-    if (overlay.options.className == undefined) {
-      overlay.options.className = 'story-annotation'
-    } else {
-      overlay.options.className += ' story-annotation'
-    }
     
     overlay.addTo(map);
 
+    // layers _should_ already have story-annotation added
     // now, add the toggled_on class to each node
     // (for some reason, setStyle can't be used after attaching to the map)
     // (also, a timer is needed to trigger animation)

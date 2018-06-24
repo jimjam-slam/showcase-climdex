@@ -216,8 +216,19 @@ L.StoryBit = L.Evented.extend({
           paddingBottomRight:
             typeof this._padding_bottomright == 'function' ?
               this._padding_bottomright(this._bit._map) :
-              this._padding_bottomright,
-          animate: false
+              this._padding_bottomright 
+        }, options));
+        break;
+      case 'fitWorld':
+        bit._map.fitWorld(L.extend({
+          paddingTopLeft:
+            typeof this._padding_topleft == 'function' ?
+              this._padding_topleft(this._bit._map) :
+              this._padding_topleft,
+          paddingBottomRight:
+            typeof this._padding_bottomright == 'function' ?
+              this._padding_bottomright(this._bit._map) :
+              this._padding_bottomright
         }, options));
         break;
       default:

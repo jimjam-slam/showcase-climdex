@@ -226,22 +226,22 @@ var showcase_stories = [
               content: 'DTR tells us how <span class="emph">daytime</span> and <span class="emph">nighttime</span> temperatures differ.'
             },
             {
-              type: 'layer', when: 3, duration: 6,
+              type: 'layer', when: 3, duration: 15,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
                 className: 'story-popup'
               }).setLatLng([-25.84, 131.1]).setContent(
-                '<span class="emph">High DTR:</span> hot days are cold nights.')
+                '<h1>High DTR</h1><p>Hot days and cold nights.</p>')
             },
             {
-              type: 'layer', when: 6, duration: 3,
+              type: 'layer', when: 6, duration: 12,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
                 className: 'story-popup'
               }).setLatLng([-19.22, 146.8]).setContent(
-                '<span class="emph">Low DTR:</span> smaller temperature swings across the day.')
+                '<h1>Low DTR</h1><p>Smaller temperature swings across the day.</p>')
             }
           ],
           end_pause: 0

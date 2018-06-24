@@ -769,28 +769,46 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p {
 
 /* story popup styling (probably won't be used now!) */
 
-.story-popup {
+.story-popup, .story-popup .leaflet-popup-content {
   margin: 0;
 }
 
-.story-popup > .leaflet-popup-content-wrapper {
-  background: none;
-  box-shadow: none;
+.story-popup .leaflet-popup-content p {
+  font-family: 'Zilla Slab', sans-serif;
+  color: white;
+  font-size: 1.5em;
+  font-style: italic;
+  font-weight: 500;
+  text-shadow: 2px 2px #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
-
-.story-popup > .leaflet-popup-tip-container {
-  display: none;
-}
-
-div.leaflet-popup.story-popup p {
+.story-popup .leaflet-popup-content h1 {
   font-family: 'Oswald', sans-serif;
-  font-size: 4em;
-  text-shadow: 1px 1px #999;
-  /* text-shadow: none; */
-  font-weight: 700;
+  color: gold;
+  font-size: 1.5em;
+  font-style: normal;
+  font-weight: 400;
   text-transform: uppercase;
+  text-shadow: 2px 2px #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0 0 5px 0;
 }
 
-div.leaflet-popup.story-popup p span.red {
-  color: red;
+.story-popup > .leaflet-popup-content-wrapper {
+  padding: 7px;
+  background: #222222cc;
+  box-shadow: 5px 0 0 #333;
+  border-radius: 0;
 }
+
+.leaflet-popup-tip {
+  background: #222222cc;
+  border: none;
+}
+
+/* div.leaflet-popup.story-popup p {
+  
+} */

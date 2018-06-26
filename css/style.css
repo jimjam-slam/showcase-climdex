@@ -391,6 +391,10 @@ div#about a:active, div#about a:hover, div#about a:visited
   box-shadow: 5px 0 0 #333, -5px 0 0 #333;
 }
 
+.story-commentary span.small {
+  font-size: 3vmin;
+}
+
 .story-commentary a {
   color: gold;
   font-weight: 700;

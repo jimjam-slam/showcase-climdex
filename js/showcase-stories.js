@@ -26,65 +26,65 @@ var time_suffix = '-01-01T00:00:00.000Z';
 var showcase_stories = [
 
   // animated storybit test
-  L.story(
-    [
-      L.storyBit.animated(td_player,
-        {
-          baselayer_label: 'Summer nights: series',
-          baselayer:
-            L.timeDimension.layer.wms(
-              L.tileLayer.wms(
-                geoserver_base, L.extend({
-                  layers: 'SU_ann_series',
-                  env: 'low:10;high:366',
-                  leg_units: 'days/yr',
-                  bounds: [[50, -136], [24, -60]]
-                }, geoserver_options)),
-              { cache: 10 }),
-          time_start: '1990' + time_suffix,
-          time_end: '1999' + time_suffix,
-          movements: [
-            {
-              by: [0, 50], type: 'panBy',
-              options: { duration: 10 }
-            }
-          ],
-          annotations: [
-            {
-              type: 'comment', when: 3,
-              content: 'Climate change is a <span class="emph">global</span> phenomenon.'
-            },
-            {
-              type: 'comment', when: 4,
-              content: 'But not all places are affected equally.'
-            },
-            {
-              type: 'clear_comments', when: 6
-            },
-            {
-              type: 'comment', when: 6.5,
-              content: 'Our hottest days have become <span class="emph">hotter...</span>'
-            },
-            {
-              type: 'comment', when: 7.5,
-              content: '... but not in the American mid-west.'
-            },
-            {
-              type: 'comment', when: 8.5,
-              content: 'There\'re a few reasons for this. <a href="https://doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
-            }
-          ],
-          end_pause: 1//,
-        })
-    ],
-    {
-      name: 'Animation test',
-      description: 'Are animated layers working?',
-      selectable: true,
-      at: [[50, -129], [24, -60]],
-      padding_topleft: dynamic_padding_tl,
-      padding_bottomright: [0, 0]
-    }),
+  // L.story(
+  //   [
+  //     L.storyBit.animated(td_player,
+  //       {
+  //         baselayer_label: 'Summer nights: series',
+  //         baselayer:
+  //           L.timeDimension.layer.wms(
+  //             L.tileLayer.wms(
+  //               geoserver_base, L.extend({
+  //                 layers: 'SU_ann_series',
+  //                 env: 'low:10;high:366',
+  //                 leg_units: 'days/yr',
+  //                 bounds: [[50, -136], [24, -60]]
+  //               }, geoserver_options)),
+  //             { cache: 10 }),
+  //         time_start: '1990' + time_suffix,
+  //         time_end: '1999' + time_suffix,
+  //         movements: [
+  //           {
+  //             by: [0, 50], type: 'panBy',
+  //             options: { duration: 10 }
+  //           }
+  //         ],
+  //         annotations: [
+  //           {
+  //             type: 'comment', when: 3,
+  //             content: 'Climate change is a <span class="emph">global</span> phenomenon.'
+  //           },
+  //           {
+  //             type: 'comment', when: 4,
+  //             content: 'But not all places are affected equally.'
+  //           },
+  //           {
+  //             type: 'clear_comments', when: 6
+  //           },
+  //           {
+  //             type: 'comment', when: 6.5,
+  //             content: 'Our hottest days have become <span class="emph">hotter...</span>'
+  //           },
+  //           {
+  //             type: 'comment', when: 7.5,
+  //             content: '... but not in the American mid-west.'
+  //           },
+  //           {
+  //             type: 'comment', when: 8.5,
+  //             content: 'There\'re a few reasons for this. <a href="https://doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
+  //           }
+  //         ],
+  //         end_pause: 1//,
+  //       })
+  //   ],
+  //   {
+  //     name: 'Animation test',
+  //     description: 'Are animated layers working?',
+  //     selectable: true,
+  //     at: [[50, -129], [24, -60]],
+  //     padding_topleft: dynamic_padding_tl,
+  //     padding_bottomright: [0, 0]
+  //   }),
 
   // dtr: fingerprint of climate change
   L.story(

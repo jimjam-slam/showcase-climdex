@@ -313,7 +313,7 @@ var showcase_stories = [
                   layers: 'PRCPTOT_ann_series',
                   env: 'low:0;high:2000',
                   leg_units: 'mm',
-                  bounds: [[22.79, 94.09], [-28.81, 135]],
+                  bounds: [[22.79, 94.09], [-28.81, 155]],
                 }, geoserver_options)),
               { cache: 10 }),
           time_start: '1980' + time_suffix,
@@ -380,7 +380,7 @@ var showcase_stories = [
               layers: 'Rx1day_ann_trendval',
               env: 'low:-1.1;mid:0;high:1.1',
               leg_units: 'mm/yr',
-              bounds: [[22.79, 94.09], [-28.81, 135]], // australia + se asia
+              bounds: [[22.79, 94.09], [-28.81, 155]], // australia + se asia
             }, geoserver_options)),
           movements: [
             {
@@ -413,7 +413,7 @@ var showcase_stories = [
               layers: 'PRCPTOT_ann_trendval',
               env: 'low:-8;mid:0;high:8',
               leg_units: 'mm/yr',
-              bounds: [[22.79, 94.09], [-28.81, 135]], // australia + se asia
+              bounds: [[22.79, 94.09], [-28.81, 155]], // australia + se asia
             }, geoserver_options)),
           movements: [
             {
@@ -466,6 +466,10 @@ var showcase_stories = [
             {
               type: 'comment', when: 5,
               content: "Observing climate extremes helps us understand these subtleties."
+            },
+            {
+              type: 'comment', when: 8,
+              content: "<span class='small'><a href='https://doi.org/10.1038/nclimate2941'>Donat et al. 2016</a></span>"
             },
             
           ],

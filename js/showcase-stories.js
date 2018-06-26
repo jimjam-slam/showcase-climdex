@@ -247,47 +247,49 @@ var showcase_stories = [
           end_pause: 0
         }),
 
-        L.storyBit(
-          {
-            baselayer_label: 'Daily temperature range: annual trend (1951&ndash;2017)',
-            baselayer:
-              L.tileLayer.wms(geoserver_base, L.extend({
-                layers: 'DTR_ann_trendval',
-                env: 'low:-0.08;mid:0;high:0.08',
-                leg_units: '&deg;C',
-                bounds: [[-80, -179], [80, 179]]    // zoom out
-              }, geoserver_options)),
-            movements: [
-              {
-                at: [[-30, -120], [30, 120]], type: 'flyToBounds',
-                options: { animate: true, duration: 1 }
-              },
-              {
-                  by: [0, -50], type: 'panBy',
-                  options: { duration: 10 }
-              }
-            ],
-            annotations: [
-              {
-                type: 'comment', when: 1,
-                content: 'Global DTR has <span class="emph">fallen</span> slightly over the last 50 years.'
-              },
-              {
-                type: 'comment', when: 4,
-                content: 'So <span class="emph">nights are warming faster</span> than days.'
-              },
-              {
-                type: 'clear_comments', when: 7
-              },
-              {
-                type: 'comment', when: 8,
-                content: 'This catch-up helps us <span class="emph">attribute</span> climate changes to the greenhouse effect.'
-              },
-              
-            ],
-            end_pause: 0
-          }),
-
+      L.storyBit(
+        {
+          baselayer_label: 'Daily temperature range: annual trend (1951&ndash;2017)',
+          baselayer:
+            L.tileLayer.wms(geoserver_base, L.extend({
+              layers: 'DTR_ann_trendval',
+              env: 'low:-0.08;mid:0;high:0.08',
+              leg_units: '&deg;C/yr',
+              bounds: [[-80, -179], [80, 179]]    // zoom out
+            }, geoserver_options)),
+          movements: [
+            {
+              at: [[-30, -120], [30, 120]], type: 'flyToBounds',
+              options: { animate: true, duration: 1 }
+            },
+            {
+                by: [0, -50], type: 'panBy',
+                options: { duration: 10 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: 'Global DTR has <span class="emph">fallen</span> slightly over the last 50 years.'
+            },
+            {
+              type: 'comment', when: 4,
+              content: 'So <span class="emph">nights are warming faster</span> than days.'
+            },
+            {
+              type: 'clear_comments', when: 7
+            },
+            {
+              type: 'comment', when: 8,
+              content: 'This catch-up helps us <span class="emph">attribute</span> climate changes to the greenhouse effect.'
+            },
+            {
+              type: 'comment', when: 11,
+              content: '<span class="small"><a target="_blank" href="https://doi.org/10.1175/JCLI-D-13-00032.1">Lewis & Karoly (2013)</a>; <a target="_blank" href="https://doi.org/10.1029/2004GL019998">Braganza et al. (2004)</a></span>'
+            }
+          ],
+          end_pause: 3
+        })
     ],
     {
       name: 'Daily temperature range',
@@ -298,61 +300,190 @@ var showcase_stories = [
       padding_bottomright: [0, 0]
     }),
   
-  // test story using bounds 
-  // L.story(
-  //   [
-  //     L.storyBit(
-  //       {
-  //         baselayer_label: 'Growing season length: annual average (1951&ndash;2017)',
-  //         baselayer:
-  //           L.tileLayer.wms(geoserver_base, L.extend({
-  //             layers: 'GSL_ann_avg',
-  //             env: 'low:10;high:366',
-  //             leg_units: 'days/yr',
-  //             bounds: [[50, -136], [24, -60]]
-  //           }, geoserver_options)),
-  //         movements: [
-  //           {
-  //             by: [0, 50],
-  //             options: { duration: 10 }
-  //           }
-  //         ],
-  //         annotations: [
-  //           {
-  //             type: 'comment', when: 3,
-  //             content: 'Climate change is a <span class="emph">global</span> phenomenon.'
-  //           },
-  //           {
-  //             type: 'comment', when: 4,
-  //             content: 'But not all places are affected equally.'
-  //           },
-  //           {
-  //             type: 'clear_comments', when: 6
-  //           },
-  //           {
-  //             type: 'comment', when: 6.5,
-  //             content: 'Our hottest days have become <span class="emph">hotter...</span>'
-  //           },
-  //           {
-  //             type: 'comment', when: 7.5,
-  //             content: '... but not in the American mid-west.'
-  //           },
-  //           {
-  //             type: 'comment', when: 8.5,
-  //             content: 'There\'re a few reasons for this. <a href="https://doi.org/10.1016/j.wace.2018.01.001">Read the paper.</a>'
-  //           }
-  //         ],
-  //         end_pause: 10//,
-  //       })
-  //   ],
-  //   {
-  //     name: 'Bounds test',
-  //     description: 'Checking to see if we can use bounds instead. ',
-  //     selectable: true,
-  //     at: [[50, -129], [24, -60]],
-  //     padding_topleft: dynamic_padding_tl,
-  //     padding_bottomright: [0, 0]
-  //   }),
+  // rainfall: changing extremes in wet and dry regions
+  L.story(
+    [
+      L.storyBit.animated(td_player,
+        {
+          baselayer_label: 'Total annual rainfall: series',
+          baselayer:
+            L.timeDimension.layer.wms(
+              L.tileLayer.wms(
+                geoserver_base, L.extend({
+                  layers: 'PRCPTOT_ann_series',
+                  env: 'low:0;high:2000',
+                  leg_units: 'mm',
+                  bounds: [[22.79, 94.09], [-28.81, 135]],
+                }, geoserver_options)),
+              { cache: 10 }),
+          time_start: '1980' + time_suffix,
+          time_end: '1989' + time_suffix,
+          movements: [
+            {
+              by: [0, 50], type: 'panBy',
+              options: { duration: 17 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: 'Water is important to everyone on Earth...'
+            },
+            
+            {
+              type: 'comment', when: 4,
+              content: '... and we all use it <span class="emph">differently.</span>'
+            },
+            {
+              type: 'clear_comments', when: 7
+            },
+            
+            {
+              type: 'comment', when: 8,
+              content: 'Some places get <span class="emph">more water...</span>'
+            },
+            {
+              type: 'layer', when: 8, duration: 9,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([14.87, 99.2]).setContent(
+                '<h1>Thailand</h1>')
+            },
+            {
+              type: 'comment', when: 11,
+              content: '... some get <span class="emph">less water...</span>'
+            },
+            {
+              type: 'layer', when: 11, duration: 6,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([-22.27, 123.79]).setContent(
+                '<h1>Western Australia</h1>')
+            },
+            {
+              type: 'comment', when: 14,
+              content: '... and climate change is affecting <span class="emph">both.</span>'
+            },
+          ],
+          end_pause: 0
+        }),
+
+      L.storyBit(
+        {
+          baselayer_label: 'Rainiest day: annual trend (1951&ndash;2017)',
+          baselayer:
+            L.tileLayer.wms(geoserver_base, L.extend({
+              layers: 'Rx1day_ann_trendval',
+              env: 'low:-1.1;mid:0;high:1.1',
+              leg_units: 'mm/yr',
+              bounds: [[22.79, 94.09], [-28.81, 135]], // australia + se asia
+            }, geoserver_options)),
+          movements: [
+            {
+                by: [-50, 0], type: 'panBy',
+                options: { duration: 10 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: "ARCCSS researchers looked the world's <span class='emph'>driest</span> and <span class='emph'>wettest</span> regions."
+            },
+            {
+              type: 'comment', when: 4,
+              content: "<span class='emph'>Extreme</span> rainfall is getting worse in <span class='emph'>both</span> regions."
+            },
+            {
+              type: 'comment', when: 7,
+              content: "But it's more complicated than that."
+            }
+          ],
+          end_pause: 0
+        }),
+
+      L.storyBit(
+        {
+          baselayer_label: 'Total annual rainfall: annual trend (1951&ndash;2017)',
+          baselayer:
+            L.tileLayer.wms(geoserver_base, L.extend({
+              layers: 'PRCPTOT_ann_trendval',
+              env: 'low:-8;mid:0;high:8',
+              leg_units: 'mm/yr',
+              bounds: [[22.79, 94.09], [-28.81, 135]], // australia + se asia
+            }, geoserver_options)),
+          movements: [
+            {
+              at: [[22.79, 94.09], [8, 110]], type: 'flyToBounds', // se asia
+              options: { duration: 1 }
+            },
+            {
+                by: [0, 50], type: 'panBy',
+                options: { duration: 6 }
+            },
+            {
+              at: [[-9, 113.5], [-28.81, 129.25]], type: 'flyToBounds', // wa
+              options: { duration: 1 }
+            },
+            {
+                by: [0, 50], type: 'panBy',
+                options: { duration: 6 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: "Wet regions might getting more extreme rainfall, but their <span class='emph'>total rainfall isn't changing.</span>"
+            },
+            {
+              type: 'comment', when: 7,
+              content: "Dry places, in contrast, are getting both worse extreme rainfall and <span class='emph'>more rainfall overall.</span>"
+            }
+          ],
+          end_pause: 0
+        }),
+
+      L.storyBit(
+        {
+          movements: [
+            {
+              at: [[22.79, 94.09], [-28.81, 129.25]], type: 'flyToBounds', // se asia
+              options: { duration: 1 }
+            },
+            {
+                by: [0, 50], type: 'panBy',
+                options: { duration: 10 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: "These <span class='emph'>subtle but important differences</span> determine how different countries, and industries, prepare for climate change."
+            },
+            {
+              type: 'comment', when: 5,
+              content: "Observing climate extremes helps us understand these subtleties."
+            },
+            
+          ],
+          end_pause: 0
+        })
+
+    ],
+    {
+      
+      name: 'Changing rainfall in wet and dry regions',
+      description: 'The impacts of climate change differ across countries and industries.',
+      selectable: true,
+      at: [[22.79, 94.09], [-28.81, 129.25]],
+      padding_topleft: dynamic_padding_tl,
+      padding_bottomright: [0, 0]
+    }
+
+  )
 
   ];
 

@@ -41,7 +41,7 @@ html, body {
 
 #map-blackout.toggled_on {
   visibility: visible;
-  opacity: 0.8;        /* DEBUG - make 1 for production */
+  opacity: 1;
 }
 
 #map-blackout h2 {

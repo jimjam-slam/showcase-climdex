@@ -503,19 +503,10 @@ var showcase_stories = [
           annotations: [
             {
               type: 'comment', when: 1,
-              content: "South-east Asia is the <span class='emph'>rapidly urbanising</span> region in the world."
+              content: "South-east Asia is the <span class='emph'>most rapidly urbanising</span> region in the world."
             },
             {
               type: 'layer', when: 2, duration: 16,
-              content: L.popup({
-                autopan: false, closeButton: false, autoClose: false,
-                closeOnEscapeKey: false, closeOnClick: false,
-                className: 'story-popup', maxWidth: 200
-              }).setLatLng([-6.3, 106.9]).setContent(
-                '<h1>Jakarta</h1><p>10.5 million</p>')
-            },
-            {
-              type: 'layer', when: 2.5, duration: 15.5,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
@@ -524,7 +515,7 @@ var showcase_stories = [
                 '<h1>Manila</h1><p>13.1 million</p>')
             },
             {
-              type: 'layer', when: 3, duration: 15,
+              type: 'layer', when: 2.5, duration: 15.5,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
@@ -533,7 +524,7 @@ var showcase_stories = [
                 '<h1>Bangkok</h1><p>9.4 million</p>')
             },
             {
-              type: 'layer', when: 3.5, duration: 14.5,
+              type: 'layer', when: 3, duration: 15,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
@@ -542,20 +533,29 @@ var showcase_stories = [
                 '<h1>Ho Chi Minh City</h1><p>7.5 million</p>')
             },
             {
-              type: 'layer', when: 4, duration: 14,
+              type: 'layer', when: 3.5, duration: 14.5,
               content: L.popup({
                 autopan: false, closeButton: false, autoClose: false,
                 closeOnEscapeKey: false, closeOnClick: false,
                 className: 'story-popup', maxWidth: 200
               }).setLatLng([1.34, 103.85]).setContent(
                 '<h1>Singapore</h1><p>5.7 million</p>')
-            }
+            },
+            {
+              type: 'layer', when: 4, duration: 14,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([-6.3, 106.9]).setContent(
+                '<h1>Jakarta</h1><p>10.5 million</p>')
+            },
             {
               type: 'comment', when: 4,
               content: "As of 2010, <span class='emph'>nearly half</span> of the population lives in cities."
             },
             {
-              type: 'comment', when: 5,
+              type: 'comment', when: 6,
               content: "<span class='small'><a href='http://www.un.org/en/development/desa/population/publications/pdf/urbanization/the_worlds_cities_in_2016_data_booklet.pdf'>United Nations (2016)</a>; <a href='www.stateofthetropics.org'>State of the Tropics (2014)</a></span>"
             },
             {
@@ -579,7 +579,7 @@ var showcase_stories = [
 
       L.storyBit(
         {
-          baselayer_label: 'Total annual rainfall: annual trend (1951&ndash;2017)',
+          baselayer_label: 'Fraction of warm days: annual trend (1951&ndash;2017)',
           baselayer:
             L.tileLayer.wms(geoserver_base, L.extend({
               layers: 'TN90p_ann_trendval',
@@ -596,7 +596,7 @@ var showcase_stories = [
           annotations: [
             {
               type: 'comment', when: 1,
-              content: "Climate change is compounding this."
+              content: "Climate change is compounding the Urban Heat Island."
             },
             {
               type: 'comment', when: 4,
@@ -609,7 +609,35 @@ var showcase_stories = [
           ],
           end_pause: 10
         }),
-
+        
+      L.storyBit(
+        {
+          baselayer_label: 'Fraction of warm days: annual trend (1951&ndash;2017)',
+          baselayer:
+            L.tileLayer.wms(geoserver_base, L.extend({
+              layers: 'WSDI_ann_trendval',
+              env: 'low:-1;mid:0;high:1',
+              leg_units: 'p.p./yr',
+              bounds: [[30, 93], [-2, 125]], // se asia
+            }, geoserver_options)),
+          movements: [
+            {
+                by: [50, 0], type: 'panBy',
+                options: { duration: 4 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: "Runs of warm days are also getting <span class='emph'>longer,</span> giving people less relief."
+            }//,
+            // {
+            //   type: 'comment', when: 4,
+            //   content: "Cities need to look for <span class='emph'>longer,</span> giving people less relief."
+            // }
+          ],
+          end_pause: 3
+        })
     ],
     {
       

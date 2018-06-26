@@ -670,22 +670,31 @@ function cleanup_for_story(story) {
 function storybit_ready() {
   console.log('storybitready handler');
   console.log(this._storybits[this._current_storybit]._baselayer_label);
-  $('#story-bitbar-label')
-    .html(this._storybits[this._current_storybit]._baselayer_label)
-    .addClass('toggled_on');
-  // also turn the year indicator on if it's animated
-  if (this._storybits[this._current_storybit] instanceof L.StoryBit.Animated)
-    $('#story-bitbar-td').removeClass('disabled');
+
+  if (
+    this._storybits[this._current_storybit]._baselayer_label !== undefined &&
+    this._storybits[this._current_storybit]._baselayer_label !== '' &&
+    this._storybits[this._current_storybit]._baselayer_label !== 'No baselayer') {
+      $('#story-bitbar-label').html(
+        this._storybits[this._current_storybit]._baselayer_label);
+      $('#story-bitbar').addClass('toggled_on');
+      // also turn the year indicator on if it's animated
+      if (this._storybits[this._current_storybit] instanceof L.StoryBit.Animated)
+        $('#story-bitbar-td').removeClass('disabled');
+    } else if ($('#story-bitbar').hasClass('toggled_on')) {
+      // otherwise, turn it off if it's off
+      $('#story-bitbar').removeClass('toggled_on');
+      $('#story-bitbar-td').addClass('disabled');
+    }
+  
   $('#map-blackout').removeClass('toggled_on');
 }
 
 function storybit_wrapup() {
   console.log('storybitend handler');
   legend.update('img/1x1.png');
-  $('#story-bitbar').one('transitionend', function() {
-    $('#story-bitbar-label').html('');
-    $('#story-bitbar-td').addClass('disabled');
-  }).removeClass('toggled_on');
+  $('#story-bitbar').removeClass('toggled_on');
+  $('#story-bitbar-td').addClass('disabled');
 }
 
 /* dynamic_padding_tl: calculates padding for the story movements based on the

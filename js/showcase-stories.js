@@ -588,10 +588,10 @@ var showcase_stories = [
               bounds: [[30, 93], [-2, 125]], // se asia
             }, geoserver_options)),
           movements: [
-            // {
-            //     by: [0, 50], type: 'panBy',
-            //     options: { duration: 6 }
-            // }
+            {
+                by: [50, 0], type: 'panBy',
+                options: { duration: 10 }
+            }
           ],
           annotations: [
             {
@@ -607,7 +607,7 @@ var showcase_stories = [
               content: "But the <span class='emph'>biggest changes</span> are in South-East Asia."
             }
           ],
-          end_pause: 10
+          end_pause: 0
         }),
         
       L.storyBit(
@@ -621,10 +621,10 @@ var showcase_stories = [
               bounds: [[30, 93], [-2, 125]], // se asia
             }, geoserver_options)),
           movements: [
-            {
-                by: [50, 0], type: 'panBy',
-                options: { duration: 4 }
-            }
+            // {
+            //     by: [50, 0], type: 'panBy',
+            //     options: { duration: 4 }
+            // }
           ],
           annotations: [
             {
@@ -636,7 +636,7 @@ var showcase_stories = [
             //   content: "Cities need to look for <span class='emph'>longer,</span> giving people less relief."
             // }
           ],
-          end_pause: 3
+          end_pause: 4
         })
     ],
     {

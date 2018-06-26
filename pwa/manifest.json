@@ -1,7 +1,7 @@
 {
   "name": "Explore Climdex",
   "short_name": "Climdex",
-  "description": "",
+  "description": "Explore and learn about observed climate extremes.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",

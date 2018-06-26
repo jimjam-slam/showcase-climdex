@@ -486,7 +486,140 @@ var showcase_stories = [
       padding_topleft: dynamic_padding_tl,
       padding_bottomright: [0, 0]
     }
+  ),
 
+  // se asia: heat and urbanising
+  L.story(
+    [
+
+      L.storyBit(
+        {
+          movements: [
+            {
+                by: [100, 100], type: 'panBy',
+                options: { duration: 18 }
+            }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: "South-east Asia is the <span class='emph'>rapidly urbanising</span> region in the world."
+            },
+            {
+              type: 'layer', when: 2, duration: 16,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([-6.3, 106.9]).setContent(
+                '<h1>Jakarta</h1><p>10.5 million</p>')
+            },
+            {
+              type: 'layer', when: 2.5, duration: 15.5,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([14.6, 121]).setContent(
+                '<h1>Manila</h1><p>13.1 million</p>')
+            },
+            {
+              type: 'layer', when: 3, duration: 15,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([13.73, 100.55]).setContent(
+                '<h1>Bangkok</h1><p>9.4 million</p>')
+            },
+            {
+              type: 'layer', when: 3.5, duration: 14.5,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([10.7, 106.7]).setContent(
+                '<h1>Ho Chi Minh City</h1><p>7.5 million</p>')
+            },
+            {
+              type: 'layer', when: 4, duration: 14,
+              content: L.popup({
+                autopan: false, closeButton: false, autoClose: false,
+                closeOnEscapeKey: false, closeOnClick: false,
+                className: 'story-popup', maxWidth: 200
+              }).setLatLng([1.34, 103.85]).setContent(
+                '<h1>Singapore</h1><p>5.7 million</p>')
+            }
+            {
+              type: 'comment', when: 4,
+              content: "As of 2010, <span class='emph'>nearly half</span> of the population lives in cities."
+            },
+            {
+              type: 'comment', when: 5,
+              content: "<span class='small'><a href='http://www.un.org/en/development/desa/population/publications/pdf/urbanization/the_worlds_cities_in_2016_data_booklet.pdf'>United Nations (2016)</a>; <a href='www.stateofthetropics.org'>State of the Tropics (2014)</a></span>"
+            },
+            {
+              type: 'clear_comments', when: 8
+            },
+            {
+              type: 'comment', when: 9,
+              content: "These people are already <span class='emph'>vulnerable</span> to heat: cities trap it."
+            },
+            {
+              type: 'comment', when: 12,
+              content: "This Urban Heat Island makes cities <span class='emph'>warmer</span> than their surrounds."
+            },
+            {
+              type: 'comment', when: 15,
+              content: "The effect is <span class='emph'>worst at night.</span>"
+            },
+          ],
+          end_pause: 0
+        }),
+
+      L.storyBit(
+        {
+          baselayer_label: 'Total annual rainfall: annual trend (1951&ndash;2017)',
+          baselayer:
+            L.tileLayer.wms(geoserver_base, L.extend({
+              layers: 'TN90p_ann_trendval',
+              env: 'low:-1.2;mid:0;high:1.2',
+              leg_units: 'p.p./yr',
+              bounds: [[30, 93], [-2, 125]], // se asia
+            }, geoserver_options)),
+          movements: [
+            // {
+            //     by: [0, 50], type: 'panBy',
+            //     options: { duration: 6 }
+            // }
+          ],
+          annotations: [
+            {
+              type: 'comment', when: 1,
+              content: "Climate change is compounding this."
+            },
+            {
+              type: 'comment', when: 4,
+              content: "Warm nights are becoming more frequent in many parts of the world..."
+            },
+            {
+              type: 'comment', when: 7,
+              content: "But the <span class='emph'>biggest changes</span> are in South-East Asia."
+            }
+          ],
+          end_pause: 10
+        }),
+
+    ],
+    {
+      
+      name: 'South-east Asia',
+      description: 'Twin impacts of cliate change and urbanisation.',
+      selectable: true,
+      at: [[30, 93], [-2, 125]],
+      padding_topleft: dynamic_padding_tl,
+      padding_bottomright: [0, 0]
+    }
   )
 
   ];

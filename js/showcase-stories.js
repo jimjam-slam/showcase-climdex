@@ -101,7 +101,7 @@ var showcase_stories = [
             }, geoserver_options)),
           movements: [
             {
-              by: [0, 50], type: 'panBy', options: { duration: 6 }
+              by: [0, 50], type: 'panBy', options: { duration: 9 }
             }
           ],
           annotations: [
@@ -110,11 +110,11 @@ var showcase_stories = [
               content: 'How do we know that <span class="emph">humans</span> are changing the climate?'
             },
             {
-              type: 'comment', when: 3,
+              type: 'comment', when: 4,
               content: 'One fingerprint is DTR:'
             },
             {
-              type: 'comment', when: 4,
+              type: 'comment', when: 6,
               content: '<span class="emph">Daily Temperature Range</span>'
             }
           ],
@@ -391,7 +391,7 @@ var showcase_stories = [
           annotations: [
             {
               type: 'comment', when: 1,
-              content: "ARCCSS researchers looked the world's <span class='emph'>driest</span> and <span class='emph'>wettest</span> regions."
+              content: "ARCCSS researchers looked at the world's <span class='emph'>driest</span> and <span class='emph'>wettest</span> regions."
             },
             {
               type: 'comment', when: 4,
@@ -436,7 +436,7 @@ var showcase_stories = [
           annotations: [
             {
               type: 'comment', when: 1,
-              content: "Wet regions might getting more extreme rainfall, but their <span class='emph'>total rainfall isn't changing.</span>"
+              content: "Wet regions might be getting more extreme rainfall, but their <span class='emph'>total rainfall isn't changing.</span>"
             },
             {
               type: 'comment', when: 7,
@@ -636,13 +636,13 @@ var showcase_stories = [
             //   content: "Cities need to look for <span class='emph'>longer,</span> giving people less relief."
             // }
           ],
-          end_pause: 4
+          end_pause: 5
         })
     ],
     {
       
       name: 'South-east Asia',
-      description: 'Twin impacts of cliate change and urbanisation.',
+      description: 'Twin impacts of climate change and urbanisation.',
       selectable: true,
       at: [[30, 93], [-2, 125]],
       padding_topleft: dynamic_padding_tl,

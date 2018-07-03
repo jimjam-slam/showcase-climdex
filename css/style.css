@@ -231,7 +231,7 @@ div#about a:active, div#about a:hover, div#about a:visited
   overflow-x: hidden;
   overflow-y: auto;
 
-  background-color: #222222cc;
+  background-color: rgba(34, 34, 34, 0.8);
   color: #eee;
 }
 
@@ -803,13 +803,13 @@ form.leaflet-control-layers-list input[type="radio"]:disabled ~ p {
 
 .story-popup > .leaflet-popup-content-wrapper {
   padding: 7px;
-  background: #222222cc;
+  background: rgba(34, 34, 34, 0.8);
   box-shadow: 5px 0 0 #333;
   border-radius: 0;
 }
 
 .leaflet-popup-tip {
-  background: #222222cc;
+  background: rgba(34, 34, 34, 0.8);
   border: none;
 }
 

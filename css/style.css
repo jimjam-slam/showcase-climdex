@@ -648,6 +648,7 @@ a.leaflet-control-layers-toggle:after {
   left: 10px;
   top: 5px;
   opacity: 0.5;
+  font-style: italic;
 }
 
 .baselayerlist-0 {

@@ -643,19 +643,29 @@ a.leaflet-control-layers-toggle:after {
   font-size: 0.8em;
 }
 
+.baselayer-notice {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+  opacity: 0.5;
+}
+
 .baselayerlist-0 {
   width: 220px;
+  margin-top: 25px;
   /* border-right: 1px solid goldenrod; */
 }
 
 .baselayerlist-1 {
   width: 90px;
+  margin-top: 25px;
   /* border-right: 1px solid goldenrod; */
 }
 
 .baselayerlist-2 {
   width: 140px;
   border-right: none;
+  margin-top: 25px;
 }
 
 /* switch to vertical stacking for narrow screens */
@@ -668,6 +678,7 @@ a.leaflet-control-layers-toggle:after {
   .baselayerlist-0 {
     width: calc(100vw - 100px);
     border: none;
+    margin-top: 25px;
   }
 
   .baselayerlist-1, .baselayerlist-2 {

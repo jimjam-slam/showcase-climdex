@@ -32,9 +32,16 @@ L.Control.Layers.ComboBaseLayer = L.Control.Layers.extend({
     // get the usual stuff done first
     L.Control.Layers.prototype._initLayout.call(this);
 
+    // (add a notice that some layers are annual only)
+    list_notice = L.DomUtil.create('p', 'baselayer-notice', this._form);
+    list_notice.innerHTML = '* Index unavailable monthly'
+
     // convert the baselayer list into an array of n based on options
     var className = 'leaflet-control-layers';
     this._baseLayersList = [ this._baseLayersList ];
+
+    // create the three option lists (index, season, aggregation) and push to
+    // the form
     for (i = 1; i < this._menu_count; i++) {
       this._baseLayersList.push(
         L.DomUtil.create('div', className + '-base', this._form));
